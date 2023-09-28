@@ -1,0 +1,238 @@
+
+{% extends "nav.html" %} 
+
+{% load static %}
+{% block style %}
+<style>
+
+
+ body {
+           background-image: url("{% static 'assets/img/image.jpg' %} "); 
+           background-size: cover;
+           background-repeat: no-repeat;
+           justify-content:center;
+           align-items:center;
+        }
+         
+
+        h2 {
+            text-align: center;
+            color: #OOO;
+            margin-top:20px;
+        }
+
+        form {
+max-width: 532px;
+margin: 20px auto; /* Center-align the form horizontally */
+padding: 42px;
+background-color: rgba(255, 255, 255, 0.5);
+box-shadow: 0px 0px 10px rgba(0, 0, 0, 29.2);
+border-radius: 55px;
+text-align: center;
+opacity: 0.9; /* This value should be between 0 and 1, not 1.9 */
+
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #ooo;
+            border-radius: 50px;
+        }
+
+        button {
+            background-color: #0074e4;
+            color: #fff;
+            border: none;
+            border-radius: 20px;
+            padding: 15px 20px;
+            cursor: pointer;
+        }
+
+        a {
+            text-decoration: none;
+            color: #00f; /* Change link color to blue */
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+</style>
+
+{% endblock style %}
+
+
+
+
+ {% block body  %}
+    <div class="signup-container">
+        <h2> CUSTOMER SIGNUP</h2><br>
+        <form id="signup-form" action="http://127.0.0.1:8000/signup/" method="post"> 
+         {% csrf_token %}
+            <div class="form-group">
+                <label for="firstname">Full Name:</label>
+                <input type="text" id="firstname" name="firstname"  onchange="validateFirstName()" required><br>
+                <span id="first-name-error" class="error-message"></span>
+            </div>
+            
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required onchange="validateEmail()"><br>
+                <span id="email-error" class="error-message"></span>
+            </div>
+            <div class="form-group">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required onchange="validateUsername()"><br>
+                <span id="username-error" class="error-message"></span>
+            </div>
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required onchange="validatePassword()"><br>
+                <span id="password-error" class="error-message"></span>
+            </div>
+            <div class="form-group">
+                <label for="confirm-password">Confirm Password:</label>
+                <input type="password" id="confirm-password" name="confirm_password" required onchange="validateConfirmPassword()"><br>
+                <span id="confirm-password-error" class="error-message"></span>
+            </div>
+            
+                <button type="submit" class="submit-btn" onclick="validateSignup()">Sign Up</button>
+                <span id="success-message" class="success-message"></span>
+        
+        </form>
+    </div>
+
+
+
+
+
+    <script>
+        function validateEmail() {
+            const email = document.getElementById('email').value;
+            const emailError = document.getElementById('email-error');
+            emailError.textContent = '';
+
+            // Validate email format
+            const emailPattern = /^[a-z0-9._-]+@[a-z.-]+\.[a-z]{2,4}$/;
+            if (!emailPattern.test(email)) {
+                emailError.textContent = 'Invalid Email !!';
+            }
+        }
+
+    function validateUsername() {
+    const usernameError = document.getElementById("username-error");
+    const username = document.getElementById('username').value;
+    usernameError.textContent = '';
+    
+    const regex = /^[a-zA-Z][a-zA-Z0-9_-]{2,19}$/;  // Setting Up Regular Expression
+    if(!regex.test(username))
+    {
+            usernameError.textContent = 'field cannot be empty,username with start with a letter,username must be between[3-20],white space not allowed';
+    }
+    }
+   /* if (!match) {
+        usernameError.style.color = "red";
+        if (username.trim() === "") {
+            usernameError.textContent = "This Field Cannot be empty";
+        }else if (!username.match(/^[a-zA-Z]/)) {
+            usernameError.textContent = " Username must start with a letter.";
+        }else if (!username.match(/[a-zA-Z0-9_-]{2,19}$/)) {
+            usernameError.textContent = " Username must be between 3 and 20 characters and can only contain letters, numbers, underscores, or hyphens.";
+        }else if (username.match(/\s/)){
+            usernameError.textContent = "White Space Not Allowed";
+        }else{
+            usernameError.textContent = " Username must be between 3 and 20 characters and can only contain letters, numbers, underscores, or hyphens.";
+        }
+        return false;
+    }*/
+
+
+        function validatePassword() {
+            const password = document.getElementById('password').value;
+            const passwordError = document.getElementById('password-error');
+
+            passwordError.textContent = '';
+
+            // Validate password (at least 8 characters, with complexity)
+            const passwordPattern = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+])[A-Za-z\d!@#$%^&*()_+]{8,}$/;
+            if (!passwordPattern.test(password)) {
+                passwordError.textContent = 'Password must contain at least one numeric digit, one uppercase letter, one lowercase letter, one special character, and be at least 8 characters long';
+            }
+        }
+
+        function validateConfirmPassword() {
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirm-password').value;
+            const confirmPasswordError = document.getElementById('confirm-password-error');
+
+            confirmPasswordError.textContent = '';
+
+            // Confirm password match
+            if (password !== confirmPassword) {
+                confirmPasswordError.textContent = 'Passwords do not match';
+            }
+        }
+
+        function validateFirstName() {
+            const firstNameInput = document.getElementById('first-name');
+            const firstName = firstNameInput.value;
+            const firstNameError = document.getElementById('first-name-error');
+        
+            firstNameError.textContent = ''; // Clear any existing error message
+        
+            // Validate the first name (between 2 and 50 characters, letters, hyphens, and apostrophes)
+            const namePattern = /^[A-Za-z-' ]{2,50}$/; // Adjust as needed
+        
+            if (!namePattern.test(firstName)) {
+                firstNameError.textContent = 'First Name is invalid';
+            } else if (/ {2,}/.test(firstName)) {
+                // Check for multiple consecutive spaces
+                firstNameError.textContent = 'Multiple consecutive spaces are not allowed';
+            }
+        }
+        function validateSignup() {
+            validateEmail();
+            validateUsername();
+            validatePassword();
+            validateConfirmPassword();
+            validateFirstName();
+            validateDepartment();
+
+            const emailError = document.getElementById('email-error').textContent;
+            const usernameError = document.getElementById('username-error').textContent;
+            const passwordError = document.getElementById('password-error').textContent;
+            const confirmPasswordError = document.getElementById('confirm-password-error').textContent;
+            const firstNameError = document.getElementById('first-name-error').textContent;
+            const departmentError = document.getElementById('department-error').textContent;
+            const successMessage = document.getElementById('success-message');
+
+            // If any error messages exist, do not proceed
+            if (emailError || usernameError || passwordError || confirmPasswordError || firstNameError || departmentError) {
+                return;
+            }
+
+            // If all validations pass, show success message
+            successMessage.textContent = 'Registration successful!';
+            // You can add code here to submit the form or perform other actions if needed.
+        }
+    </script>
+
+
+ {% endblock body  %}
+
+
+
+
+  {% block script  %}
+    
+
+    
+  {% endblock script  %}
+
