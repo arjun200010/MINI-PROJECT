@@ -70,19 +70,20 @@ opacity: 1.9; /* This value should be between 0 and 1, not 1.9 */
     {% block body  %}
     <div class="form-container">
         <h2>Login</h2>
-        <form method="post" action=" {% url 'login' %}">
+        <form method="post" action=" {% url 'login' %}" id="login-form">
             {% csrf_token %}
             <div class="form-element">
                 <label for="username">USERNAME:</label>
-                <input type="text" id="username" name="username" placeholder="Enter your username">
+                <input type="text" id="username" name="username" placeholder="Enter your username" required onchange="validateUsername()">
                 <div class="error-message" id ="username-error"></div>
             </div>
             <div class="form-element">
                 <label for="password">PASSWORD</label>
-                <input type="password" id="password" name="password" placeholder="Enter your password">
+                <input type="password" id="password" name="password" placeholder="Enter your password" required onchange="validatePassword()">
                 <div class="error-message" id ="password-error"></div>
             </div>
-            <button type="submit" class="btn btn-primary">LOGIN</button>
+            <button type="submit" class="btn btn-primary" onclick="validateLogin()" >LOGIN</button>
+            <span id="success-message" class="success-message"></span>
         </form>
 
        
@@ -98,6 +99,43 @@ opacity: 1.9; /* This value should be between 0 and 1, not 1.9 */
     <br>
     <br>
     <br>
+    <script>
+        function validateUsername()
+        {
+            const userName=document.getElementById('username').value;
+             const usernameError=document.getElementById("username-error");
+             usernameError.textContent='';
+             const regex=/^[a-zA-Z][a-zA-Z0-9_-]{2,19}$/; 
+             if(!regex.test(userName))
+             {
+                    usernameError.textContent='field cannot be empty,username must start with a letter,username must be between[3-20],white space not allowed';
+             }
+        }
+         function validatePassword() {
+            const Password = document.getElementById('password').value;
+            const passwordError = document.getElementById('password-error');
+
+            passwordError.textContent = '';
+
+            // Validate password (at least 8 characters, with complexity)
+            const passwordPattern = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+])[A-Za-z\d!@#$%^&*()_+]{8,}$/;
+            if (!passwordPattern.test(Password)) {
+                passwordError.textContent = 'Password must contain at least one numeric digit, one uppercase letter, one lowercase letter, one special character, and be at least 8 characters long';
+            }
+        }
+        function validateLogin() {
+            validateUsername();
+            validatePassword();
+             const usernameError = document.getElementById('username-error').textContent;
+            const passwordError = document.getElementById('password-error').textContent;
+            const successMessage = document.getElementById('success-message');
+             if (usernameError || passwordError ) {
+                return;
+            }
+            successMessage.textContent = 'Login successful!';
+            }
+
+    </script>
  {% endblock body  %}
 
 

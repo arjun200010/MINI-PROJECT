@@ -7,7 +7,7 @@
 
 
  body {
-           background-image: url("{% static 'assets/img/image.jpg' %} "); 
+           background-image: url("{% static 'assets/img/signup.jpeg' %} "); 
            background-size: cover;
            background-repeat: no-repeat;
            justify-content:center;
@@ -77,9 +77,14 @@ opacity: 0.9; /* This value should be between 0 and 1, not 1.9 */
         <form id="signup-form" action="http://127.0.0.1:8000/signup/" method="post"> 
          {% csrf_token %}
             <div class="form-group">
-                <label for="firstname">Full Name:</label>
-                <input type="text" id="firstname" name="firstname"  onchange="validateFirstName()" required><br>
+                <label for="firstname">First Name:</label>
+                <input type="text" id="first-name" name="firstname"  onchange="validateFirstName()" required><br>
                 <span id="first-name-error" class="error-message"></span>
+            </div>
+            <div class="form-group">
+                <label for="lastname">Last Name:</label>
+                <input type="text" id="last-name" name="lastname"  required onchange="validateLastName()" ><br>
+                <span id="last-name-error" class="error-message"></span>
             </div>
             
             <div class="form-group">
@@ -134,7 +139,7 @@ opacity: 0.9; /* This value should be between 0 and 1, not 1.9 */
     const regex = /^[a-zA-Z][a-zA-Z0-9_-]{2,19}$/;  // Setting Up Regular Expression
     if(!regex.test(username))
     {
-            usernameError.textContent = 'field cannot be empty,username with start with a letter,username must be between[3-20],white space not allowed';
+            usernameError.textContent = 'field cannot be empty,username must start with a letter,username must be between[3-20],white space not allowed';
     }
     }
    /* if (!match) {
@@ -180,7 +185,8 @@ opacity: 0.9; /* This value should be between 0 and 1, not 1.9 */
             }
         }
 
-        function validateFirstName() {
+        function validateFirstName() 
+        {
             const firstNameInput = document.getElementById('first-name');
             const firstName = firstNameInput.value;
             const firstNameError = document.getElementById('first-name-error');
@@ -190,31 +196,53 @@ opacity: 0.9; /* This value should be between 0 and 1, not 1.9 */
             // Validate the first name (between 2 and 50 characters, letters, hyphens, and apostrophes)
             const namePattern = /^[A-Za-z-' ]{2,50}$/; // Adjust as needed
         
-            if (!namePattern.test(firstName)) {
+            if (!namePattern.test(firstName)) 
+            {
+
                 firstNameError.textContent = 'First Name is invalid';
-            } else if (/ {2,}/.test(firstName)) {
+            } 
+            else if (/ {2,}/.test(firstName)) 
+            {
+
                 // Check for multiple consecutive spaces
                 firstNameError.textContent = 'Multiple consecutive spaces are not allowed';
             }
         }
+        
+        function validateLastName(){
+            const lastnameInput=document.getElementById('last-name');
+            const lastName=lastnameInput.value;
+            const lastnameError=document.getElementById('last-name-error');
+            lastnameError.textContent= '';
+            const namepattern=/^[A-Za-z-' ]{2,50}$/;
+            if(!namepattern.test(lastName))
+            {
+                lastnameError.textContent='Last name is invalid';
+            }
+            else if(/ {2,}/.test(lastName))
+            {
+                lastnameError.textContent="Multiple consecutive spaces are not allowed";
+            }
+        }
+    
         function validateSignup() {
             validateEmail();
             validateUsername();
             validatePassword();
             validateConfirmPassword();
             validateFirstName();
-            validateDepartment();
+            validateLastName();
 
             const emailError = document.getElementById('email-error').textContent;
             const usernameError = document.getElementById('username-error').textContent;
             const passwordError = document.getElementById('password-error').textContent;
             const confirmPasswordError = document.getElementById('confirm-password-error').textContent;
             const firstNameError = document.getElementById('first-name-error').textContent;
-            const departmentError = document.getElementById('department-error').textContent;
+            const lastNameError = document.getElementById('last-name-error').textContent;
             const successMessage = document.getElementById('success-message');
 
             // If any error messages exist, do not proceed
-            if (emailError || usernameError || passwordError || confirmPasswordError || firstNameError || departmentError) {
+            if (emailError || usernameError || passwordError || confirmPasswordError || firstNameError || lastnameError) {
                 return;
             }
 

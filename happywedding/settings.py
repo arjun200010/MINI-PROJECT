@@ -130,5 +130,8 @@ STATICFILES_DIRS= [
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-AUTH_USER_MODEL = 'weddingapp.CustomUser'  
+AUTH_USER_MODEL = "weddingapp.User" 
+
+
+
 
