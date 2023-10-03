@@ -4,6 +4,7 @@ from django.contrib.auth import logout
 from django.contrib import messages
 from .models import User
 from django.contrib.auth.decorators import login_required
+
 def index(request):
     return render(request, 'index.html')
 
@@ -21,11 +22,9 @@ def signup(request):
             # Check if the email is unique
             if not User.objects.filter(email=email).exists():
                 # Create a new user
-                print(firstname,lastname,password,email)
                 user = User.objects.create_user(first_name=firstname,last_name=lastname,username=username, email=email,password=password,role="CUSTOMER")
-                # user.firstname = firstname
-
                 user.save()
+                messages.success(request,"Signup successfull!!!")
                 return redirect('login')
             else:
                 messages.error(request, 'Email already exists.')
@@ -33,18 +32,6 @@ def signup(request):
             messages.error(request, 'Passwords do not match.')
     
     return render(request, 'signup.html')
-#    if request.method == 'POST':
-#             # Create the user
-#             first_name=request.POST['first-name']
-#             username = request.POST['username']  
-#             email = request.POST['email']
-#             password = request.POST['password']  
-#             confirm_password = request.POST['confirm_password']
-#             user = User.objects.create_user(first_name=first_name,username=username, email=email, password=password)
-#             user.save()
-#             return redirect('login')  
-#    else:
-#         return render(request, 'signup.html')
 
 
 def login(request):
@@ -54,23 +41,29 @@ def login(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             auth_login(request, user)
-            return redirect('loginhome')
+            request.session['username']=username
+            return redirect('loginhome') 
+            
+            
         else:
+            messages.error(request, 'Invalid login credentials.')
             return redirect('login')
-    return render(request,"login.html")
-
-
+    response = render(request,'login.html')
+    response['Cache-Control'] = 'no-store, must-revalidate'
+    return response
 
 def loginhome(request):
-    return render(request, 'loginhome.html')
-
+        
+        if 'username' in request.session:
+            response = render(request, 'loginhome.html')
+            response['Cache-Control'] = 'no-store, must-revalidate'
+            return response
+        else:
+            return redirect('login')
 def handlelogout(request):
     if request.user.is_authenticated:
         logout(request)
-    return redirect('login')  # Replace 'index' with the name of your desired landing page
-
-
-
+    return redirect('login')  
 
 
 

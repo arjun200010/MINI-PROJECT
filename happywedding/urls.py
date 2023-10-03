@@ -18,13 +18,12 @@ from django.contrib import admin
 from django.urls import path
 from weddingapp import views
 
-
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('',views.index,name='index'),
     path('signup/',views.signup,name='signup'),
      path('login/',views.login,name='login'),
     path('loginhome/',views.loginhome,name='loginhome'),
-    path('handlelogout/',views.handlelogout,name='handlelogout')
+    path('logout/',views.handlelogout,name='handlelogout'),
 ]
 

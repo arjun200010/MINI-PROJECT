@@ -7,12 +7,15 @@
 
 
  body {
-           background-image: url("{% static 'assets/img/signup.jpeg' %} "); 
+           background-image: url("{% static 'assets/img/wed.jpg' %} "); 
            background-size: cover;
            background-repeat: no-repeat;
            justify-content:center;
            align-items:center;
-        }
+           font-family: "Open Sans", sans-serif;
+           color: #100e0e;
+}
+        
          
 
         h2 {
@@ -29,7 +32,7 @@ background-color: rgba(255, 255, 255, 0.5);
 box-shadow: 0px 0px 10px rgba(0, 0, 0, 29.2);
 border-radius: 55px;
 text-align: center;
-opacity: 0.9; /* This value should be between 0 and 1, not 1.9 */
+ /* This value should be between 0 and 1, not 1.9 */
 
         }
 
@@ -64,48 +67,63 @@ opacity: 0.9; /* This value should be between 0 and 1, not 1.9 */
         a:hover {
             text-decoration: underline;
         }
+    div2{
+        color:red;
+        font-weight:bold;
+    }
 </style>
 
 {% endblock style %}
-
-
-
-
  {% block body  %}
+
+ {% for message in messages %}  
+ <div class="alert alert-{{ message.tags}} alert-dismissible fade show" role="alert">
+  <strong>Message:</strong> {{ message }}
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{% endfor %}
     <div class="signup-container">
         <h2> CUSTOMER SIGNUP</h2><br>
         <form id="signup-form" action="http://127.0.0.1:8000/signup/" method="post"> 
+        {% comment %} {% for message in messages %}
+
+                  <div class="alert alert-{{message.tags}} alert-dismissible fade show" role="alert">
+                  <strong>{{message}}</strong> 
+                   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                   </div>
+
+        {% endfor %}  {% endcomment %}
          {% csrf_token %}
             <div class="form-group">
                 <label for="firstname">First Name:</label>
                 <input type="text" id="first-name" name="firstname"  onchange="validateFirstName()" required><br>
-                <span id="first-name-error" class="error-message"></span>
+                <div2><span id="first-name-error" class="error-message"></span></div2>
             </div>
             <div class="form-group">
                 <label for="lastname">Last Name:</label>
                 <input type="text" id="last-name" name="lastname"  required onchange="validateLastName()" ><br>
-                <span id="last-name-error" class="error-message"></span>
+                <div2><span id="last-name-error" class="error-message"></span></div2>
             </div>
             
             <div class="form-group">
                 <label for="email">Email:</label>
                 <input type="email" id="email" name="email" required onchange="validateEmail()"><br>
-                <span id="email-error" class="error-message"></span>
+                <div2><span id="email-error" class="error-message"></span></div2>
             </div>
             <div class="form-group">
                 <label for="username">Username:</label>
                 <input type="text" id="username" name="username" required onchange="validateUsername()"><br>
-                <span id="username-error" class="error-message"></span>
+                <div2><span id="username-error" class="error-message"></span></div2>
             </div>
             <div class="form-group">
                 <label for="password">Password:</label>
                 <input type="password" id="password" name="password" required onchange="validatePassword()"><br>
-                <span id="password-error" class="error-message"></span>
+                <div2><span id="password-error" class="error-message"></span></div2>
             </div>
             <div class="form-group">
                 <label for="confirm-password">Confirm Password:</label>
                 <input type="password" id="confirm-password" name="confirm_password" required onchange="validateConfirmPassword()"><br>
-                <span id="confirm-password-error" class="error-message"></span>
+                <div2><span id="confirm-password-error" class="error-message"></span></div2>
             </div>
             
                 <button type="submit" class="submit-btn" onclick="validateSignup()">Sign Up</button>
