@@ -81,14 +81,6 @@ opacity: 1.9; /* This value should be between 0 and 1, not 1.9 */
   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 </div>
 {% endfor %}
-        {% comment %} {% for message in messages %}
-
-                  <div class="alert alert-{{message.tags}} alert-dismissible fade show" role="alert">
-                  <strong>{{message}}</strong> 
-                   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                   </div>
-
-        {% endfor %}  {% endcomment %}
             {% csrf_token %}
             <div class="form-element">
                 <label for="username">USERNAME:</label>
@@ -101,7 +93,7 @@ opacity: 1.9; /* This value should be between 0 and 1, not 1.9 */
                 <div1 class="error-message" id ="password-error"></div1>
             </div>
             <button type="submit" class="btn btn-primary" onclick="validateLogin()" >LOGIN</button>
-            <span id="success-message" class="success-message"></span>
+            <span id="success-message" class="success-message"></span><br>
             <a href="{% url 'password_reset' %}">Forget Password</a>
         </form>
 
@@ -118,7 +110,7 @@ opacity: 1.9; /* This value should be between 0 and 1, not 1.9 */
     <br>
     <br>
     <br>
-    <script>
+    {% comment %} <script>
         function validateUsername()
         {
             const userName=document.getElementById('username').value;
@@ -154,7 +146,7 @@ opacity: 1.9; /* This value should be between 0 and 1, not 1.9 */
             }
 
     </script>
- {% endblock body  %}
+ 
 
 
 
@@ -165,4 +157,5 @@ opacity: 1.9; /* This value should be between 0 and 1, not 1.9 */
     
   {% endblock script  %}
 
-
+ {% endcomment %}
+{% endblock body  %}

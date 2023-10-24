@@ -1,0 +1,95 @@
+<!-- edit_user.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit User</title>
+    <style>
+body {
+           background-size: cover;
+           background-repeat: no-repeat;
+           justify-content:center;
+           align-items:center;
+        }
+         
+
+        h2 {
+            text-align: center;
+            color: #OOO;
+            margin-top:20px;
+        }
+
+        form {
+                    max-width: 532px;
+                    margin: 20px auto; /* Center-align the form horizontally */
+                    padding: 42px;
+                    background-color: rgba(255, 255, 255, 0.5);
+                    box-shadow: 0px 0px 10px rgba(0, 0, 0, 29.2);
+                    border-radius: 55px;
+                    text-align: center;
+                    opacity: 0.9; /* This value should be between 0 and 1, not 1.9 */
+
+        }
+         button {
+            background-color: #0074e4;
+            color: #fff;
+            border: none;
+            border-radius: 20px;
+            padding: 15px 20px;
+            cursor: pointer;
+        }
+
+        a {
+            text-decoration: none;
+            color: #00f; /* Change link color to blue */
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+         label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #ooo;
+            border-radius: 50px;
+        }
+    </style>
+</head>
+<body>
+    <h2>Edit User Details</h2>
+    <form method="POST" action="{% url 'update_user' user.id %}">
+        {% csrf_token %}
+        <div>
+        <label for="username">Username:</label>
+        <input type="text" name="username" id="username" value="{{ user.username }}"><br></div>
+        <div>
+        <label for="email">Email:</label>
+        <input type="text" name="email" id="email" value="{{ user.email }}"><br></div>
+        <div>
+        <label for="first_name">First Name:</label>
+        <input type="text" name="first_name" id="first_name" value="{{ user.first_name }}"><br></div>
+        <div>
+        <label for="last_name">Last Name:</label>
+        <input type="text" name="last_name" id="last_name" value="{{ user.last_name }}"><br></div>
+        <div>
+        <label for="is_active">Is Active:</label>
+        <input type="checkbox" name="is_active" id="is_active" {% if user.is_active %}checked{% endif %}><br></div>
+        
+        <label for="role">Role:</label>
+        <select name="role" id="role">
+            <option value="ADMIN" {% if user.role == 'ADMIN' %}selected{% endif %}>ADMIN</option>
+            <option value="VENDOR" {% if user.role == 'VENDOR' %}selected{% endif %}>VENDOR</option>
+            <option value="CUSTOMER" {% if user.role == 'CUSTOMER' %}selected{% endif %}>CUSTOMER</option>
+        </select><br>
+        <br>
+       <button type="submit" class="submit-btn">SAVE</button>
+    </form>
+</body>
+</html>

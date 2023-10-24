@@ -1,0 +1,216 @@
+<!-- create_user.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>HAPPY WEDDING|Create User</title>
+    <style>
+    
+ body {
+          
+           background-size: cover;
+           background-repeat: no-repeat;
+           justify-content:center;
+           align-items:center;
+        }
+         
+
+        h2 {
+            text-align: center;
+            color: #OOO;
+            margin-top:20px;
+        }
+
+        form {
+                    max-width: 532px;
+                    margin: 20px auto; /* Center-align the form horizontally */
+                    padding: 42px;
+                    background-color: rgba(255, 255, 255, 0.5);
+                    box-shadow: 0px 0px 10px rgba(0, 0, 0, 29.2);
+                    border-radius: 55px;
+                    text-align: center;
+                    opacity: 0.9; /* This value should be between 0 and 1, not 1.9 */
+
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #ooo;
+            border-radius: 50px;
+        }
+
+        button {
+            background-color: #0074e4;
+            color: #fff;
+            border: none;
+            border-radius: 20px;
+            padding: 15px 20px;
+            cursor: pointer;
+        }
+
+        a {
+            text-decoration: none;
+            color: #00f; /* Change link color to blue */
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+</style>
+    </style>
+</head>
+<body>
+    <h2>Create User</h2>
+    <form method="POST" id="create_user_form" action="{% url 'create_user' %}">
+    {% for message in messages %}
+
+                  <div class="alert alert-{{message.tags}} alert-dismissible fade show" role="alert">
+                  <strong>{{message}}</strong> 
+                   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                   </div>
+
+        {% endfor %} 
+    {% csrf_token %}
+    <div>
+    <label for="username">Username:</label>
+    <input type="text" name="username" id="username" required onchange="validateUsername()">
+    <span id="username_error" class="error"></span><br>
+    </div>
+    <div>
+    <label for="email">Email:</label>
+    <input type="text" name="email" id="email" required onchange="validateEmail()">
+    <span id="email_error" class="error"></span><br>
+</div>
+<div>
+    <label for="password">Password:</label>
+    <input type="password" name="password" id="password" required onchange="validatePassword()">
+    <span id="password_error" class="error"></span><br>
+</div>
+<div>
+    <label for="first_name">First Name:</label>
+    <input type="text" name="first_name" id="first_name" required onchange="validateFirstname()">
+    <span id="first_name_error" class="error"></span><br>
+</div>
+<div>
+    <label for="last_name">Last Name:</label>
+    <input type="text" name="last_name" id="last_name" required onchange="validateLastname()">
+    <span id="last_name_error" class="error"></span><br>
+</div>
+<div>
+    <label for="is_active">Is Active:</label>
+    <input type="checkbox" name="is_active" id="is_active"required ><br>
+</div>
+<div>
+    <label for="role">Role:</label>
+    <select name="role" id="role" required >
+        <option value="ADMIN">ADMIN</option>
+        <option value="VENDOR">VENDOR</option>
+        <option value="CUSTOMER">CUSTOMER</option>
+    </select><br>
+</div>
+<br>
+<br>
+   <button type="submit" class="submit-btn" onclick="validateform()">CREATE USER</button>
+    <span id="success-message" class="success-message"></span>
+</form>
+
+<script>
+    function validateEmail(){
+        const email=document.getElementById('email').value;
+        const emailError=document.getElementById('email_error')
+        emailError.textContent='';
+        const emailPattern=/^[a-z0-9._-]+@[a-z.-]+\.[a-z]{2,4}$/;
+        if(!emailPattern.test(email))
+        {
+            emailError.textContent='Invalid Email';
+        }
+        else{
+            fetch(`/check_user_email/?email=${email}`)
+                .then(Response => Response.json())
+                .then(data => {
+                    if (data.exists)
+                        emailError.textContent = ' Email already exists !!';
+                })
+        }
+    }
+    function validateUsername()
+    {
+        const username=document.getElementById('username').value;
+        const usernameError=document.getElementById('username_error');
+        usernameError.textContent='';
+        const regex= /^[a-zA-Z][a-zA-Z0-9_-]{2,19}$/; 
+        if(!regex.test(username))
+        {
+            usernameError.textContent='Field cannot be empty,Username should start with a letter,username must be between[3-20],white space not allowed';
+
+        }
+    }
+    function validatePassword()
+    {
+        const password=document.getElementById('password').value;
+        const passwordError=document.getElementById("password_error");
+        passwordError.textContent='';
+        const passwordPattern=/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+])[A-Za-z\d!@#$%^&*()_+]{8,}$/;
+        if(!passwordPattern.test(password))
+        {
+            passwordError.textContent="Password must be atleast have one numeric digit, one uppercase letter, one lowercase letter, one special character, and be at least 8 characters long";
+
+        }
+    }
+    function validateFirstname()
+    {
+        const firstname=document.getElementById('firstname').value;
+        const firstnameError=document.getElementById('firstname_error');
+        const namePattern=/^[A-Za-z-' 1-9]+$/; 
+        if(!namePattern.test(firstname))
+        {
+            firstnameError.textContent="First name is invalid";
+        }
+        else if (/ {2,}/.test(firstname)) {
+                firstnameError.textContent="Multiple consecutive spaces are not allowed";
+
+        }
+    }
+    function validateLastname() {
+        const lastname = document.getElementById('last_name').value;
+        const lastnameError = document.getElementById('last_name_error');
+        lastnameError.textContent = '';
+        const lastnamePattern = /^[A-Za-z-' 1-9]+$/; // Adjust as needed
+        if (!lastnamePattern.test(lastname)) {
+            lastnameError.textContent = 'Last Name is invalid';
+        } else if (/ {2,}/.test(lastname)) {
+            // Check for multiple consecutive spaces
+            lastnameError.textContent = 'Multiple consecutive spaces are not allowed';
+        }
+    }
+    function validateform()
+    {
+        validateEmail();
+        validatePassword();
+        validateUsername();
+        validateFirstname();
+        validateLastname();
+         const emailError = document.getElementById('email_error').textContent;
+            const usernameError = document.getElementById('username_error').textContent;
+            const passwordError = document.getElementById('password_error').textContent;
+            const firstnameError = document.getElementById('first_name_error').textContent;
+            const lastnameError = document.getElementById('last_name_error').textContent;
+            const successMessage = document.getElementById('success-message');
+          if(emailError!=''|| usernameError!==''|| passwordError!==''|| firstnameError!==''|| lastnamError!=='')  
+          {
+            event.preventDefault();
+          }
+    }
+</script>
+
+
+</body>
+</html>

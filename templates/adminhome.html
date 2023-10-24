@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>HAPPY WEDDING | Admin Home</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background-color: #333;
+            padding: 20px;
+            color: white;
+           
+        }
+
+        .sidebar a {
+            text-decoration: none;
+            color: white;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        /* Main Content */
+        .content {
+            flex: 1;
+            padding: 20px;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+         button {
+        background-color:  #00b140;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        padding: 5px 10px;
+        cursor: pointer;
+    }
+
+        a {
+            text-decoration: none;
+            color: #00f; /* Change link color to blue */
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+         table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    th, td {
+        border: 2px solid #000;
+        padding: 8px;
+        text-align: left;
+    }
+
+    th {
+       /* Gradient background color combination */
+background: linear-gradient(to right, #000, #00b140); /* Replace with your desired colors */
+
+        color: white;
+        font-weight: bold; /* Make heading fonts bold */
+    }
+
+    td {
+        font-style: italic; /* Make content italic */
+    }
+
+    tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+
+    tr:hover {
+        background-color: #0074e4;
+        color: white;
+    }
+
+    /* Style radio buttons */
+    input[type="radio"] {
+        margin-right: 5px;
+    }
+  h2 {
+            text-align: center;
+            color: #OOO;
+            margin-top:20px;
+        }
+    </style>
+</head>
+<body>
+<div class="sidebar">
+<a href="/adminfirst/">Dashboard</a>
+    <a href="/create_user/">Create User</a>
+    <!-- Add more links as needed for other sections -->
+</div>
+<div class="content">
+    <h2>User Information</h2>
+    <form id="filter-form">
+    <label for="user-filter">Filter by:</label>
+    <select id="user-filter">
+        <option value="all">All</option>
+        <option value="customer">Customer</option>
+        <option value="vendor">Vendor</option>
+    </select>
+    </form>
+    <input type="submit" value="Submit">
+    <table border="2">
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>Email</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Is Active</th>
+                <th>Role</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+                {% if not user.is_superuser %}
+                <tr>
+                    <td>{{ user.username }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>{{ user.first_name }}</td>
+                    <td>{{ user.last_name }}</td>
+                    <td>{{ user.is_active }}</td>
+                    <td>{{ user.role }}</td>
+                    <td>
+                        <input type="radio" name="activate-deactivate-{{ user.id }}" value="activate" {% if user.is_active %}checked{% endif %}> Activate
+                        <input type="radio" name="activate-deactivate-{{ user.id }}" value="deactivate" {% if not user.is_active %}checked{% endif %}> Deactivate
+                        <button onclick="toggleActive({{ user.id }})">Submit</button>
+                        <button onclick="editUser({{ user.id }})">Edit</button>
+                    </td>
+                </tr>
+                {% endif %}
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+
+<script>
+    function toggleActive(userId) {
+    const selectedValue = $(`input[name="activate-deactivate-${userId}"]:checked`).val();
+    
+    $.ajax({
+        type: "POST",
+        url: `/toggle_user_active/${userId}/`,
+        data: {
+            'action': selectedValue,  // Indicates whether to activate or deactivate
+            csrfmiddlewaretoken: '{{ csrf_token }}'
+        },
+        success: function (data) {
+            if (data.success) {
+                // Update the user's active status in the table
+                const isActiveCell = $(`td[data-user-id="${userId}"]`);
+                isActiveCell.text(data.is_active ? 'Active' : 'Inactive');
+            }
+        }
+    });
+}
+ function filterUsersByRole() {
+        const selectedRole = document.getElementById('user-filter').value;
+        const userRows = document.querySelectorAll('tr[data-role]');
+        
+        userRows.forEach((row) => {
+            const role = row.getAttribute('data-role');
+            if (selectedRole === 'all' || selectedRole === role) {
+                row.style.display = 'table-row';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    }
+     function handleSubmit(event) {
+        event.preventDefault(); // Prevent the default form submission
+        filterUsersByRole(); // Apply the filter
+    }
+    document.getElementById('filter-form').addEventListener('submit', handleSubmit);
+
+function editUser(userId) {
+    window.location.href = `/edit_user/${userId}/`;
+}
+
+
+</script>
+</body>
+</html>

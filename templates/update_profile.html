@@ -1,0 +1,31 @@
+<html>
+<head>
+<title>HAPPY WEDDING|Update Profile</title>
+<style>
+
+</style>
+</head>
+<body>
+  <form method="post">
+    {% csrf_token %}
+    <div class="form-group">
+      <label for="first_name">First Name:</label>
+      <input type="text" name="first_name" id="first_name" value="{{ user.first_name }}" class="form-control" required>
+    </div>
+    <div class="form-group">
+      <label for="last_name">Last Name:</label>
+      <input type="text" name="last_name" id="last_name" value="{{ user.last_name }}" class="form-control" required>
+    </div>
+    <div class="form-group">
+      <label for="email">Email:</label>
+      <input type="text" name="email" id="email" value="{{ user.email }}" class="form-control" disabled>
+    </div>
+    <div class="form-group">
+      <label for="username">Username:</label>
+      <input type="text" name="username" id="username" value="{{ user.username }}" class="form-control" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Update Profile</button>
+  </form>
+
+</body>
+</html>
