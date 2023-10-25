@@ -1,20 +1,94 @@
-<html>
-<head>
-<title>HAPPY WEDDING|Update Profile</title>
+{% extends "nav2.html" %} 
+
+{% load static %}
+{% block style %}
 <style>
 
+ body {
+       
+           background-size: cover;
+           background-repeat: no-repeat;
+           justify-content:center;
+           align-items:center;
+        }
+         
+
+        h2 {
+            text-align: center;
+            color: #OOO;
+            margin:bottom:30px;
+            margin-top:102px;
+        }
+
+        form {
+max-width: 501px;
+margin: 0 auto; /* Center-align the form horizontally */
+padding: 19px;
+background-color: rgba(255, 255, 255, 0.5);
+box-shadow: 0px 0px 10px rgba(0, 0, 0, 7.2);
+border-radius: 119px;
+text-align: center;
+opacity: 1.9; /* This value should be between 0 and 1, not 1.9 */
+
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 30px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #ooo;
+            border-radius: 50px;
+        }
+
+        button {
+            background-color: #0074e4;
+            color: #fff;
+            border: none;
+            border-radius: 20px;
+            padding: 15px 20px;
+            cursor: pointer;
+        }
+
+        a {
+            text-decoration: none;
+            color: #00f; /* Change link color to blue */
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+        div2{
+            color:red;
+            font-weight:bold;
+        }
 </style>
-</head>
-<body>
+{% endblock style %}
+
+    {% block body  %}
   <form method="post">
+  <h2>Update Profile</h2>
+     {% for message in messages %}  
+ <div class="alert alert-{{ message.tags}} alert-dismissible fade show" role="alert">
+  <strong>Message:</strong> {{ message }}
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{% endfor %}
     {% csrf_token %}
     <div class="form-group">
       <label for="first_name">First Name:</label>
-      <input type="text" name="first_name" id="first_name" value="{{ user.first_name }}" class="form-control" required>
+      <input type="text" name="first_name" id="first_name" value="{{ user.first_name }}" class="form-control" onchange="validateFirstName()" required>
+      <div2><span id="first-name-error" class="error-message"></span></div2>
     </div>
     <div class="form-group">
       <label for="last_name">Last Name:</label>
-      <input type="text" name="last_name" id="last_name" value="{{ user.last_name }}" class="form-control" required>
+      <input type="text" name="last_name" id="last_name" value="{{ user.last_name }}" class="form-control" onchange="validateLastName()" required>
+    <div2><span id="last-name-error" class="error-message"></span></div2>
     </div>
     <div class="form-group">
       <label for="email">Email:</label>
@@ -22,10 +96,83 @@
     </div>
     <div class="form-group">
       <label for="username">Username:</label>
-      <input type="text" name="username" id="username" value="{{ user.username }}" class="form-control" required>
+      <input type="text" name="username" id="username" value="{{ user.username }}" class="form-control" onchange="validateUsername()"required>
+      <div2><span id="username-error" class="error-message"></span></div2>
     </div>
-    <button type="submit" class="btn btn-primary">Update Profile</button>
+    <button type="submit" class="btn btn-primary"onclick="validateProfile()">Update Profile</button>
+     <span id="success-message" class="success-message"></span>
   </form>
 
-</body>
-</html>
+<script>
+
+ function validateUsername() {
+    const usernameError = document.getElementById("username-error");
+    const username = document.getElementById('username').value;
+    usernameError.textContent = '';
+    
+    const regex = /^[a-zA-Z][a-zA-Z0-9_-]{2,19}$/;  // Setting Up Regular Expression
+    if(!regex.test(username))
+    {
+            usernameError.textContent = 'field cannot be empty,username must start with a letter,username must be between[3-20],white space not allowed';
+    }
+    }
+      function validateFirstName() 
+        {
+            const firstNameInput = document.getElementById('first_name');
+            const firstName = firstNameInput.value;
+            const firstNameError = document.getElementById('first-name-error');
+        
+            firstNameError.textContent = ''; // Clear any existing error message
+        
+            // Validate the first name (between 2 and 50 characters, letters, hyphens, and apostrophes)
+            const namePattern = /^[A-Za-z-' ]{2,50}$/; // Adjust as needed
+        
+            if (!namePattern.test(firstName)) 
+            {
+
+                firstNameError.textContent = 'First Name is invalid';
+            } 
+            else if (/ {2,}/.test(firstName)) 
+            {
+
+                // Check for multiple consecutive spaces
+                firstNameError.textContent = 'Multiple consecutive spaces are not allowed';
+            }
+        }
+          function validateLastName(){
+            const lastnameInput=document.getElementById('last_name');
+            const lastName=lastnameInput.value;
+            const lastnameError=document.getElementById('last-name-error');
+            lastnameError.textContent= '';
+            const namepattern=/^[A-Za-z-' ]{2,50}$/;
+            if(!namepattern.test(lastName))
+            {
+                lastnameError.textContent='Last name is invalid';
+            }
+            else if(/ {2,}/.test(lastName))
+            {
+                lastnameError.textContent="Multiple consecutive spaces are not allowed";
+            }
+        }
+        function validateProfile(){
+          validateLastName();
+          validateFirstName();
+          validateUsername();
+          
+            const usernameError = document.getElementById('username-error').textContent;
+            const firstNameError = document.getElementById('first-name-error').textContent;
+            const lastNameError = document.getElementById('last-name-error').textContent;
+            const successMessage = document.getElementById('success-message');
+
+            // If any error messages exist, do not proceed
+            if (usernameError || firstNameError || lastnameError) {
+                return;
+            }
+
+            // If all validations pass, show success message
+            successMessage.textContent = 'Profile Updated  successful!';
+            // You can add code here to submit the form or perform other actions if needed.
+        
+        }
+</script>
+{% endblock body  %}

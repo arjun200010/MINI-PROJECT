@@ -18,8 +18,6 @@ from django.contrib import admin
 from django.urls import path
 from weddingapp import views
 from django.contrib.auth.views import PasswordResetView,PasswordResetDoneView,PasswordResetConfirmView,PasswordResetCompleteView
-from django.contrib.auth.views import PasswordChangeView, PasswordChangeDoneView
-from django.urls import reverse_lazy
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('',views.index,name='index'),
@@ -35,11 +33,11 @@ urlpatterns = [
     path('vendorhome/',views.vendorhome,name="vendorhome"),
     path("adminhome/",views.adminhome,name="adminhome"),
     path("create_user/",views.create_user,name="create_user"),
-    path('edit_user/<int:user_id>/', views.edit_user, name='edit_user'),
-    path("update_user/<int:user_id>/",views.update_user,name="update_user"),
     path('update_profile/',views.update_profile,name="update_profile"),
-    path('change_password/', PasswordChangeView.as_view(success_url=reverse_lazy('login')), name='change_password'),
-    path('change_password/done/', PasswordChangeDoneView.as_view(), name='change_password_done'),
+    path('change_password/', views.change_password, name='change_password'),
+    path('activate_user/<int:user_id>/', views.activate_user, name='activate_user'),
+    path('deactivate_user/<int:user_id>/', views.deactivate_user, name='deactivate_user'),
+
 
 
 ]

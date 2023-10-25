@@ -6,7 +6,7 @@ from django.contrib import messages
 from .models import User
 from django.contrib.auth.decorators import login_required
 import json
-
+from django.shortcuts import get_object_or_404, redirect
 def index(request):
     return render(request, 'index.html')
 
@@ -55,9 +55,8 @@ def login(request):
                 request.session['username'] = username
                 return redirect("vendorhome")
         else:
-            messages.error(request, 'Invalid login credentials.')
+            messages.error(request, 'Invalid login credentials or account has been deactivated')
             return redirect('login')
-
     response = render(request, 'login.html')
     response['Cache-Control'] = 'no-store, must-revalidate'
     return response
@@ -101,47 +100,51 @@ def check_user_email(request):
     }
     return JsonResponse(data)
 
-
-
-def toggle_user_active(request, user_id):
-    try:
-        user = User.objects.get(id=user_id)
-        action = request.POST.get('action')
-        
-        if action == 'activate':
-            user.is_active = True
-        elif action == 'deactivate':
-            user.is_active = False
-        
+def deactivate_user(request, user_id):
+    user = get_object_or_404(User, id=user_id)
+    if user.is_active:
+        user.is_active = False
         user.save()
-        
-        return JsonResponse({'success': True, 'is_active': user.is_active})
-    except User.DoesNotExist:
-        return JsonResponse({'success': False})
+        messages.success(request, f"User '{user.username}' has been deactivated.")
+    else:
+        messages.warning(request, f"User '{user.username}' is already deactivated.")
+    return redirect('adminhome')
 
-def edit_user(request, user_id):
-    try:
-        user = User.objects.get(id=user_id)
-        return render(request, 'edit_user.html', {'user': user})
-    except User.DoesNotExist:
-        return HttpResponse("User not found", status=404)
+def activate_user(request, user_id):
+    user = get_object_or_404(User, id=user_id)
+    if not user.is_active:
+        user.is_active = True
+        user.save()
+        messages.success(request, f"User '{user.username}' has been activated.")
+    else:
+        messages.warning(request, f"User '{user.username}' is already active.")
+    return redirect('adminhome')
+
+
+# def edit_user(request, user_id):
+#     try:
+#         user = User.objects.get(id=user_id)
+#         return render(request, 'edit_user.html', {'user': user})
+#     except User.DoesNotExist:
+#         return HttpResponse("User not found", status=404)
     
-def update_user(request, user_id):
-    try:
-        user = User.objects.get(id=user_id)
+
+# def update_user(request, user_id):
+#     try:
+#         user = User.objects.get(id=user_id)
         
-        if request.method == 'POST':
-                    user.username = request.POST.get('username')
-                    user.email = request.POST.get('email')
-                    user.first_name = request.POST.get('first_name')
-                    user.last_name = request.POST.get('last_name')
-                    user.is_active = request.POST.get('is_active') == 'on'
-                    user.role = request.POST.get('role')
-                    user.save()
-                    return redirect('adminhome')
-        return HttpResponse("Invalid request method", status=400)
-    except User.DoesNotExist:
-        return HttpResponse("User not found", status=404)
+#         if request.method == 'POST':
+#                     user.username = request.POST.get('username')
+#                     user.email = request.POST.get('email')
+#                     user.first_name = request.POST.get('first_name')
+#                     user.last_name = request.POST.get('last_name')
+#                     user.is_active = request.POST.get('is_active') == 'on'
+#                     user.role = request.POST.get('role')
+#                     user.save()
+#                     return redirect('adminhome')
+#         return HttpResponse("Invalid request method", status=400)
+#     except User.DoesNotExist:
+#         return HttpResponse("User not found", status=404)
 
 
 
@@ -193,9 +196,30 @@ def update_profile(request):
 
     return render(request, 'update_profile.html')
 
+
 @login_required
 def change_password(request):
-    return render(request,"change_password.html")
+        if request.method == 'POST':
+            current_password = request.POST.get('current_password')
+            new_password = request.POST.get('new_password')
+            
+            user = authenticate(username=request.user.username, password=current_password)
+        
+            if user is not None:
+                # Password is correct
+                request.user.set_password(new_password)
+                request.user.save()
+                # Log the user out for security reasons and then log them back in
+                auth_login(request, request.user)
+                messages.success(request,"Password changed sucessfully")
+                return redirect('login')
+            else:
+                # Password is incorrect
+                messages.error(request,"Incorrect Current password")
+                return render(request, 'change_password.html')
+    
+        return render(request, 'change_password.html')
+
 
 
 
