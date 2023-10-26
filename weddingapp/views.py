@@ -1,5 +1,5 @@
 from django.http import JsonResponse
-from django.shortcuts import render,redirect,HttpResponse
+from django.shortcuts import render,redirect
 from django.contrib.auth import login as auth_login, authenticate
 from django.contrib.auth import logout
 from django.contrib import messages
@@ -7,6 +7,9 @@ from .models import User
 from django.contrib.auth.decorators import login_required
 import json
 from django.shortcuts import get_object_or_404, redirect
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
+
 def index(request):
     return render(request, 'index.html')
 
@@ -24,7 +27,7 @@ def signup(request):
             # Check if the email is unique
             if not User.objects.filter(email=email).exists():
                 # Create a new user
-                user = User.objects.create_user(first_name=firstname,last_name=lastname,username=username, email=email,password=password,role="")
+                user = User.objects.create_user(first_name=firstname,last_name=lastname,username=username, email=email,password=password,role="CUSTOMER")
                 user.save()
                 messages.success(request,"Signup successfull!!!")
                 return redirect('login')
@@ -105,7 +108,16 @@ def deactivate_user(request, user_id):
     if user.is_active:
         user.is_active = False
         user.save()
-        messages.success(request, f"User '{user.username}' has been deactivated.")
+         # Send deactivation email
+        subject = 'Account Deactivation'
+        message = 'Your account has been deactivated by the admin.'
+        from_email = 'achu31395@gmail.com'  # Replace with your email
+        recipient_list = [user.email]
+        html_message = render_to_string('deactivation_email.html', {'user': user})
+
+        send_mail(subject, message, from_email, recipient_list, html_message=html_message)
+
+        messages.success(request, f"User '{user.username}' has been deactivated, and an email has been sent.")
     else:
         messages.warning(request, f"User '{user.username}' is already deactivated.")
     return redirect('adminhome')
@@ -115,10 +127,21 @@ def activate_user(request, user_id):
     if not user.is_active:
         user.is_active = True
         user.save()
-        messages.success(request, f"User '{user.username}' has been activated.")
+
+        # Send activation email
+        subject = 'Account Activation'
+        message = 'Your account has been activated by the admin.'
+        from_email = 'achu31395@gmail.com'  # Replace with your email
+        recipient_list = [user.email]
+        html_message = render_to_string('activation_email.html', {'user': user})
+
+        send_mail(subject, message, from_email, recipient_list, html_message=html_message)
+
+        messages.success(request, f"User '{user.username}' has been activated, and an email has been sent.")
     else:
         messages.warning(request, f"User '{user.username}' is already active.")
     return redirect('adminhome')
+
 
 
 # def edit_user(request, user_id):

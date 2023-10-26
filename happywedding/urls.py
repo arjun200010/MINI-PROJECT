@@ -37,8 +37,5 @@ urlpatterns = [
     path('change_password/', views.change_password, name='change_password'),
     path('activate_user/<int:user_id>/', views.activate_user, name='activate_user'),
     path('deactivate_user/<int:user_id>/', views.deactivate_user, name='deactivate_user'),
-
-
-
 ]
 
