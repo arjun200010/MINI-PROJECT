@@ -1,0 +1,86 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Page</title>
+    <style>
+        /* Style your form and other elements as needed */
+        form {
+            width: 300px;
+            margin: 0 auto;
+        }
+
+        select {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+        }
+
+        button {
+            display: block;
+            margin: 10px 0;
+        }
+
+        /* Show the confirmation tick when the form is submitted */
+        #gold-booking-form.submitted .confirmation-tick {
+            display: inline;
+        }
+    </style>
+</head>
+<body>
+    <h1>Booking Page</h1>
+    <form method="post" id="gold-booking-form" >
+        {% csrf_token %}
+<label for="date_of_booking">Date of Booking:</label>
+<input type="date" id="date_of_booking" name="date_of_booking" required>
+<span id="dateError" style="color: red;"></span>
+<br>
+        <label for="destination_selected">Destination:</label>
+        <select id="destination_selected" name="destination_selected" required>
+            <option value="Kerala">Kerala</option>
+            <option value="Rajasthan">Rajasthan</option>
+            <option value="Delhi">Delhi</option>
+            <option value="Goa">Goa</option>
+            <option value="Uttarkhand">Uttarkhand</option>
+            <option value="Lakshadweep">Lakshadweep</option>
+            <option value="Andaman & Nicobar Islands">Andaman & Nicobar Islands</option>
+            <option value="Maharastra">Maharastra</option>
+            <option value="Uttar Pradesh">Uttar Pradesh</option>
+            <option value="Jammu & Kashmir">Jammu & Kashmir</option>
+        </select>
+        <br>
+        <input type="checkbox" id="agree_terms" name="agree_terms" required>
+        <label for="agree_terms">I agree to the terms and conditions. Please read it carefully before proceeding<a href="">Terms and Conditions</a></label>
+        <br>
+        <button type="submit">Submit</button>
+        <a href="{% url 'loginhome' %}">Back</a>
+    </form>
+</body>
+<script>
+    function bookNow() {
+        // Perform booking actions here
+        // You can capture the selected options and process the booking as needed
+        alert("Booking successful!");
+    }
+     const dateInput = document.getElementById("date_of_booking");
+  
+  // Get the current date in the format "YYYY-MM-DD"
+  const currentDate = new Date().toISOString().split("T")[0];
+  
+  // Set the min attribute of the date input to the current date
+  dateInput.min = currentDate;
+  
+  // Add an event listener to the date input for validation
+  dateInput.addEventListener("change", function() {
+    const selectedDate = dateInput.value;
+    if (selectedDate < currentDate) {
+      document.getElementById("dateError").textContent = "Booking for past dates is not allowed.";
+      dateInput.value = ""; // Clear the input
+    } else {
+      document.getElementById("dateError").textContent = "";
+    }
+  });
+</script>
+</html>

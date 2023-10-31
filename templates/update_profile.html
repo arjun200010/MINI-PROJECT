@@ -20,15 +20,15 @@
             margin-top:102px;
         }
 
-        form {
-max-width: 501px;
-margin: 0 auto; /* Center-align the form horizontally */
-padding: 19px;
-background-color: rgba(255, 255, 255, 0.5);
-box-shadow: 0px 0px 10px rgba(0, 0, 0, 7.2);
-border-radius: 119px;
-text-align: center;
-opacity: 1.9; /* This value should be between 0 and 1, not 1.9 */
+          form {
+  max-width: 501px;
+  margin: 0 auto; /* Center-align the form horizontally */
+  padding: 19px;
+  background-color: rgba(255, 255, 255, 0.5);
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 7.2);
+  border-radius: 119px;
+  text-align: center;
+  opacity: 1.9; 
 
         }
 
@@ -96,7 +96,7 @@ opacity: 1.9; /* This value should be between 0 and 1, not 1.9 */
     </div>
     <div class="form-group">
       <label for="username">Username:</label>
-      <input type="text" name="username" id="username" value="{{ user.username }}" class="form-control" onchange="validateUsername()"required>
+      <input type="text" name="username" id="username" value="{{ user.username }}" class="form-control" disabled>
       <div2><span id="username-error" class="error-message"></span></div2>
     </div>
     <button type="submit" class="btn btn-primary"onclick="validateProfile()">Update Profile</button>
@@ -105,17 +105,6 @@ opacity: 1.9; /* This value should be between 0 and 1, not 1.9 */
 
 <script>
 
- function validateUsername() {
-    const usernameError = document.getElementById("username-error");
-    const username = document.getElementById('username').value;
-    usernameError.textContent = '';
-    
-    const regex = /^[a-zA-Z][a-zA-Z0-9_-]{2,19}$/;  // Setting Up Regular Expression
-    if(!regex.test(username))
-    {
-            usernameError.textContent = 'field cannot be empty,username must start with a letter,username must be between[3-20],white space not allowed';
-    }
-    }
       function validateFirstName() 
         {
             const firstNameInput = document.getElementById('first_name');

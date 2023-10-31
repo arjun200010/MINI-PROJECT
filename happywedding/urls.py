@@ -18,6 +18,7 @@ from django.contrib import admin
 from django.urls import path
 from weddingapp import views
 from django.contrib.auth.views import PasswordResetView,PasswordResetDoneView,PasswordResetConfirmView,PasswordResetCompleteView
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('',views.index,name='index'),
@@ -37,5 +38,25 @@ urlpatterns = [
     path('change_password/', views.change_password, name='change_password'),
     path('activate_user/<int:user_id>/', views.activate_user, name='activate_user'),
     path('deactivate_user/<int:user_id>/', views.deactivate_user, name='deactivate_user'),
+    path('verify/<str:verification_code>/', views.verify_email, name='verify_email'),
+    path('gold_booking/',views.gold_booking,name="gold_booking"),
+    path('silver_booking/',views.silver_booking,name="silver_booking"),
+    path('platinum_booking/',views.platinum_booking,name="platinum_booking"),
+    path('confirmation/', views.confirmation_view, name='confirmation'),
+    path('gold/',views.gold,name='gold'),
+    path('silver/',views.silver,name='silver'),
+    path('platinum/',views.platinum,name='platinum'),
+    path('toggle-booking/<int:booking_id>/', views.toggle_booking_gold, name='toggle_booking_gold'),
+    path('toggle-booking-silver/<int:booking_id>/', views.toggle_booking_silver, name='toggle_booking_silver'),
+    path('toggle-booking-platinum/<int:booking_id>/', views.toggle_booking_platinum, name='toggle_booking_platinum'),
 ]
+
+
+
+   
+
+
+
+
+
 

@@ -3,16 +3,18 @@ from django.shortcuts import render,redirect
 from django.contrib.auth import login as auth_login, authenticate
 from django.contrib.auth import logout
 from django.contrib import messages
+from django.urls import reverse
 from .models import User
+from .models import GoldPackage,SilverPackage,PlatinumPackage
 from django.contrib.auth.decorators import login_required
 import json
 from django.shortcuts import get_object_or_404, redirect
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
-
+from django.utils.crypto import get_random_string
+from django.contrib.auth import get_user_model
 def index(request):
     return render(request, 'index.html')
-
 
 def signup(request):
     if request.method == 'POST':
@@ -26,16 +28,32 @@ def signup(request):
         if password == confirm_password:
             # Check if the email is unique
             if not User.objects.filter(email=email).exists():
-                # Create a new user
-                user = User.objects.create_user(first_name=firstname,last_name=lastname,username=username, email=email,password=password,role="CUSTOMER")
+                user = User.objects.create_user(username=username, first_name=firstname, last_name=lastname, email=email, password=password,role="CUSTOMER")
+
+                user.is_active = False  # Deactivate the user until verification
+                verification_code = get_random_string(32)  # Generate a random code
+                user.verification_code = verification_code
                 user.save()
-                messages.success(request,"Signup successfull!!!")
-                return redirect('login')
+
+                # Send an email with the verification link
+                subject = 'Email Verification'
+                verification_url = request.build_absolute_uri(reverse('verify_email', args=[verification_code]))
+                message = f'Click the following link to verify your email: {verification_url}'
+                from_email = 'achu31395@gmail.com'
+                recipient_list = [email]
+                send_mail(subject, message, from_email, recipient_list, fail_silently=False)
+                messages.success(request,"An account activation link is send to your email ,verify it to continue")
+                return redirect('signup')  # Redirect to a login page with a message
+
             else:
-                messages.error(request, 'Email already exists.')
+                # Email already exists
+                messages.error(request,"Email already exists")
+                return render(request, 'signup.html')
         else:
-            messages.error(request, 'Passwords do not match.')
-    
+            # Passwords do not match
+            messages.error(request,"Password does not match")
+            return render(request, 'signup.html')
+
     return render(request, 'signup.html')
 
 def login(request):
@@ -58,7 +76,7 @@ def login(request):
                 request.session['username'] = username
                 return redirect("vendorhome")
         else:
-            messages.error(request, 'Invalid login credentials or account has been deactivated')
+            messages.error(request, 'Invalid login credentials or account is deactivated')
             return redirect('login')
     response = render(request, 'login.html')
     response['Cache-Control'] = 'no-store, must-revalidate'
@@ -215,7 +233,7 @@ def update_profile(request):
         user.username = username
         user.save()
         
-        return redirect('login')
+        return redirect('loginhome')
 
     return render(request, 'update_profile.html')
 
@@ -245,4 +263,248 @@ def change_password(request):
 
 
 
+def verify_email(request, verification_code):
+    User = get_user_model()
+    
+    try:
+        user = User.objects.get(verification_code=verification_code, is_active=False)
+        user.is_active = True  # Activate the user
+        user.is_verified = True  # Set the user as verified
+        user.save()
+        return redirect('login')
+        
+    except User.DoesNotExist:
+        messages.error(request,"Invalid email.Please enter valid email")
+        return render(request, 'signup.html')  # Handle invalid verification codes
 
+
+@login_required  
+def gold_booking(request):
+    if request.method == 'POST':
+        # Retrieve data from the form
+        date_of_booking = request.POST.get('date_of_booking')
+        destination_selected = request.POST.get('destination_selected')
+
+        # Get the current user (logged-in user)
+        current_user = request.user
+
+        # Create a new GoldPackage record with the form data and the current user
+        gold_package = GoldPackage.objects.create(
+            user=current_user,
+            date_of_booking=date_of_booking,
+            destination_selected=destination_selected
+        )
+
+        # Save the GoldPackage record
+        gold_package.save()
+
+        # Redirect to a success page or a confirmation page
+        return redirect('confirmation')
+
+    return render(request, 'gold_booking.html')
+
+@login_required  
+def silver_booking(request):
+    if request.method == 'POST':
+        # Retrieve data from the form
+        date_of_booking = request.POST.get('date_of_booking')
+        destination_selected = request.POST.get('destination_selected')
+        honeymoon_destination = request.POST.get('honeymoon_destination')
+        # Get the current user (logged-in user)
+        current_user = request.user
+
+        # Create a new GoldPackage record with the form data and the current user
+        silver_package = SilverPackage.objects.create(
+            user=current_user,
+            date_of_booking=date_of_booking,
+            destination_selected=destination_selected,
+            honeymoon_destination=honeymoon_destination
+        )
+
+        # Save the GoldPackage record
+        silver_package.save()
+        subject = 'Booking Confirmed'
+        message = f'Thank you for your booking, {current_user.username}!\n' \
+                  f'Your Silver package booking has been confirmed with the following details:\n\n' \
+                  f'Date of Booking: {date_of_booking}\n' \
+                  f'Destination Selected: {destination_selected}\n' \
+                  f'Honeymoon Destination: {honeymoon_destination}\n\n' \
+                  f'We look forward to making your WEDDING memorable.'
+        from_email = 'achu31395@gmail.com'  # Use a valid email address
+        recipient_list = [current_user.email]  # Get the user's email address
+
+        send_mail(subject, message, from_email, recipient_list, fail_silently=False)
+
+        # Redirect to a success page or a confirmation page
+        return redirect('confirmation')
+
+    return render(request, 'silver_booking.html')
+
+@login_required  
+def platinum_booking(request):
+    if request.method == 'POST':
+        # Retrieve data from the form
+        date_of_booking = request.POST.get('date_of_booking')
+        destination_selected = request.POST.get('destination_selected')
+        honeymoon_destination = request.POST.get('honeymoon_destination')
+        # Get the current user (logged-in user)
+        current_user = request.user
+
+        # Create a new GoldPackage record with the form data and the current user
+        platinum_package = PlatinumPackage.objects.create(
+            user=current_user,
+            date_of_booking=date_of_booking,
+            destination_selected=destination_selected,
+            honeymoon_destination=honeymoon_destination
+        )
+
+        # Save the GoldPackage record
+        platinum_package.save()
+        subject = 'Booking Confirmed'
+        message = f'Thank you for your booking, {current_user.username}!\n' \
+                  f'Your Platinum package booking has been confirmed with the following details:\n\n' \
+                  f'Date of Booking: {date_of_booking}\n' \
+                  f'Destination Selected: {destination_selected}\n' \
+                  f'Honeymoon Destination: {honeymoon_destination}\n\n' \
+                  f'We look forward to making your WEDDING memorable.'
+        from_email = 'achu31395@gmail.com'  # Use a valid email address
+        recipient_list = [current_user.email]  # Get the user's email address
+
+        send_mail(subject, message, from_email, recipient_list, fail_silently=False)
+
+        # Redirect to a success page or a confirmation page
+        return redirect('confirmation')
+
+    return render(request, 'platinum_booking.html')
+
+@login_required
+def confirmation_view(request):
+    return render(request, 'confirmation.html')
+
+@login_required
+def gold(request):
+     goldbookings = GoldPackage.objects.all()
+    
+    # Render the data in an HTML template
+     return render(request, 'gold.html', {'goldbookings': goldbookings})
+
+@login_required
+def silver(request):
+    silverbookings = SilverPackage.objects.all()
+    
+    # Render the data in an HTML template
+    return render(request, 'silver.html', {'silverbookings': silverbookings})
+
+@login_required
+def platinum(request):
+   platinumbookings = PlatinumPackage.objects.all()
+    
+    # Render the data in an HTML template
+   return render(request, 'platinum.html', {'platinumbookings': platinumbookings})
+
+# def book_user(request, user_id):
+#     booking = get_object_or_404(GoldPackage, user__id=user_id)  # Corrected the model
+#     subject = 'Booking Confirmation'
+#     message = 'Your booking has been confirmed.'
+#     from_email = 'achu31395@gmail.com'
+#     recipient_list = [booking.user.email]  # Use booking.user.email
+
+#     send_mail(subject, message, from_email, recipient_list)
+#     messages.success(request, f"User '{booking.user.username}' event has been booked and email has sent.")
+#     return redirect("gold")
+
+# def unbook_user(request, user_id):
+#     booking = get_object_or_404(GoldPackage, user__id=user_id)  # Corrected the model
+#     subject = 'Booking Cancellation'
+#     message = 'Your booking has been cancelled.'
+#     from_email = 'achu31395@gmail.com'
+#     recipient_list = [booking.user.email]  # Use booking.user.email
+
+#     send_mail(subject, message, from_email, recipient_list)
+#     messages.success(request, f"User '{booking.user.username}' event has cancelled and an email has sent.")
+#     return redirect("gold")
+
+   
+def toggle_booking_gold(request, booking_id):
+    booking = get_object_or_404(GoldPackage, id=booking_id)
+    booking.is_booked = not booking.is_booked  # Toggle the booking status
+    booking.save()
+    
+    # Send confirmation or cancellation email based on the new status
+    if booking.is_booked:  # Corrected the model
+            subject = 'Gold Booking Confirmation'
+            message = 'Your Gold booking has been confirmed.'
+            from_email = 'achu31395@gmail.com'
+            recipient_list = [booking.user.email]  # Use booking.user.email
+
+            send_mail(subject, message, from_email, recipient_list)
+            messages.success(request, f"User '{booking.user.username}' event has been booked and email has sent.")
+            return redirect("gold")
+
+    else:
+            subject = 'Gold Booking Cancellation'
+            message = 'Your  Gold booking has been cancelled.'
+            from_email = 'achu31395@gmail.com'
+            recipient_list = [booking.user.email]  # Use booking.user.email
+
+            send_mail(subject, message, from_email, recipient_list)
+            messages.success(request, f"User '{booking.user.username}' event has cancelled and an email has sent.")
+            return redirect("gold")
+
+    return JsonResponse({'is_booked': booking.is_booked})
+ 
+def toggle_booking_silver(request, booking_id):
+    booking = get_object_or_404(SilverPackage, id=booking_id)
+    booking.is_booked = not booking.is_booked  # Toggle the booking status
+    booking.save()
+    
+    # Send confirmation or cancellation email based on the new status
+    if booking.is_booked:  # Corrected the model
+            subject = 'Silver Booking Confirmation'
+            message = 'Your Silver booking has been confirmed.'
+            from_email = 'achu31395@gmail.com'
+            recipient_list = [booking.user.email]  # Use booking.user.email
+
+            send_mail(subject, message, from_email, recipient_list)
+            messages.success(request, f"User '{booking.user.username}' event has been booked and email has sent.")
+            return redirect("silver")
+
+    else:
+            subject = ' Silver Booking Cancellation'
+            message = 'Your Silver booking has been cancelled.'
+            from_email = 'achu31395@gmail.com'
+            recipient_list = [booking.user.email]  # Use booking.user.email
+
+            send_mail(subject, message, from_email, recipient_list)
+            messages.success(request, f"User '{booking.user.username}' event has cancelled and an email has sent.")
+            return redirect("silver")
+
+    return JsonResponse({'is_booked': booking.is_booked})
+
+def toggle_booking_platinum(request, booking_id):
+    booking = get_object_or_404(PlatinumPackage, id=booking_id)
+    booking.is_booked = not booking.is_booked  # Toggle the booking status
+    booking.save()
+    
+    # Send confirmation or cancellation email based on the new status
+    if booking.is_booked:  # Corrected the model
+            subject = ' Platinum Booking Confirmation'
+            message = 'Your Platinum booking has been confirmed.'
+            from_email = 'achu31395@gmail.com'
+            recipient_list = [booking.user.email]  # Use booking.user.email
+
+            send_mail(subject, message, from_email, recipient_list)
+            messages.success(request, f"User '{booking.user.username}' event has been booked and email has sent.")
+            return redirect("platinum")
+
+    else:
+            subject = 'Platinum Booking Cancellation'
+            message = 'Your Platinum booking has been cancelled.'
+            from_email = 'achu31395@gmail.com'
+            recipient_list = [booking.user.email]  # Use booking.user.email
+
+            send_mail(subject, message, from_email, recipient_list)
+            messages.success(request, f"User '{booking.user.username}' event has cancelled and an email has sent.")
+            return redirect("platinum")
+
+    return JsonResponse({'is_booked': booking.is_booked})

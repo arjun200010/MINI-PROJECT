@@ -1,0 +1,90 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Page</title>
+    <style>
+        /* Style your form and other elements as needed */
+        form {
+            width: 300px;
+            margin: 0 auto;
+        }
+
+        select {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+        }
+
+        button {
+            display: block;
+            margin: 10px 0;
+        }
+
+        /* Show the confirmation tick when the form is submitted */
+        #gold-booking-form.submitted .confirmation-tick {
+            display: inline;
+        }
+    </style>
+</head>
+<body>
+    <h1>Booking Page</h1>
+    <form method="post" id="platinum-booking-form" >
+        {% csrf_token %}
+        <label for="username">Username:</label>
+        <input type="text" id="username" value="{{ user.username }}" disabled>
+        <br>
+        <label for="date_of_booking">Date of Booking:</label>
+        <input type="date" id="date_of_booking" name="date_of_booking" required>
+        <br>
+        <label for="honeymoon_destination">honeymoon Destination **</label>
+         <select id="honeymoon_destination" name="honeymoon_destination" required>
+            <option value="Kerala">Kerala</option>
+            <option value="Delhi">Delhi</option>
+            <option value="Uttarkhand">Uttarkhand</option>
+            <option value="Uttar Pradesh">Uttar Pradesh</option>
+            <option value="Jammu & Kashmir">Jammu & Kashmir</option>
+             <option value="london">London</option>
+            <option value="switzerland">Switzerland</option>
+            <option value="luexmborg">Luexmborg</option>
+            <option value="Japan">Japan</option>
+            <option value="Hawaii">Hawaii</option>
+        </select>
+        <br>
+        <label for="destination_selected">Destination:</label>
+        <select id="destination_selected" name="destination_selected"required>
+            <option value="Kerala">Kerala</option>
+            <option value="Rajasthan">Rajasthan</option>
+            <option value="Delhi">Delhi</option>
+            <option value="Goa">Goa</option>
+            <option value="Uttarkhand">Uttarkhand</option>
+            <option value="Lakshadweep">Lakshadweep</option>
+            <option value="Andaman & Nicobar Islands">Andaman & Nicobar Islands</option>
+            <option value="Maharastra">Maharastra</option>
+            <option value="Uttar Pradesh">Uttar Pradesh</option>
+            <option value="Jammu & Kashmir">Jammu & Kashmir</option>
+            <option value="switzerland">Switzerland</option>
+            <option value="malta">Malta</option>
+            <option value="singapore">Singapore</option>
+            <option value="amsterdm">Amsterdam</option>
+            <option value="brazil">Brazil</option>
+        </select>
+        <br>
+        <input type="checkbox" id="agree_terms" name="agree_terms" required>
+        <label for="agree_terms">I agree to the all Terms and Conditions. Please read it carefully before Final Submission<a href="">Terms and Conditions</a></label>
+        <br>
+        <p>NOTE: ** Conditions Applied<a href="">Terms and conditions.</a></p>
+        <button type="submit">Submit</button>
+        <a href="{% url 'loginhome' %}">Back</a>
+    </form>
+</body>
+<script>
+    function bookNow() {
+        // Perform booking actions here
+        // You can capture the selected options and process the booking as needed
+        alert("Booking successful!");
+    }
+</script>
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmation Page</title>
+    <style>
+        /* Add styling for the confirmation tick */
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .confirmation-tick {
+            font-size: 198px;
+            color: green;
+            border: 4px solid green;
+            border-radius: 50%;
+            display: inline-block;
+            padding: 10px;
+            margin: 20px;
+        }
+
+        a {
+            text-decoration: none;
+            font-size: 20px;
+        }
+        p{
+            font-size:40px;
+        }
+    </style>
+</head>
+<body>
+    <p>Your booking has been confirmed</p><br>
+    <h3>Confirmation Mail would be sent within 48 hours</h3>
+    <span class="confirmation-tick">&#10004;</span><br>
+    <a href="{% url 'loginhome' %}">DONE</a>
+</body>
+</html>
