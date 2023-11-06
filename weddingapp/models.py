@@ -17,6 +17,7 @@ class GoldPackage(models.Model):
     destination_selected = models.CharField(max_length=255)
     # Other fields specific to the Gold package
     is_booked = models.BooleanField(default=False) 
+    
 
 class SilverPackage(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -32,4 +33,25 @@ class PlatinumPackage(models.Model):
     destination_selected = models.CharField(max_length=255)
     honeymoon_destination=models.CharField(max_length=255)
     is_booked = models.BooleanField(default=False) 
-    # Other fields specific to the Platinum package
+
+class CustomisePackage(models.Model):
+    user=models.ForeignKey(User,on_delete=models.CASCADE)
+    date_of_booking=models.DateField()
+    destination_selected=models.CharField(max_length=255)
+    honeymoon_destination=models.CharField(max_length=255,null=True,blank=True)
+    food=models.CharField(max_length=255)
+    hotel=models.CharField(max_length=255)
+    videography=models.CharField(max_length=255)
+    location=models.CharField(max_length=255,null=True,blank=True)
+    photography=models.CharField(max_length=255)
+    guest=models.IntegerField()
+    food=models.CharField(max_length=255)
+    is_booked=models.BooleanField(default=False)
+    billing_info=models.IntegerField()
+
+class UserProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    booked_package = models.CharField(max_length=100, default="Not booked")
+
+class Package(models.Model):
+    name = models.CharField(max_length=100)

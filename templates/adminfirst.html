@@ -9,7 +9,7 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <style>
         body {
-            background-color:#665866;
+            
             margin: 0;
             padding: 0;
             ackground-size: cover;
@@ -52,7 +52,9 @@
         select{
             border-radius:15px;
         }
-        
+        h2{
+            text-align:center;
+        }
     </style>
 </head>
 <body>
@@ -64,6 +66,7 @@
     <option value="gold">Gold</option>
     <option value="silver">Silver</option>
     <option value="platinum">Platinum</option>
+    <option value="customise">Customise</option>
     </select>
 <!-- Button to trigger the redirection -->
         <button onclick="redirectToSelectedPage()">Go</button>
@@ -84,6 +87,7 @@
         var goldURL = "/gold/";
         var silverURL = "/silver/";
         var platinumURL = "/platinum/";
+        var customiseURL= "/customise/";
 
         // Redirect based on the selected option
         switch (selectedOption) {
@@ -95,6 +99,9 @@
                 break;
             case "platinum":
                 window.location.href = platinumURL;
+                break;
+            case "customise":
+                window.location.href= customiseURL;
                 break;
             default:
                 // If no option is selected or an invalid option is chosen, display an error or do nothing.

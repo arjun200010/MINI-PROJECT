@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Gold Booking Data</title>
+    <title>Customise Booking </title>
        <style>
  body {
             background-color:#665866;
@@ -113,7 +113,7 @@ background: linear-gradient(to right, #000, #00b140); /* Replace with your desir
 
 
     <div class="content">
-        <h1>Gold Booking Data</h1>
+        <h1>Customise Booking Data</h1>
     <form id="message">
        <form id="message">
     {% for message in messages %}
@@ -127,16 +127,32 @@ background: linear-gradient(to right, #000, #00b140); /* Replace with your desir
         <th>Date of Booking</th>
         <th>Destination Selected</th>
         <th>Username</th>
+        <th>Honeymoon</th>
+        <th>Hotel</th>
+        <th>Cuisine</th>
+        <th>Videography</th>
+        <th>Location TO Shoot</th>
+        <th>Photography</th>
+        <th>Guest</th>
+        <th>Total Amount</th>
         <th>Booking Status</th>
     </tr>
-    {% for booking in goldbookings %}
+    {% for booking in customisebookings %}
     <tr>
         <td>{{ booking.date_of_booking }}</td>
         <td>{{ booking.destination_selected }}</td>
         <td>{{ booking.user.username }}</td>
+        <td>{{ booking.honeymoon_selection }}</td>
+        <td>{{ booking.hotel }}</td>
+        <td>{{ booking.food }}</td>
+        <td>{{ booking.videography }}</td>
+        <td>{{ booking.location }}</td>
+        <td>{{ booking.photography }}</td>
+        <td>{{ booking.guest }}</td>
+        <td>{{ booking.billing_info }}</td>
         <td>
             <div id="booking-status-{{ booking.id }}">
-                <form method="post" id="booking-form-{{ booking.id }}" action="{% url 'toggle_booking_gold' booking.id %}">
+                <form method="post" id="booking-form-{{ booking.id }}" action="{% url 'toggle_booking_customise' booking.id %}">
                     {% csrf_token %}
                     <button type="submit" class="booking-status-button">
                         {% if booking.is_booked %}

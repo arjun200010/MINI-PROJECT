@@ -1,0 +1,285 @@
+{% extends "nav3.html" %} 
+
+{% load static %}
+
+
+
+{% block style %}
+
+<style>
+             /* Style your form and other elements as needed */
+           form {
+max-width: 500px;
+margin: 0 auto; /* Center-align the form horizontally */
+padding: 52px;
+background-color: rgba(255, 255, 255, 0.5);
+box-shadow: 0px 0px 10px rgba(0, 0, 0, 7.2);
+border-radius: 119px;
+text-align: center;
+opacity: 1.9; /* This value should be between 0 and 1, not 1.9 */
+
+        }
+        select {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+        }
+
+        button {
+            background-color: #0074e4;
+            color: #fff;
+            border: none;
+            border-radius: 20px;
+            padding: 15px 20px;
+            cursor: pointer;
+        }
+
+        /* Show the confirmation tick when the form is submitted */
+        #gold-booking-form.submitted .confirmation-tick {
+            display: inline;
+        }
+        
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 30px;
+        }
+        input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #ooo;
+            border-radius: 50px;
+        }
+         h2 {
+            text-align: center;
+            color: #OOO;
+            
+        }
+        p{
+            color:red;
+        }
+        </style>
+        {% endblock style %}
+ {% block body %}
+    <h2>Customise Booking</h2>
+    <br>
+    <br>
+    <form id="booking-form" method="post">
+    {% csrf_token %}
+        <label for="date_of_booking">Date of Booking:</label>
+        <input type="date" id="date_of_booking" name="date_of_booking" required><br>
+        <span id="dateError" style="color: red;"></span>
+
+        <label for="destination_selected">Destination Selection:</label>
+        <select id="destination_selected" name="destination_selected" required>
+            <option value="">Select Destination</option>
+            <option value="Delhi">Delhi</option>
+            <option value="Rajasthan">Rajasthan</option>
+            <option value="Jammu and Kashmir">Jammu and Kashmir</option>
+            <option value="Kerala">Kerala</option>
+            <option value="Uttarakhand">Uttarakhand</option>
+            <option value="Switzerland">Switzerland</option>
+            <option value="Malta">Malta</option>
+            <option value="Singapore">Singapore</option>
+            <option value="Amsterdam">Amsterdam</option>
+            <option value="Brazil">Brazil</option>
+        </select><br>
+
+        <label for="honeymoon_selection">Honeymoon Selection:</label>
+        <select id="honeymoon_selection" name="honeymoon_selection" disabled>
+            <option value="None">None</option>
+            <option value="Himachal Pradesh">Himachal Pradesh</option>
+            <option value="Pondicherry">Pondicherry</option>
+            <option value="Lakshwadweep">Lakshwadweep</option>
+            <option value="Hong Kong">Hong Kong"</option>
+            <option value="London">London</option>
+            <option value="Miami">Miami</option>
+        </select><br>
+
+        <label for="hotel">Hotel:</label>
+        <select id="hotel" name="hotel" required>
+            <option value="">Select Hotels</option>
+            <option value="Seven Star Hotels">Seven Star Hotels</option>
+            <option value="Five Star Hotels">Five Star Hotels</option>
+            <option value="Hotels">Hotels</option>
+        </select><br>
+
+        <label for="food">Food:</label>
+        <select id="food" name="food" required>
+            <option value="">Select Cuisine</option>
+            <option value="Indian Cuisine">Indian Cuisine</option>
+            <option value="Continental Cuisine">Continental Cuisine</option>
+        </select><br>
+
+        <label for="videography">Videography:</label>
+        <select id="videography" name="videography">
+            <option value="No">No</option>
+            <option value="Camera">Camera</option>
+            <option value="Drone">Drone</option>
+        </select><br>
+
+        <label for="location">Location to Shoot:</label>
+        <select id="location" name="location" disabled><br>
+            <option value="">Select Location</option>
+            <option value="Maharastra">Maharastra</option>
+            <option value="Karnataka">Karnataka</option>
+            <option value="Madhya Pradesh">Madhya Pradesh</option>
+            <option value="Paris">Paris</option>
+            <option value="Fiji">Fiji</option>
+            <option value="Luxemborg">Luxemborg</option>
+        </select>
+        <br>
+
+        <label for="photography">Photography:</label>
+        <select id="photography" name="photography" required>
+            <option value="">Select One</option>
+            <option value="Yes">Yes</option>
+            <option value="No">No</option>
+        </select><br>
+
+        <label for="guest">Guest:</label>
+        <input type="number" id="guest" name="guest" min="50" max="150" required><br>
+
+        <label for="billing_info">Billing Information:</label>
+        <input type="text" id="billing_info" name="billing_info" readonly><br>
+
+        <input type="checkbox" id="agree_terms" name="agree_terms" required>
+        <label for="agree_terms">After, Receiving confirmation mail. You cannot CANCEL it.</label>
+        <p>NOTE:<br>
+                1.) Honeymoon  Package is FREE for INTERNATIONAL Destination<br>
+                2.) Cost of Cuisine is on per head basis<br>
+                3.) Total Amount displayed is NON-NEGOTIABLE</p>
+
+        <button type="submit">Submit</button>
+    </form>
+
+    <script>
+        // Function to calculate and update the billing amount
+        function calculateBillingAmount() {
+            let totalAmount = 0;
+
+            const selectedDestination = document.getElementById("destination_selected").value;
+            const selectedHotel = document.getElementById("hotel").value;
+            const selectedFood = document.getElementById("food").value;
+            const selectedVideography = document.getElementById("videography").value;
+            const selectedPhotography = document.getElementById("photography").value;
+            const selectedLocation = document.getElementById("location").value;
+            const numberOfGuests = parseInt(document.getElementById("guest").value, 10);
+
+            const destinationCosts = {
+                "": 0,
+                "Delhi": 600,
+                "Rajasthan": 400,
+                "Jammu and Kashmir": 500,
+                "Kerala": 400,
+                "Uttarakhand": 350,
+                "Switzerland": 1000,
+                "Malta": 1500,
+                "Singapore": 1500,
+                "Amsterdam": 1000,
+                "Brazil": 1200,
+            };
+
+            const hotelCosts = {
+                "": 0,
+                "Seven Star Hotels": 800,
+                "Five Star Hotels": 500,
+                "Hotels": 200,
+            };
+
+            const foodCosts = {
+                "": 0,
+                "Indian Cuisine": 50,
+                "Continental Cuisine": 100,
+            };
+
+            const videographyCosts = {
+                "No": 0,
+                "Camera": 50,
+                "Drone": 100,
+            };
+
+            const photographyCosts = {
+                "": 0,
+                "Yes": 350,
+                "No": 0,
+            };
+
+            const locationCosts = {
+                "": 0,
+                "Maharastra": 500,
+                "Karnataka": 500,
+                "Madhya Pradesh": 400,
+                "Paris": 1000,
+                "Fiji": 1500,
+                "Luxemborg": 1600,
+            };
+
+            totalAmount += destinationCosts[selectedDestination] || 0;
+            totalAmount += hotelCosts[selectedHotel] || 0;
+            totalAmount += foodCosts[selectedFood] || 0;
+            totalAmount += videographyCosts[selectedVideography] || 0;
+            totalAmount += photographyCosts[selectedPhotography] || 0;
+            totalAmount += locationCosts[selectedLocation] || 0;
+
+            // Additional cost based on the number of guests and food type
+            if (!isNaN(numberOfGuests) && (selectedFood === "Indian Cuisine" || selectedFood === "Continental Cuisine")) {
+                totalAmount += numberOfGuests * (selectedFood === "Indian Cuisine" ? 50 : 100);
+            }
+
+            document.getElementById("billing_info").value = `$${totalAmount}`;
+        }
+
+        // Add event listeners for real-time enabling/disabling of fields
+        document.getElementById("videography").addEventListener("change", function () {
+            const location = document.getElementById("location");
+            location.disabled = this.value === "No";
+            if (location.disabled) {
+                location.value = "";
+            }
+            calculateBillingAmount();
+        });
+
+        document.getElementById("destination_selected").addEventListener("change", function () {
+            const honeymoonSelection = document.getElementById("honeymoon_selection");
+            const selectedDestination = this.value;
+            if (selectedDestination === "Switzerland" ||
+                selectedDestination === "Malta" ||
+                selectedDestination === "Singapore" ||
+                selectedDestination === "Amsterdam" ||
+                selectedDestination === "Brazil") {
+                honeymoonSelection.disabled = false;
+            } else {
+                honeymoonSelection.disabled = true;
+                honeymoonSelection.value = "None";
+            }
+            calculateBillingAmount();
+        });
+
+        document.getElementById("hotel").addEventListener("change", calculateBillingAmount);
+        document.getElementById("food").addEventListener("change", calculateBillingAmount);
+        document.getElementById("photography").addEventListener("change", calculateBillingAmount);
+        document.getElementById("location").addEventListener("change", calculateBillingAmount);
+        document.getElementById("guest").addEventListener("change", calculateBillingAmount);
+        const dateInput = document.getElementById("date_of_booking");
+  
+  // Get the current date in the format "YYYY-MM-DD"
+  const currentDate = new Date().toISOString().split("T")[0];
+  
+  // Set the min attribute of the date input to the current date
+  dateInput.min = currentDate;
+  
+  // Add an event listener to the date input for validation
+  dateInput.addEventListener("change", function() {
+    const selectedDate = dateInput.value;
+    if (selectedDate < currentDate) {
+      document.getElementById("dateError").textContent = "Booking for past dates is not allowed.";
+      dateInput.value = ""; // Clear the input
+    } else {
+      document.getElementById("dateError").textContent = "";
+    }
+  });
+    </script>
+</body>
+{% endblock body %}

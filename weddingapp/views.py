@@ -4,8 +4,8 @@ from django.contrib.auth import login as auth_login, authenticate
 from django.contrib.auth import logout
 from django.contrib import messages
 from django.urls import reverse
-from .models import User
-from .models import GoldPackage,SilverPackage,PlatinumPackage
+from .models import User,UserProfile
+from .models import GoldPackage,SilverPackage,PlatinumPackage,CustomisePackage
 from django.contrib.auth.decorators import login_required
 import json
 from django.shortcuts import get_object_or_404, redirect
@@ -278,7 +278,9 @@ def verify_email(request, verification_code):
         return render(request, 'signup.html')  # Handle invalid verification codes
 
 
-@login_required  
+
+
+@login_required
 def gold_booking(request):
     if request.method == 'POST':
         # Retrieve data from the form
@@ -288,94 +290,178 @@ def gold_booking(request):
         # Get the current user (logged-in user)
         current_user = request.user
 
+        # Check if the user already has a confirmed booking in any table
+        has_confirmed_booking = (
+            GoldPackage.objects.filter(user=current_user, is_booked=True).exists() or
+            SilverPackage.objects.filter(user=current_user, is_booked=True).exists() or
+            PlatinumPackage.objects.filter(user=current_user, is_booked=True).exists() or
+            CustomisePackage.objects.filter(user=current_user,is_booked=True).exists()
+        )
         # Create a new GoldPackage record with the form data and the current user
         gold_package = GoldPackage.objects.create(
             user=current_user,
             date_of_booking=date_of_booking,
-            destination_selected=destination_selected
+            destination_selected=destination_selected,
+            is_booked=False  # Set the initial booking status to False
         )
 
         # Save the GoldPackage record
         gold_package.save()
 
-        # Redirect to a success page or a confirmation page
-        return redirect('confirmation')
+        # If the user has a confirmed booking, redirect to a different page
+        if has_confirmed_booking:
+            messages.error(request,"You already has a confirm booking and REBOOKING IS NOT PERMITTED")
+            return redirect('view_profile')
+        else:
+            # Redirect to a success page for a new booking
+            return redirect('confirmation')
 
     return render(request, 'gold_booking.html')
 
-@login_required  
+
+
+@login_required
 def silver_booking(request):
     if request.method == 'POST':
         # Retrieve data from the form
         date_of_booking = request.POST.get('date_of_booking')
         destination_selected = request.POST.get('destination_selected')
-        honeymoon_destination = request.POST.get('honeymoon_destination')
+        honeymoon_destination=request.POST.get('honeymoon_destination')
+
         # Get the current user (logged-in user)
         current_user = request.user
 
+        # Check if the user already has a confirmed booking in any table
+        has_confirmed_booking = (
+            GoldPackage.objects.filter(user=current_user, is_booked=True).exists() or
+            SilverPackage.objects.filter(user=current_user, is_booked=True).exists() or
+            PlatinumPackage.objects.filter(user=current_user, is_booked=True).exists() or
+            CustomisePackage.objects.filter(user=current_user,is_booked=True).exists()
+        )
         # Create a new GoldPackage record with the form data and the current user
         silver_package = SilverPackage.objects.create(
             user=current_user,
             date_of_booking=date_of_booking,
             destination_selected=destination_selected,
-            honeymoon_destination=honeymoon_destination
+            honeymoon_destination=honeymoon_destination,
+            is_booked=False  # Set the initial booking status to False
         )
 
         # Save the GoldPackage record
         silver_package.save()
-        subject = 'Booking Confirmed'
-        message = f'Thank you for your booking, {current_user.username}!\n' \
-                  f'Your Silver package booking has been confirmed with the following details:\n\n' \
-                  f'Date of Booking: {date_of_booking}\n' \
-                  f'Destination Selected: {destination_selected}\n' \
-                  f'Honeymoon Destination: {honeymoon_destination}\n\n' \
-                  f'We look forward to making your WEDDING memorable.'
-        from_email = 'achu31395@gmail.com'  # Use a valid email address
-        recipient_list = [current_user.email]  # Get the user's email address
 
-        send_mail(subject, message, from_email, recipient_list, fail_silently=False)
-
-        # Redirect to a success page or a confirmation page
-        return redirect('confirmation')
+        # If the user has a confirmed booking, redirect to a different page
+        if has_confirmed_booking:
+            messages.error(request,"You already has a confirm booking and REBOOKING IS NOT PERMITTED")
+            return redirect('view_profile')
+        else:
+            # Redirect to a success page for a new booking
+            return redirect('confirmation')
 
     return render(request, 'silver_booking.html')
 
-@login_required  
+@login_required
 def platinum_booking(request):
     if request.method == 'POST':
         # Retrieve data from the form
         date_of_booking = request.POST.get('date_of_booking')
         destination_selected = request.POST.get('destination_selected')
-        honeymoon_destination = request.POST.get('honeymoon_destination')
+        honeymoon_destination=request.POST.get('honeymoon_destination')
+
         # Get the current user (logged-in user)
         current_user = request.user
 
+        # Check if the user already has a confirmed booking in any table
+        has_confirmed_booking = (
+            GoldPackage.objects.filter(user=current_user, is_booked=True).exists() or
+            SilverPackage.objects.filter(user=current_user, is_booked=True).exists() or
+            PlatinumPackage.objects.filter(user=current_user, is_booked=True).exists() or
+            CustomisePackage.objects.filter(user=current_user,is_booked=True).exists()
+        )
         # Create a new GoldPackage record with the form data and the current user
         platinum_package = PlatinumPackage.objects.create(
             user=current_user,
             date_of_booking=date_of_booking,
             destination_selected=destination_selected,
-            honeymoon_destination=honeymoon_destination
+            honeymoon_destination=honeymoon_destination,
+            is_booked=False  # Set the initial booking status to False
         )
 
         # Save the GoldPackage record
         platinum_package.save()
-        subject = 'Booking Confirmed'
-        message = f'Thank you for your booking, {current_user.username}!\n' \
-                  f'Your Platinum package booking has been confirmed with the following details:\n\n' \
-                  f'Date of Booking: {date_of_booking}\n' \
-                  f'Destination Selected: {destination_selected}\n' \
-                  f'Honeymoon Destination: {honeymoon_destination}\n\n' \
-                  f'We look forward to making your WEDDING memorable.'
-        from_email = 'achu31395@gmail.com'  # Use a valid email address
-        recipient_list = [current_user.email]  # Get the user's email address
 
-        send_mail(subject, message, from_email, recipient_list, fail_silently=False)
-
-        # Redirect to a success page or a confirmation page
-        return redirect('confirmation')
+        # If the user has a confirmed booking, redirect to a different page
+        if has_confirmed_booking:
+            messages.error(request,"You already has a confirm booking and REBOOKING IS NOT PERMITTED")
+            return redirect('view_profile')
+        else:
+            # Redirect to a success page for a new booking
+            return redirect('confirmation')
 
     return render(request, 'platinum_booking.html')
+
+from django.core.exceptions import ValidationError
+
+@login_required
+def customise_booking(request):
+    if request.method == 'POST':
+        # Retrieve data from the form
+        date_of_booking = request.POST.get('date_of_booking')
+        destination_selected = request.POST.get('destination_selected')
+        honeymoon_destination = request.POST.get('honeymoon_destination')
+        hotel = request.POST.get('hotel')
+        food = request.POST.get('food')
+        videography = request.POST.get('videography')
+        location = request.POST.get('location')
+        photography = request.POST.get('photography')
+        guest = request.POST.get('guest')
+        billing_info_str = request.POST.get('billing_info')
+
+        try:
+            billing_info = float(billing_info_str.replace('$', ''))
+        except ValueError:
+            messages.error(request, "Invalid billing info. Please provide a valid numeric value.")
+            return redirect('customise_booking')
+
+        # Get the current user (logged-in user)
+        current_user = request.user
+
+        # Check if the user already has a confirmed booking in any table
+        has_confirmed_booking = (
+            GoldPackage.objects.filter(user=current_user, is_booked=True).exists() or
+            SilverPackage.objects.filter(user=current_user, is_booked=True).exists() or
+            PlatinumPackage.objects.filter(user=current_user, is_booked=True).exists() or
+            CustomisePackage.objects.filter(user=current_user, is_booked=True).exists()
+        )
+
+        # Create a new CustomisePackage record with the form data and the current user
+        customise_package = CustomisePackage.objects.create(
+            user=current_user,
+            date_of_booking=date_of_booking,
+            destination_selected=destination_selected,
+            honeymoon_destination=honeymoon_destination,
+            hotel=hotel,
+            food=food,
+            videography=videography,
+            location=location,
+            photography=photography,
+            guest=guest,
+            billing_info=billing_info,
+            is_booked=False  # Set the initial booking status to False
+        )
+
+        # Save the CustomisePackage record
+        customise_package.save()
+
+        # If the user has a confirmed booking, redirect to a different page
+        if has_confirmed_booking:
+            messages.error(request, "You already have a confirmed booking, and REBOOKING IS NOT PERMITTED.")
+            return redirect('view_profile')
+        else:
+            # Redirect to a success page for a new booking
+            return redirect('confirmation')
+
+    return render(request, 'customise_booking.html')
 
 @login_required
 def confirmation_view(request):
@@ -402,27 +488,13 @@ def platinum(request):
     # Render the data in an HTML template
    return render(request, 'platinum.html', {'platinumbookings': platinumbookings})
 
-# def book_user(request, user_id):
-#     booking = get_object_or_404(GoldPackage, user__id=user_id)  # Corrected the model
-#     subject = 'Booking Confirmation'
-#     message = 'Your booking has been confirmed.'
-#     from_email = 'achu31395@gmail.com'
-#     recipient_list = [booking.user.email]  # Use booking.user.email
+@login_required
+def customise(request):
+   customisebookings = CustomisePackage.objects.all()
+    
+    # Render the data in an HTML template
+   return render(request, 'customise.html', {'customisebookings': customisebookings})
 
-#     send_mail(subject, message, from_email, recipient_list)
-#     messages.success(request, f"User '{booking.user.username}' event has been booked and email has sent.")
-#     return redirect("gold")
-
-# def unbook_user(request, user_id):
-#     booking = get_object_or_404(GoldPackage, user__id=user_id)  # Corrected the model
-#     subject = 'Booking Cancellation'
-#     message = 'Your booking has been cancelled.'
-#     from_email = 'achu31395@gmail.com'
-#     recipient_list = [booking.user.email]  # Use booking.user.email
-
-#     send_mail(subject, message, from_email, recipient_list)
-#     messages.success(request, f"User '{booking.user.username}' event has cancelled and an email has sent.")
-#     return redirect("gold")
 
    
 def toggle_booking_gold(request, booking_id):
@@ -430,7 +502,7 @@ def toggle_booking_gold(request, booking_id):
     booking.is_booked = not booking.is_booked  # Toggle the booking status
     booking.save()
     
-    # Send confirmation or cancellation email based on the new status
+    
     if booking.is_booked:  # Corrected the model
             subject = 'Gold Booking Confirmation'
             message = 'Your Gold booking has been confirmed.'
@@ -508,3 +580,154 @@ def toggle_booking_platinum(request, booking_id):
             return redirect("platinum")
 
     return JsonResponse({'is_booked': booking.is_booked})
+
+
+def toggle_booking_customise(request, booking_id):
+    booking = get_object_or_404(CustomisePackage, id=booking_id)
+    booking.is_booked = not booking.is_booked  # Toggle the booking status
+    booking.save()
+    
+    # Send confirmation or cancellation email based on the new status
+    if booking.is_booked:  # Corrected the model
+            subject = ' Customised Package Booking Confirmation'
+            message = 'Your Customised booking has been confirmed.'
+            from_email = 'achu31395@gmail.com'
+            recipient_list = [booking.user.email]  # Use booking.user.email
+
+            send_mail(subject, message, from_email, recipient_list)
+            messages.success(request, f"User '{booking.user.username}' event has been booked and email has sent.")
+            return redirect("customise")
+
+    else:
+            subject = 'Customised Package Booking Cancellation'
+            message = 'Your Customised booking has been cancelled.'
+            from_email = 'achu31395@gmail.com'
+            recipient_list = [booking.user.email]  # Use booking.user.email
+
+            send_mail(subject, message, from_email, recipient_list)
+            messages.success(request, f"User '{booking.user.username}' event has cancelled and an email has sent.")
+            return redirect("customise")
+
+    return JsonResponse({'is_booked': booking.is_booked})
+
+@login_required
+def view_profile(request):
+    user = request.user  # Get the currently logged-in user
+    gold_packages = GoldPackage.objects.filter(user=user)
+    silver_packages = SilverPackage.objects.filter(user=user)
+    platinum_packages = PlatinumPackage.objects.filter(user=user)
+    customise_packages=CustomisePackage.objects.filter(user=user)
+    
+    return render(request, 'view_profile.html', {
+         'user':user,
+        'gold_packages': gold_packages,
+        'silver_packages': silver_packages,
+        'platinum_packages': platinum_packages,
+        'customise_packages':customise_packages
+    })
+
+
+
+@login_required
+def cancel_package_gold(request, package_id):
+    current_user = request.user
+
+    # Retrieve the package based on the package_id
+    try:
+        gold_package = GoldPackage.objects.get(id=package_id, user=current_user, is_booked=False)
+        # Send an email to the admin
+        send_mail(
+            'Cancellation Request',
+            f'{current_user.username} has requested to cancel the Gold package with ID {gold_package.id}.',
+            current_user.email,
+            ['achu31395@gmail.com'],  # Replace with the admin's email address
+            fail_silently=False,
+        )
+        # Mark the package as Cancelled
+        gold_package.is_booked = False
+        gold_package.save()
+        return redirect('cancellation')
+    except GoldPackage.DoesNotExist:
+        messages.error(request, "Package not found or it's already cancelled.")
+
+    # Redirect back to the user's profile page
+    return redirect('view_profile')
+
+@login_required
+def cancel_package_silver(request, package_id):
+    current_user = request.user
+
+    # Retrieve the package based on the package_id
+    try:
+        silver_package = SilverPackage.objects.get(id=package_id, user=current_user, is_booked=False)
+        # Send an email to the admin
+        send_mail(
+            'Cancellation Request',
+            f'{current_user.username} has requested to cancel the Gold package with ID {silver_package.id}.',
+            current_user.email,
+            ['achu31395@gmail.com'],  # Replace with the admin's email address
+            fail_silently=False,
+        )
+        # Mark the package as Cancelled
+        silver_package.is_booked = False
+        silver_package.save()
+        return redirect('cancellation')
+    except SilverPackage.DoesNotExist:
+        messages.error(request, "Package not found or it's already cancelled.")
+
+    # Redirect back to the user's profile page
+    return redirect('view_profile')
+
+@login_required
+def cancel_package_platinum(request, package_id):
+    current_user = request.user
+
+    # Retrieve the package based on the package_id
+    try:
+        platinum_package = PlatinumPackage.objects.get(id=package_id, user=current_user, is_booked=False)
+        # Send an email to the admin
+        send_mail(
+            'Cancellation Request',
+            f'{current_user.username} has requested to cancel the Gold package with ID {platinum_package.id}.',
+            current_user.email,
+            ['achu31395@gmail.com'],  # Replace with the admin's email address
+            fail_silently=False,
+        )
+        # Mark the package as Cancelled
+        platinum_package.is_booked = False
+        platinum_package.save()
+        return redirect('cancellation')
+    except PlatinumPackage.DoesNotExist:
+        messages.error(request, "Package not found or it's already cancelled.")
+
+    # Redirect back to the user's profile page
+    return redirect('view_profile')
+
+@login_required
+def cancel_package_customise(request, package_id):
+    current_user = request.user
+
+    # Retrieve the package based on the package_id
+    try:
+        customise_package = CustomisePackage.objects.get(id=package_id, user=current_user, is_booked=False)
+        # Send an email to the admin
+        send_mail(
+            'Cancellation Request',
+            f'{current_user.username} has requested to cancel the Customise package with ID {customise_package.id}.',
+            current_user.email,
+            ['achu31395@gmail.com'],  # Replace with the admin's email address
+            fail_silently=False,
+        )
+        # Mark the package as Cancelled
+        customise_package.is_booked = False
+        customise_package.save()
+        return redirect('cancellation')
+    except PlatinumPackage.DoesNotExist:
+        messages.error(request, "Package not found or it's already cancelled.")
+
+    # Redirect back to the user's profile page
+    return redirect('view_profile')
+
+
+def cancellation_view(request):
+     return render(request,"cancellation.html")

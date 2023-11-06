@@ -43,12 +43,21 @@ urlpatterns = [
     path('silver_booking/',views.silver_booking,name="silver_booking"),
     path('platinum_booking/',views.platinum_booking,name="platinum_booking"),
     path('confirmation/', views.confirmation_view, name='confirmation'),
+    path('cancellation/', views.cancellation_view, name='cancellation'),
     path('gold/',views.gold,name='gold'),
     path('silver/',views.silver,name='silver'),
     path('platinum/',views.platinum,name='platinum'),
+    path('customise/',views.customise,name='customise'),
     path('toggle-booking/<int:booking_id>/', views.toggle_booking_gold, name='toggle_booking_gold'),
     path('toggle-booking-silver/<int:booking_id>/', views.toggle_booking_silver, name='toggle_booking_silver'),
     path('toggle-booking-platinum/<int:booking_id>/', views.toggle_booking_platinum, name='toggle_booking_platinum'),
+    path('toggle-booking-customise/<int:booking_id>/', views.toggle_booking_customise, name='toggle_booking_customise'),
+     path('view_profile/', views.view_profile, name='view_profile'),
+      path('cancel_package_gold/<int:package_id>/', views.cancel_package_gold, name='cancel_package_gold'),
+       path('cancel_package_silver/<int:package_id>/', views.cancel_package_silver, name='cancel_package_silver'),
+        path('cancel_package_platinum/<int:package_id>/', views.cancel_package_platinum, name='cancel_package_platinum'),
+        path('cancel_package_customise/<int:package_id>/', views.cancel_package_customise, name='cancel_package_customise'),
+    path('customise_booking/',views.customise_booking,name="customise_booking"),    
 ]
 
 

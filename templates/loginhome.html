@@ -48,17 +48,16 @@ p1{
   <header id="header" class="d-flex align-items-center">
     <div class="container d-flex align-items-center justify-content-between">
 
-      <h1 class="logo"><a href="index.html">HAPPY WEDDING</a></h1>
+      <h1 class="logo"><a href="">HAPPY WEDDING</a></h1>
       <!-- Uncomment below if you prefer to use an image logo -->
       <a href="index.html" class="logo"><img src="{% static 'assets/img/logo.png'%}" alt="" class="img-fluid"></a>
 
       <nav id="navbar" class="navbar">
         <ul>
-          <li><a class="nav-link scrollto" href="{% url 'index' %}">Home</a></li>
           <li><a class="nav-link scrollto" href="#pricing">Pricing</a></li>
           <li><a class="nav-link scrollto" href="#services">Destination</a></li>
           <li><a class="nav-link scrollto" href="#contact">Contact</a></li>
-        </ul>
+        
         <i class="bi bi-list mobile-nav-toggle"></i>
       </nav><!-- .navbar -->
     <div class="dropdown-center">
@@ -68,8 +67,10 @@ p1{
   <ul class="dropdown-menu">
     <li><a class="dropdown-item" href="{% url 'update_profile' %}">Update Profile</a></li>
     <li><a class="dropdown-item" href="{% url 'change_password' %}">Change Password</a></li>
+     <li><a class="dropdown-item" href="{% url 'view_profile' %}">Profile Details</a></li>
         <li><a class="dropdown-item" href="{% url 'handlelogout' %}">Logout</a></li>
 
+  </ul>
   </ul>
 </div>
 
@@ -167,10 +168,9 @@ p1{
               <ul>
                 <li>customise</li>
                 <li>Your needs</li>
-                <li>With ADDS-on advnatage</li>
               </ul>
               <div class="btn-wrap">
-                <a href="" class="btn-buy">Customise</a>
+                <a href="{% url 'customise_booking' %}" class="btn-buy">Customise</a>
               </div>
             </div>
           </div>
@@ -186,7 +186,7 @@ p1{
                 <li>MUSIC</li>
                  <li>PHOTOGRAPY</li>
                  <li>ACCODOMATIONS</li>
-                <li>DECORATORATION</li>
+                <li>DECORATION</li>
                 <li>100 GUESTS</li>
               </ul>
               <div class="btn-wrap">
@@ -200,18 +200,18 @@ p1{
               <h4>SILVER</h4>
               <h3><sup>$</sup>55000<span></span></h3>
               <ul>
-                <li>INDIAN OR CONTINENTAL CUISINE</li>
+                <li>INDO-WESTREN CUISINE</li>
                 <li>INDIAN DESTINATION WITH FREE HONEYMOON PACKAGE</li>
                 <li>TRAVELLING FACILITY</li>
                 <li>S CLASS-ACCODOMATIONS</li>
                 <li>MUSIC AND DJ NIGHT</li>
                 <li>AFTER MARRIAGE SHOOTING</li>
                  <li>PHOTOGRAPY</li>
-                <li>DECORATORATION</li>
+                <li>DECORATION</li>
                 <li>100-150 GUESTS</li>
               </ul>
               <div class="btn-wrap">
-                <a href="{% url 'silver_booking' %}" class="btn-buy">Buy Now</a>
+                <a href="{% url 'silver_booking' %}" class="btn-buy">Book Now</a>
               </div>
             </div>
           </div>
@@ -227,12 +227,12 @@ p1{
                 <li>5 STAR CLASS-ACCODOMATIONS</li>
                 <li>MUSIC , DJ NIGHT AND LIVE CONCERT</li>
                 <li>AFTER MARRIAGE SHOOTING WITH PROJECTOR DISPLAY</li>
-                 <li>DESTIANTION PHOTOGRAPY</li>
+                 <li>DESTINATIONPHOTOGRAPY</li>
                 <li>INTERNATIONAL DECORATORATION</li>
                 <li>100GUESTS</li>
               </ul>
               <div class="btn-wrap">
-                <a href="{% url 'platinum_booking' %}" class="btn-buy">Buy Now</a>
+                <a href="{% url 'platinum_booking' %}" class="btn-buy">Book Now</a>
               </div>
             </div>
           </div>
