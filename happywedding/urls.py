@@ -36,6 +36,7 @@ urlpatterns = [
     path("create_user/",views.create_user,name="create_user"),
     path('update_profile/',views.update_profile,name="update_profile"),
     path('change_password/', views.change_password, name='change_password'),
+    path('vendor_change_password/',views.vendor_change_password,name="vendor_change_password"),
     path('activate_user/<int:user_id>/', views.activate_user, name='activate_user'),
     path('deactivate_user/<int:user_id>/', views.deactivate_user, name='deactivate_user'),
     path('verify/<str:verification_code>/', views.verify_email, name='verify_email'),
@@ -58,7 +59,18 @@ urlpatterns = [
         path('cancel_package_platinum/<int:package_id>/', views.cancel_package_platinum, name='cancel_package_platinum'),
         path('cancel_package_customise/<int:package_id>/', views.cancel_package_customise, name='cancel_package_customise'),
     path('customise_booking/',views.customise_booking,name="customise_booking"),    
+    path('vendorsignup/',views.vendorsignup,name="vendorsignup"),
+    path('vendor_update_profile/',views.vendor_update_profile,name="vendor_update_profile"),
+    path('vendordetails/',views.vendordetails,name="vendordetails"),
 ]
+# urls.py
+
+from django.conf import settings
+from django.conf.urls.static import static
+
+# ... your other urlpatterns ...
+
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 
 

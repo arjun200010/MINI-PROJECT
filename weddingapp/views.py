@@ -4,7 +4,7 @@ from django.contrib.auth import login as auth_login, authenticate
 from django.contrib.auth import logout
 from django.contrib import messages
 from django.urls import reverse
-from .models import User,UserProfile
+from .models import User,UserProfile,VendorProfile
 from .models import GoldPackage,SilverPackage,PlatinumPackage,CustomisePackage
 from django.contrib.auth.decorators import login_required
 import json
@@ -13,6 +13,7 @@ from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from django.utils.crypto import get_random_string
 from django.contrib.auth import get_user_model
+
 def index(request):
     return render(request, 'index.html')
 
@@ -56,6 +57,46 @@ def signup(request):
 
     return render(request, 'signup.html')
 
+def vendorsignup(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        firstname = request.POST['firstname']
+        lastname = request.POST['lastname']
+        email = request.POST['email']
+        password = request.POST['password']
+        confirm_password = request.POST['confirm_password']
+
+        if password == confirm_password:
+            # Check if the email is unique
+            if not User.objects.filter(email=email).exists():
+                user = User.objects.create_user(username=username, first_name=firstname, last_name=lastname, email=email, password=password,role="VENDOR")
+
+                user.is_active = False  # Deactivate the user until verification
+                verification_code = get_random_string(32)  # Generate a random code
+                user.verification_code = verification_code
+                user.save()
+
+                # Send an email with the verification link
+                subject = 'Email Verification'
+                verification_url = request.build_absolute_uri(reverse('verify_email', args=[verification_code]))
+                message = f'Click the following link to verify your email: {verification_url}'
+                from_email = 'achu31395@gmail.com'
+                recipient_list = [email]
+                send_mail(subject, message, from_email, recipient_list, fail_silently=False)
+                messages.success(request,"An account activation link is send to your email ,verify it to continue")
+                return redirect('vendorsignup')  # Redirect to a login page with a message
+
+            else:
+                # Email already exists
+                messages.error(request,"Email already exists")
+                return render(request, 'vendorsignup.html')
+        else:
+            # Passwords do not match
+            messages.error(request,"Password does not match")
+            return render(request, 'vendorsignup.html')
+
+    return render(request, 'vendorsignup.html')
+
 def login(request):
     if request.method == "POST":
         username = request.POST.get("username")
@@ -74,7 +115,7 @@ def login(request):
             else:
                 auth_login(request, user)  # Log in the user
                 request.session['username'] = username
-                return redirect("vendorhome")
+                return redirect("vendor_update_profile")
         else:
             messages.error(request, 'Invalid login credentials or account is deactivated')
             return redirect('login')
@@ -92,16 +133,38 @@ def loginhome(request):
         else:
             return redirect('login')
         
+
 def adminfirst(request):
     if 'username' in request.session:
-            response = render(request, 'adminfirst.html')
+        user_count = User.objects.filter(role='CUSTOMER').count()
+        vendor_count = User.objects.filter(role='VENDOR').count()
+
+        # Assuming "active" is a status field in your booking model
+        active_booking_count = GoldPackage.objects.filter(is_booked=True).count() + \
+                              SilverPackage.objects.filter(is_booked=True).count() + \
+                              PlatinumPackage.objects.filter(is_booked=True).count() + \
+                              CustomisePackage.objects.filter(is_booked=True).count()
+
+        context = {
+            'user_count': user_count,
+            'vendor_count': vendor_count,
+            'active_booking_count': active_booking_count,
+        }
+
+        response = render(request, 'adminfirst.html', context)
+        response['Cache-Control'] = 'no-store, must-revalidate'
+        return response
+    else:
+        return redirect('login')
+
+
+def vendorhome(request):
+    if 'username' in request.session:
+            response = render(request, 'vendorhome.html')
             response['Cache-Control'] = 'no-store, must-revalidate'
             return response
     else:
             return redirect('login')
-
-def vendorhome(request):
-    return render(request,"vendorhome.html")
 
 
 def adminhome(request):
@@ -120,6 +183,49 @@ def check_user_email(request):
         "exists": User.objects.filter(email=userd).exists()
     }
     return JsonResponse(data)
+
+
+
+
+# views.py
+
+
+
+
+from django.core.exceptions import ObjectDoesNotExist
+
+@login_required
+def vendor_update_profile(request):
+    try:
+        user_profile = UserProfile.objects.get(user=request.user)
+    except ObjectDoesNotExist:
+        user_profile = UserProfile(user=request.user)
+        user_profile.save()
+
+    vendor_profile, created = VendorProfile.objects.get_or_create(user=request.user)
+    
+    if request.method == 'POST':
+        skill = request.POST.get('skill')
+        document = request.FILES.get('document')
+
+        # Update VendorProfile fields
+        vendor_profile.skill = skill
+        vendor_profile.document = document
+        vendor_profile.save()
+
+        # Update UserProfile fields
+        user = get_object_or_404(User, pk=request.user.id)
+        user.first_name = request.POST.get('first_name')
+        user.last_name = request.POST.get('last_name')
+        user.save()
+
+        return redirect('vendor_update_profile')  # Redirect to a success page
+
+    return render(request, 'vendor_update_profile.html', {'user_profile': user_profile, 'vendor_profile': vendor_profile})
+
+
+
+
 
 def deactivate_user(request, user_id):
     user = get_object_or_404(User, id=user_id)
@@ -224,19 +330,15 @@ def update_profile(request):
     if request.method == 'POST':
         first_name = request.POST.get('first_name')
         last_name = request.POST.get('last_name')
-        username = request.POST.get('username')
-        
         # Update the user's profile data
         user = request.user
         user.first_name = first_name
         user.last_name = last_name
-        user.username = username
         user.save()
         
         return redirect('loginhome')
 
     return render(request, 'update_profile.html')
-
 
 @login_required
 def change_password(request):
@@ -261,6 +363,28 @@ def change_password(request):
     
         return render(request, 'change_password.html')
 
+@login_required
+def vendor_change_password(request):
+        if request.method == 'POST':
+            current_password = request.POST.get('current_password')
+            new_password = request.POST.get('new_password')
+            
+            user = authenticate(username=request.user.username, password=current_password)
+        
+            if user is not None:
+                # Password is correct
+                request.user.set_password(new_password)
+                request.user.save()
+                # Log the user out for security reasons and then log them back in
+                auth_login(request, request.user)
+                messages.success(request,"Password changed sucessfully")
+                return redirect('login')
+            else:
+                # Password is incorrect
+                messages.error(request,"Incorrect Current password")
+                return render(request, 'change_password.html')
+    
+        return render(request, 'vendor_change_password.html')
 
 
 def verify_email(request, verification_code):
@@ -495,7 +619,11 @@ def customise(request):
     # Render the data in an HTML template
    return render(request, 'customise.html', {'customisebookings': customisebookings})
 
+@login_required
+def vendordetails(request):
+     vendors = VendorProfile.objects.all()
 
+     return render(request, 'vendordetails.html', {'vendors': vendors})
    
 def toggle_booking_gold(request, booking_id):
     booking = get_object_or_404(GoldPackage, id=booking_id)
@@ -731,3 +859,7 @@ def cancel_package_customise(request, package_id):
 
 def cancellation_view(request):
      return render(request,"cancellation.html")
+
+
+
+

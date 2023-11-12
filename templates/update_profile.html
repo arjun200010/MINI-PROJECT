@@ -90,17 +90,9 @@
       <input type="text" name="last_name" id="last_name" value="{{ user.last_name }}" class="form-control" onchange="validateLastName()" required>
     <div2><span id="last-name-error" class="error-message"></span></div2>
     </div>
-    <div class="form-group">
-      <label for="email">Email:</label>
-      <input type="text" name="email" id="email" value="{{ user.email }}" class="form-control" disabled>
-    </div>
-    <div class="form-group">
-      <label for="username">Username:</label>
-      <input type="text" name="username" id="username" value="{{ user.username }}" class="form-control" disabled>
-      <div2><span id="username-error" class="error-message"></span></div2>
-    </div>
     <button type="submit" class="btn btn-primary"onclick="validateProfile()">Update Profile</button>
      <span id="success-message" class="success-message"></span>
+    
   </form>
 
 <script>

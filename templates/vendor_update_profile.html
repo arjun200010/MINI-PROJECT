@@ -1,0 +1,39 @@
+<html>
+<head>
+<script>
+
+</script>
+</head>
+<body>
+<form method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+  
+  <label for="first_name">First Name:</label>
+  <input type="text" id="first_name" name="first_name" value="{{ request.user.first_name }}">
+  <br>
+  
+  <label for="last_name">Last Name:</label>
+  <input type="text" id="last_name" name="last_name" value="{{ request.user.last_name }}">
+  <br>
+  
+  <label for="skill">Skill:</label>
+  <select id="skill" name="skill">
+    <option value="Skill1" {% if vendor_profile.skill == 'Skill1' %}selected{% endif %}>Skill1</option>
+    <option value="Skill2" {% if vendor_profile.skill == 'Skill2' %}selected{% endif %}>Skill2</option>
+    <!-- Add more options as needed -->
+  </select>
+  <br>
+  
+  <label for="document">Document:</label>
+  <input type="file" id="document" name="document">
+  <br>
+  
+  <input type="submit" value="Update Profile">
+  <button type="submit"><a href="{% url 'vendorhome' %}">Continue</a>
+</form>
+
+
+
+
+</body>
+</html>

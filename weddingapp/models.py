@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-
+from django.core.files import File
+from django.conf import settings
 class User(AbstractUser):
     class Role(models.TextChoices):
         ADMIN = "ADMIN", "Admin"
@@ -10,6 +11,7 @@ class User(AbstractUser):
     role = models.CharField(max_length=50, choices=Role.choices)
     verification_code = models.CharField(max_length=32, blank=True)  # Field to store the verification code
     is_verified = models.BooleanField(default=False)
+
 
 class GoldPackage(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -52,6 +54,14 @@ class CustomisePackage(models.Model):
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     booked_package = models.CharField(max_length=100, default="Not booked")
+
+class VendorProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    skill = models.CharField(max_length=100)
+    document = models.FileField(upload_to='vendor_documents/')
+
+
+
 
 class Package(models.Model):
     name = models.CharField(max_length=100)
