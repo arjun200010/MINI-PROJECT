@@ -106,23 +106,30 @@ opacity: 1.9; /* This value should be between 0 and 1, not 1.9 */
         // You can capture the selected options and process the booking as needed
         alert("Booking successful!");
     }
-    const dateInput = document.getElementById("date_of_booking");
-  
-  // Get the current date in the format "YYYY-MM-DD"
-  const currentDate = new Date().toISOString().split("T")[0];
-  
-  // Set the min attribute of the date input to the current date
-  dateInput.min = currentDate;
-  
-  // Add an event listener to the date input for validation
-  dateInput.addEventListener("change", function() {
-    const selectedDate = dateInput.value;
-    if (selectedDate < currentDate) {
-      document.getElementById("dateError").textContent = "Booking for past dates is not allowed.";
-      dateInput.value = ""; // Clear the input
-    } else {
-      document.getElementById("dateError").textContent = "";
-    }
-  });
-</script>
+ const dateInput = document.getElementById("date_of_booking");
+
+    // Get the current date
+    const currentDate = new Date();
+    
+    // Calculate the date 5 days ahead
+    currentDate.setDate(currentDate.getDate() + 5);
+
+    // Format the date as "YYYY-MM-DD"
+    const minDate = currentDate.toISOString().split("T")[0];
+
+    // Set the min attribute of the date input to 5 days ahead
+    dateInput.min = minDate;
+
+    // Add an event listener to the date input for validation
+    dateInput.addEventListener("change", function() {
+      const selectedDate = new Date(dateInput.value);
+      
+      if (selectedDate < currentDate) {
+        document.getElementById("dateError").textContent = "Please select a date.";
+        dateInput.value = ""; // Clear the input
+      } else {
+        document.getElementById("dateError").textContent = "";
+      }
+    });
+  </script>
 {% endblock body %}

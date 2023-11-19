@@ -13,11 +13,11 @@ class User(AbstractUser):
     is_verified = models.BooleanField(default=False)
 
 
+
 class GoldPackage(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     date_of_booking = models.DateField()
     destination_selected = models.CharField(max_length=255)
-    # Other fields specific to the Gold package
     is_booked = models.BooleanField(default=False) 
     
 
@@ -27,7 +27,6 @@ class SilverPackage(models.Model):
     destination_selected = models.CharField(max_length=255)
     honeymoon_destination=models.CharField(max_length=255)
     is_booked = models.BooleanField(default=False) 
-    # Other fields specific to the Silver package
 
 class PlatinumPackage(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -61,7 +60,11 @@ class VendorProfile(models.Model):
     document = models.FileField(upload_to='vendor_documents/')
 
 
-
-
 class Package(models.Model):
     name = models.CharField(max_length=100)
+
+
+class Booking(models.Model):
+    date_of_booking = models.DateField()
+    destination_selected = models.CharField(max_length=100)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)

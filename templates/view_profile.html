@@ -27,6 +27,14 @@
         padding: 20px;
         width: 55%;
     }
+    button {
+            background-color: #0074e4;
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
 </style>
  {% endblock style %}
 
@@ -52,20 +60,18 @@
             <h2>Selected Packages</h2><br>
             <ul class="package-list">
                 {% for package in gold_packages %}
-                    <li class="package-item">
-                        <h3>Gold Package:</h3>
-                        <p>Package: {{ package.destination_selected }}</p>
-                        <p>Date of Booking: {{ package.date_of_booking }}</p>
-                        <p>Status: {% if package.is_booked %}Confirmed{% else %}Pending{% endif %}</p>
-                        {% if not package.is_booked %}
-                            <form method="post" action="{% url 'cancel_package_gold' package.id %}">
-                                {% csrf_token %}
-                                <button type="submit" class="cancel-button">Cancel</button>
-                            </form>
-                        {% endif %}
-                    </li>
-                {% endfor %}
-
+    <li class="package-item">
+        <h3>Gold Package:</h3>
+        <p>Package: {{ package.destination_selected }}</p>
+        <p>Date of Booking: {{ package.date_of_booking }}</p>
+        <p>Status: {% if package.is_booked %}Confirmed{% else %}Pending{% endif %}</p>
+        
+        <form method="post" action="{% url 'cancel_package_gold' package.id %}">
+            {% csrf_token %}
+            <button type="submit" class="cancel-button">Cancel</button>
+        </form>
+    </li>
+{% endfor %}
                 {% for package in silver_packages %}
                     <li class="package-item">
                         <h3>Silver Package:</h3>
@@ -73,12 +79,10 @@
                         <p>Date of Booking: {{ package.date_of_booking }}</p>
                         <p>Honeymoon Destination: {{ package.honeymoon_destination }}</p>
                         <p>Status: {% if package.is_booked %}Confirmed{% else %}Pending{% endif %}</p>
-                        {% if not package.is_booked %}
                             <form method="post" action="{% url 'cancel_package_silver' package.id %}">
                                 {% csrf_token %}
                                 <button type="submit" class="cancel-button">Cancel</button>
                             </form>
-                        {% endif %}
                     </li>
                 {% endfor %}
 
@@ -89,12 +93,10 @@
                         <p>Date of Booking: {{ package.date_of_booking }}</p>
                         <p>Honeymoon Destination: {{ package.honeymoon_destination }}</p>
                         <p>Status: {% if package.is_booked %}Confirmed{% else %}Pending{% endif %}</p>
-                        {% if not package.is_booked %}
                            <form method="post" action="{% url 'cancel_package_platinum' package.id %}">
                                 {% csrf_token %}
                                 <button type="submit" class="cancel-button">Cancel</button>
                             </form>
-                        {% endif %}
                     </li>
                 {% endfor %}
                 {% for package in customise_packages %}

@@ -4,7 +4,6 @@
     <title>Platinum Booking Data</title>
        <style>
          body {
-            background-color:#665866;
             margin: 0;
             padding: 0;
             display: flex;
@@ -122,17 +121,14 @@ background: linear-gradient(to right, #000, #00b140); /* Replace with your desir
     <tr>
         <th>Date of Booking</th>
         <th>Destination Selected</th>
-        <th>Honeymoon_selected</th> 
-        <th>User ID</th>
         <th>Username</th>
         <th>Booking Status</th>
+        <th>Action</th> <!-- New column for the delete button -->
     </tr>
     {% for booking in platinumbookings %}
     <tr>
         <td>{{ booking.date_of_booking }}</td>
         <td>{{ booking.destination_selected }}</td>
-        <td>{{booking.honeymoon_destination}}</td>
-        <td>{{ booking.user.id }}</td>
         <td>{{ booking.user.username }}</td>
         <td>
             <div id="booking-status-{{ booking.id }}">
@@ -148,10 +144,15 @@ background: linear-gradient(to right, #000, #00b140); /* Replace with your desir
                 </form>
             </div>
         </td>
+        <td>
+            <form method="post" action="{% url 'delete_booking_platinum' booking.id %}">
+                {% csrf_token %}
+                <button type="submit" class="delete-button">Delete</button>
+            </form>
+        </td>
     </tr>
     {% endfor %}
 </table>
-
 
     </div>
 

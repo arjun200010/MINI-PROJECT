@@ -1,39 +1,196 @@
-<html>
-<head>
-<script>
+{% extends "nav6.html" %} 
 
-</script>
-</head>
-<body>
+{% load static %}
+{% block style %}
+<style>
+ body {
+       
+           background-size: cover;
+           background-repeat: no-repeat;
+           justify-content:center;
+           align-items:center;
+        }
+         
+
+        h2 {
+            text-align: center;
+            color: #OOO;
+            margin:bottom:30px;
+            margin-top:102px;
+        }
+
+          form {
+  max-width: 501px;
+  margin: 0 auto; /* Center-align the form horizontally */
+  padding: 19px;
+  background-color: rgba(255, 255, 255, 0.5);
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 7.2);
+  border-radius: 119px;
+  text-align: center;
+  opacity: 1.9; 
+
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 30px;
+        }
+
+        select,input,
+        input[type="file"] {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #ooo;
+            border-radius: 50px;
+        }
+
+        button {
+            background-color: #0074e4;
+            color: #fff;
+            border: none;
+            border-radius: 20px;
+            padding: 15px 20px;
+            cursor: pointer;
+        }
+
+        a {
+            text-decoration: none;
+            color: white; /* Change link color to blue */
+            
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+        div2{
+            color:red;
+            font-weight:bold;
+        }
+</style>
+{% endblock style %}
+
+{% block body  %}
+<h2> Vendor Update Profile</h2>
 <form method="post" enctype="multipart/form-data">
+
+
+ {% for message in messages %}  
+ <div class="alert alert-{{ message.tags}} alert-dismissible fade show" role="alert">
+  <strong>Message:</strong> {{ message }}
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{% endfor %}
   {% csrf_token %}
   
   <label for="first_name">First Name:</label>
-  <input type="text" id="first_name" name="first_name" value="{{ request.user.first_name }}">
+  <input type="text" id="first_name" name="first_name" value="{{ request.user.first_name }}"  onchange="validateFirstName()">
+  <div2><span id="first-name-error" class="error-message"></span></div2>
   <br>
   
   <label for="last_name">Last Name:</label>
-  <input type="text" id="last_name" name="last_name" value="{{ request.user.last_name }}">
+  <input type="text" id="last_name" name="last_name" value="{{ request.user.last_name }}" onchange="validateLastname">
+  <div2><span id="last-name-error" class="error-message"></span></div2>
   <br>
   
   <label for="skill">Skill:</label>
-  <select id="skill" name="skill">
-    <option value="Skill1" {% if vendor_profile.skill == 'Skill1' %}selected{% endif %}>Skill1</option>
-    <option value="Skill2" {% if vendor_profile.skill == 'Skill2' %}selected{% endif %}>Skill2</option>
+  <select id="skill" name="skill" value="{{request.VendorProfile.document.name}}">
+  <option value="">Choose a skill</option>
+    <option value="chef" {% if vendor_profile.skill == 'chef' %}selected{% endif %}>chef</option>
+    <option value="Decorator" {% if vendor_profile.skill == 'Decorator' %}selected{% endif %}>Decorator</option>
+     <option value="Disk Jockey" {% if vendor_profile.skill == 'Disk Jockey' %}selected{% endif %}>Disk Jockey</option>
+    <option value="Photographer" {% if vendor_profile.skill == 'Photographer' %}selected{% endif %}>Photographer</option>
+     <option value="Bar tender" {% if vendor_profile.skill == 'Bar tender' %}selected{% endif %}>Bar tender</option>
+    <option value="Waiter" {% if vendor_profile.skill == 'Waiter' %}selected{% endif %}>Waiter</option>
     <!-- Add more options as needed -->
   </select>
   <br>
   
   <label for="document">Document:</label>
-  <input type="file" id="document" name="document">
+  <input type="file" id="document" name="document" required onchange="validateDocument()">
+  <div2><span id="document-error" class="error-message"></span></div2>
   <br>
   
-  <input type="submit" value="Update Profile">
-  <button type="submit"><a href="{% url 'vendorhome' %}">Continue</a>
+  <button type="submit" class="btn btn-primary"onclick="validateProfile()">Update Profile</button>
+  <span id="success-message" class="success-message"></span>
+  <button type="submit"><a href="{% url 'vendorhome' %}">Close</a>
 </form>
 
+<script>
+    function validateDocument() {
+        const documentInput = document.getElementById('document');
+        const documentError = document.getElementById('document-error');
+        const allowedExtensions = /(\.pdf)$/i; // Add more extensions if needed
+
+        documentError.textContent = ''; // Clear any existing error message
 
 
+        if (!allowedExtensions.test(documentInput.files[0].name)) {
+            documentError.textContent = 'Only PDF files are allowed';
+        }
 
-</body>
-</html>
+        }
+
+    document.getElementById('document').addEventListener('change', validateDocument);
+
+      function validateFirstName() 
+        {
+            const firstNameInput = document.getElementById('first_name');
+            const firstName = firstNameInput.value;
+            const firstNameError = document.getElementById('first-name-error');
+        
+            firstNameError.textContent = ''; // Clear any existing error message
+        
+            // Validate the first name (between 2 and 50 characters, letters, hyphens, and apostrophes)
+            const namePattern = /^[A-Za-z-' ]{2,50}$/; // Adjust as needed
+        
+            if (!namePattern.test(firstName)) 
+            {
+
+                firstNameError.textContent = 'First Name is invalid';
+            } 
+            else if (/ {2,}/.test(firstName)) 
+            {
+
+                // Check for multiple consecutive spaces
+                firstNameError.textContent = 'Multiple consecutive spaces are not allowed';
+            }
+        }
+          function validateLastName(){
+            const lastnameInput=document.getElementById('last_name');
+            const lastName=lastnameInput.value;
+            const lastnameError=document.getElementById('last-name-error');
+            lastnameError.textContent= '';
+            const namepattern=/^[A-Za-z-' ]{2,50}$/;
+            if(!namepattern.test(lastName))
+            {
+                lastnameError.textContent='Last name is invalid';
+            }
+            else if(/ {2,}/.test(lastName))
+            {
+                lastnameError.textContent="Multiple consecutive spaces are not allowed";
+            }
+        }
+        function validateProfile(){
+          validateLastName();
+          validateFirstName();
+          validateDocument();
+
+            const documentError = document.getElementById('document-error').textContent;
+            const firstNameError = document.getElementById('first-name-error').textContent;
+            const lastNameError = document.getElementById('last-name-error').textContent;
+            const successMessage = document.getElementById('success-message');
+
+            // If any error messages exist, do not proceed
+            if (firstNameError || lastnameError || documentError) {
+                return;
+            }
+
+            // If all validations pass, show success message
+            successMessage.textContent = 'Profile Updated  successful!';
+            // You can add code here to submit the form or perform other actions if needed.
+        
+        }
+</script>
+{% endblock body  %}

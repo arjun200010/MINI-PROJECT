@@ -4,39 +4,57 @@
 <head>
     <meta charset="UTF-8">
     <title>HAPPY WEDDING | Admin Home</title>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
     <style>
-        body {
-            background-color:#665866;
-            margin: 0;
-            padding: 0;
-            display: flex;
-        }
+  body {
+    margin: 0;
+    padding: 0;
+    display: flex;
+}
 
-        /* Sidebar */
-          .sidebar {
-            position: fixed;
-            width: 200px;
-            background-color: black;
-            height: 100%;
-            color: white;
-            padding: 20px;
-        }
+/* Sidebar */
+.sidebar {
+    position: fixed;
+    width: 200px;
+    background-color: black;
+    height: 100%;
+    color: white;
+    padding: 20px;
+}
 
-        .sidebar a {
-            text-decoration: none;
-            color: white;
-            display: block;
-            margin-bottom: 10px;
-        }
+.sidebar a {
+    text-decoration: none;
+    color: white;
+    display: block;
+    margin-bottom: 10px;
+}
 
-        
+/* Adjust the content area to occupy the remaining space */
+.content {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    margin-left: 300px; /* Width of the sidebar */
+    width: 100%; /* Occupy the remaining space */
+}
 
-       table {
+/* Filter form styling */
+#roleFilterForm {
+    display: flex;
+    margin-bottom: 20px; /* Add some space between the filter form and the table */
+}
+
+/* Rest of your existing styles */
+/* ... */
+
+table {
     border-collapse: collapse;
-    width: calc(100% - 300px); /* Subtract the width of the sidebar from the total width */
-    float: right; /* Float the table to the right of the sidebar */
-    margin-right: 20px; /* Add some margin to separate the table from the sidebar */
+    width: 100%; /* Occupy the full width of the content area */
+}
+
+/* ... */
+
 }
 
 /* Adjust the content area to occupy the remaining space */
@@ -126,63 +144,65 @@ background: linear-gradient(to right, #000, #00b140); /* Replace with your desir
         <strong>Message:</strong> {{ message }}
     </div>
     {% endfor %}
+    </form>
+
+   <!-- adminhome.html -->
+<form method="get" action="">
+    <label for="roleFilter">Filter by Role:</label>
+    <select id="roleFilter" name="role">
+        <option value="" {% if not selected_role %}selected{% endif %}>All</option>
+        <option value="ADMIN" {% if selected_role == "ADMIN" %}selected{% endif %}>Admin</option>
+        <option value="VENDOR" {% if selected_role == "VENDOR" %}selected{% endif %}>Vendor</option>
+        <option value="CUSTOMER" {% if selected_role == "CUSTOMER" %}selected{% endif %}>Customer</option>
+    </select>
+    <button type="submit">Filter</button>
 </form>
 
-    
-    <table border="2">
-        <thead>
-            <tr>
-                <th>Username</th>
-                <th>Email</th>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th>Is Active</th>
-                <th>Role</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-       <tbody>
-    {% for user in users %}
-        {% if not user.is_superuser %}
+<table border="2">
+    <thead>
         <tr>
-            <td>{{ user.username }}</td>
-            <td>{{ user.email }}</td>
-            <td>{{ user.first_name }}</td>
-            <td>{{ user.last_name }}</td>
-            <td>{{ user.is_active }}</td>
-            <td>{{ user.role }}</td>
-            <td>
-                {% if user.is_active %}
-                    <form method="post" action="{% url 'deactivate_user' user.id %}">
-                        {% csrf_token %}
-                        <button type="submit">Deactivate</button>
-                    </form>
-                {% else %}
-                    <form method="post" action="{% url 'activate_user' user.id %}">
-                        {% csrf_token %}
-                        <button type="submit">Activate</button>
-                    </form>
-                {% endif %}
-            </td>
+            <th>Username</th>
+            <th>Email</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Is Active</th>
+            <th>Role</th>
+            <th>Action</th>
         </tr>
-        {% endif %}
-    {% endfor %}
-</tbody>
+    </thead>
+    <tbody>
+        {% for user in users %}
+            {% if not user.is_superuser %}
+                <tr>
+                    <td>{{ user.username }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>{{ user.first_name }}</td>
+                    <td>{{ user.last_name }}</td>
+                    <td>{{ user.is_active }}</td>
+                    <td>{{ user.role }}</td>
+                    <td>
+                        {% if user.is_active %}
+                            <form method="post" action="{% url 'deactivate_user' user.id %}">
+                                {% csrf_token %}
+                                <button type="submit">Deactivate</button>
+                            </form>
+                        {% else %}
+                            <form method="post" action="{% url 'activate_user' user.id %}">
+                                {% csrf_token %}
+                                <button type="submit">Activate</button>
+                            </form>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endif %}
+        {% endfor %}
+    </tbody>
+</table>
 
-    </table>
 </div>
 
 
-<script>
-     function handleSubmit(event) {
-        event.preventDefault(); // Prevent the default form submission
-        filterUsersByRole(); // Apply the filter
-    }
-    document.getElementById('filter-form').addEventListener('submit', handleSubmit);
 
 
-
-
-</script>
 </body>
 </html>

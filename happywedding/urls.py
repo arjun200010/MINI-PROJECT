@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.urls import path
 from weddingapp import views
 from django.contrib.auth.views import PasswordResetView,PasswordResetDoneView,PasswordResetConfirmView,PasswordResetCompleteView
-
+from weddingapp.views import delete_booking_gold,delete_booking_customise,delete_booking_platinum,delete_booking_silver
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('',views.index,name='index'),
@@ -62,6 +62,13 @@ urlpatterns = [
     path('vendorsignup/',views.vendorsignup,name="vendorsignup"),
     path('vendor_update_profile/',views.vendor_update_profile,name="vendor_update_profile"),
     path('vendordetails/',views.vendordetails,name="vendordetails"),
+    path('delete_booking_gold/<int:booking_id>/', delete_booking_gold, name='delete_booking_gold'),
+    path('delete_booking_silver/<int:booking_id>/', delete_booking_silver, name='delete_booking_silver'),
+    path('delete_booking_platinum/<int:booking_id>/', delete_booking_platinum, name='delete_booking_platinum'),
+    path('delete_booking_customise/<int:booking_id>/', delete_booking_customise, name='delete_booking_customise'),
+    path('package_details/',views.package_details,name="package_details"),
+    path("apply_booking/",views.apply_booking,name="apply_booking"),
+    
 ]
 # urls.py
 

@@ -4,7 +4,7 @@
     <title>Customise Booking </title>
        <style>
  body {
-            background-color:#665866;
+            
             margin: 0;
             padding: 0;
             display: flex;
@@ -136,6 +136,7 @@ background: linear-gradient(to right, #000, #00b140); /* Replace with your desir
         <th>Guest</th>
         <th>Total Amount</th>
         <th>Booking Status</th>
+        <th>Action</th>
     </tr>
     {% for booking in customisebookings %}
     <tr>
@@ -163,6 +164,12 @@ background: linear-gradient(to right, #000, #00b140); /* Replace with your desir
                     </button>
                 </form>
             </div>
+        </td>
+        <td>
+            <form method="post" action="{% url 'delete_booking_customise' booking.id %}">
+                {% csrf_token %}
+                <button type="submit" class="delete-button">Delete</button>
+            </form>
         </td>
     </tr>
     {% endfor %}

@@ -140,7 +140,7 @@ MESSAGE_TAGS={
 
 SESSION_ENGINE = "django.contrib.sessions.backends.db"
 SESSION_COOKIE_NAME = "sessionid"
-SESSION_COOKIE_AGE = 600
+SESSION_COOKIE_AGE = 1000
 LOGIN_URL = 'login'
 
 MESSAGE_STORAGE = 'django.contrib.messages.storage.cookie.CookieStorage'

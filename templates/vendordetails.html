@@ -1,34 +1,128 @@
-
-
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vendor Table</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            width: 200px;
+            background-color: black;
+            height: 100%;
+            color: white;
+            padding: 20px;
+        }
+
+        .sidebar a {
+            text-decoration: none;
+            color: white;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: calc(100% - 500px); /* Subtract the width of the sidebar from the total width */
+            margin-left: 352px; /* Add margin to separate the table from the sidebar */
+        }
+
+        /* Adjust the content area to occupy the remaining space */
+        .content {
+            flex: 1;
+            padding: 20px;
+            width: calc(100% - 200px); /* Subtract the width of the sidebar */
+        }
+
+        button {
+            background-color: green;
+            color: black;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+
+        a {
+            text-decoration: none;
+            color: #00f; /* Change link color to blue */
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        th, td {
+            border: 2px solid #000;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            /* Gradient background color combination */
+            background: linear-gradient(to right, #000, #00b140); /* Replace with your desired colors */
+
+            color: white;
+            font-weight: bold; /* Make heading fonts bold */
+        }
+
+        td {
+            font-style: italic;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        tr:hover {
+            background-color: #0074e4;
+            color: white;
+        }
+
+        h2 {
+            text-align: center;
+            color: #OOO;
+            margin-top: 20px;
+        }
+        .message-box {
+            text-align: right;
+            margin: 10px; /* Add margin for spacing */
+            width: auto; /* Make the message boxes expand to fit content */
+        }
+    </style>
 </head>
 <body>
-    <h1>Vendor Table</h1>
-
-    <table border="1">
-        <thead>
-            <tr>
-                <th>User ID</th>
-                <th>Name</th>
-                <th>Skills</th>
-                <th>Download Document</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for vendor in vendors %}
+    <div class="sidebar">
+        <a href="/adminfirst/">Dashboard</a>
+    </div>
+    <div class="content">
+        <h2>Vendor Table</h2>
+        <table border="1">
+            <thead>
                 <tr>
-                    <td>{{ vendor.user.id }}</td>
-                    <td>{{ vendor.user.get_full_name }}</td>
-                    <td>{{ vendor.skill }}</td>
-                    <td><a href="{{ vendor.document.url }}" download>Download</a></td>
+                    <th>User ID</th>
+                    <th>Skills</th>
+                    <th>Download Document</th>
                 </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                {% for vendor in vendors %}
+                    <tr>
+                        <td>{{ vendor.user.id }}</td>
+                        <td>{{ vendor.skill }}</td>
+                        <td><a href="{{ vendor.document.url }}" download>Download</a></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </body>
 </html>

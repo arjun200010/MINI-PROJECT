@@ -4,7 +4,6 @@
     <title>Gold Booking Data</title>
        <style>
  body {
-            background-color:#665866;
             margin: 0;
             padding: 0;
             display: flex;
@@ -90,7 +89,7 @@ background: linear-gradient(to right, #000, #00b140); /* Replace with your desir
         color: white;
     }
 
-  h1 {
+  h2 {
             text-align: center;
             color: #OOO;
             margin-top:20px;
@@ -113,7 +112,7 @@ background: linear-gradient(to right, #000, #00b140); /* Replace with your desir
 
 
     <div class="content">
-        <h1>Gold Booking Data</h1>
+        <h2>Gold Booking Data</h2>
     <form id="message">
        <form id="message">
     {% for message in messages %}
@@ -122,12 +121,15 @@ background: linear-gradient(to right, #000, #00b140); /* Replace with your desir
     </div>
     {% endfor %}
     </form>
-       <table>
+<!-- ... (existing code) ... -->
+
+<table>
     <tr>
         <th>Date of Booking</th>
         <th>Destination Selected</th>
         <th>Username</th>
         <th>Booking Status</th>
+        <th>Action</th> <!-- New column for the delete button -->
     </tr>
     {% for booking in goldbookings %}
     <tr>
@@ -148,9 +150,18 @@ background: linear-gradient(to right, #000, #00b140); /* Replace with your desir
                 </form>
             </div>
         </td>
+        <td>
+            <form method="post" action="{% url 'delete_booking_gold' booking.id %}">
+                {% csrf_token %}
+                <button type="submit" class="delete-button">Delete</button>
+            </form>
+        </td>
     </tr>
     {% endfor %}
 </table>
+
+<!-- ... (existing code) ... -->
+
     </div>
   <script>
    
