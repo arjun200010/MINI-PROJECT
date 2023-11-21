@@ -66,9 +66,14 @@ urlpatterns = [
     path('delete_booking_silver/<int:booking_id>/', delete_booking_silver, name='delete_booking_silver'),
     path('delete_booking_platinum/<int:booking_id>/', delete_booking_platinum, name='delete_booking_platinum'),
     path('delete_booking_customise/<int:booking_id>/', delete_booking_customise, name='delete_booking_customise'),
-    path('package_details/',views.package_details,name="package_details"),
-    path("apply_booking/",views.apply_booking,name="apply_booking"),
-    
+    path('confirmed_gold_bookings',views.confirmed_gold_bookings,name="confirmed_gold_bookings"),
+    path('apply_bookings_gold/<int:booking_id>/', views.apply_bookings_gold, name='apply_bookings_gold'),
+    path('confirmed_silver_bookings',views.confirmed_silver_bookings,name="confirmed_silver_bookings"),
+    path('apply_bookings_silver/<int:booking_id>/', views.apply_bookings_silver, name='apply_bookings_silver'),
+    path('confirmed_platinum_bookings',views.confirmed_platinum_bookings,name="confirmed_platinum_bookings"),
+    path('apply_bookings_platinum/<int:booking_id>/', views.apply_bookings_platinum, name='apply_bookings_platinum'),
+    path('confirmed_customise_bookings',views.confirmed_customise_bookings,name="confirmed_customise_bookings"),
+    path('apply_bookings_customise/<int:booking_id>/', views.apply_bookings_customise, name='apply_bookings_customise'),
 ]
 # urls.py
 

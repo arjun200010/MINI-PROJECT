@@ -54,8 +54,8 @@ p1{
 
       <nav id="navbar" class="navbar">
         <ul>
+          <li><a class="nav-link scrollto" href="#pricing">want to work?</a></li>
           <li><a class="nav-link scrollto" href="#contact">Contact</a></li>
-        
         <i class="bi bi-list mobile-nav-toggle"></i>
       </nav><!-- .navbar -->
     <div class="dropdown-center">
@@ -65,7 +65,6 @@ p1{
   <ul class="dropdown-menu">
     <li><a class="dropdown-item" href="{% url 'vendor_change_password' %}">Change Password</a></li>
     <li><a class="dropdown-item" href="{% url 'vendor_update_profile' %}">Update Profile</a></li>
-    <li><a class="dropdown-item" href="{% url 'package_details' %}">Want to Work ?</a></li>
     <li><a class="dropdown-item" href="{% url 'handlelogout' %}">Logout</a></li>
   </ul>
   </ul>
@@ -82,7 +81,99 @@ p1{
   </section><!-- End Hero -->
 
   <main id="main">
-       <!-- ======= Contact Section ======= -->
+      
+
+  </main><!-- End #main -->
+
+<!-- ======= Pricing Section ======= -->
+    <section id="pricing" class="pricing">
+      <div class="container">
+
+        <div class="section-title">
+          <span>Packages</span>
+          <h2>Packages</h2>
+          <p>CHOOSE  THE PACKAGE To Apply</p>
+        </div>
+
+        <div class="row">
+
+          <div class="col-lg-4 col-md-6" data-aos="zoom-in" data-aos-delay="150">
+            <div class="box">
+              <h4>CUSTOMISE</h4>
+              <h3><sup>$</sup>3500-<sup>$</sup>100000</h3>
+              <ul>
+                <li>customise</li>
+                <li>Your needs</li>
+                <li>With ADDS-on advnatage</li>
+              </ul>
+              <div class="btn-wrap">
+                <a href="{% url 'confirmed_customise_bookings' %}" class="btn-buy">Apply</a>
+              </div>
+            </div>
+          </div>
+ <div class="row">
+
+          <div class="col-lg-4 col-md-6" data-aos="zoom-in" data-aos-delay="150">
+            <div class="box">
+              <h4>GOLD</h4>
+              <h3><sup>$</sup>45000<span></span></h3>
+              <ul>
+                <li>INDIAN CUISINE</li>
+                <li>INDIAN DESTINATION</li>
+                <li>MUSIC</li>
+                 <li>PHOTOGRAPY</li>
+                <li>DECORATION</li>
+                <li>100 GUEST</li>
+              </ul>
+              <div class="btn-wrap">
+                <a href="{% url 'confirmed_gold_bookings' %}" class="btn-buy">Apply</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-4 col-md-6 mt-4 mt-md-0" data-aos="zoom-in">
+            <div class="box featured">
+              <h4>SILVER</h4>
+              <h3><sup>$</sup>55000<span></span></h3>
+              <ul>
+                <li>INDIAN OR CONTINENTAL CUISINE</li>
+                <li>INDIAN DESTINATION WITH FREE HONEYMOON PACKAGE</li>
+                <li>MUSIC AND DJ NIGHT</li>
+                <li>PRE-WEDDING SHOOTING</li>
+                 <li>PHOTOGRAPY</li>
+                <li>DECORATION</li>
+                <li>100-150 GUEST</li>
+              </ul>
+              <div class="btn-wrap">
+                <a href="{% url 'confirmed_silver_bookings' %}" class="btn-buy">Apply</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-4 col-md-6 mt-4 mt-lg-0" data-aos="zoom-in" data-aos-delay="150">
+            <div class="box">
+              <h4>PLATINUM</h4>
+              <h3><sup>$</sup>60000<span></span></h3>
+              <ul>
+                <li>INDIAN AND CONTINENTAL CUISINE WITH BEVERAGES</li>
+                <li>INDIAN AND INTERNATIONAL DESTINATION WITH FREE HONEYMOON PACKAGE</li>
+                <li>MUSIC , DJ NIGHT AND LIVE CONCERT</li>
+                <li>PRE-WEDDING SHOOTING WITH PROJECTOR DISPLAY</li>
+                 <li>DESTINATION PHOTOGRAPY</li>
+                <li>STAR DECORATORATION</li>
+                <li>100 GUEST</li>
+              </ul>
+              <div class="btn-wrap">
+                <a href="{% url 'confirmed_platinum_bookings' %}" class="btn-buy">Apply</a>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section><!-- End Pricing Section -->
+ <!-- ======= Contact Section ======= -->
     <section id="contact" class="contact">
       <div class="container">
 
@@ -153,10 +244,7 @@ p1{
         </div>
 
       </div>
-    </section><!-- End Contact Section -->
-
-  </main><!-- End #main -->
-
+    </section><!-- End Contact
   <!-- ======= Footer ======= -->
   <footer id="footer">
     <div class="footer-top">

@@ -46,7 +46,6 @@ class CustomisePackage(models.Model):
     location=models.CharField(max_length=255,null=True,blank=True)
     photography=models.CharField(max_length=255)
     guest=models.IntegerField()
-    food=models.CharField(max_length=255)
     is_booked=models.BooleanField(default=False)
     billing_info=models.IntegerField()
 

@@ -137,22 +137,22 @@ def loginhome(request):
 
 def adminfirst(request):
     if 'username' in request.session:
-        user_count = User.objects.filter(role='CUSTOMER').count()
-        vendor_count = User.objects.filter(role='VENDOR').count()
+        # user_count = User.objects.filter(role='CUSTOMER').count()
+        # vendor_count = User.objects.filter(role='VENDOR').count()
 
-        # Assuming "active" is a status field in your booking model
-        active_booking_count = GoldPackage.objects.filter(is_booked=True).count() + \
-                              SilverPackage.objects.filter(is_booked=True).count() + \
-                              PlatinumPackage.objects.filter(is_booked=True).count() + \
-                              CustomisePackage.objects.filter(is_booked=True).count()
+        # # Assuming "active" is a status field in your booking model
+        # active_booking_count = GoldPackage.objects.filter(is_booked=True).count() + \
+        #                       SilverPackage.objects.filter(is_booked=True).count() + \
+        #                       PlatinumPackage.objects.filter(is_booked=True).count() + \
+        #                       CustomisePackage.objects.filter(is_booked=True).count()
 
-        context = {
-            'user_count': user_count,
-            'vendor_count': vendor_count,
-            'active_booking_count': active_booking_count,
-        }
+        # context = {
+        #     'user_count': user_count,
+        #     'vendor_count': vendor_count,
+        #     'active_booking_count': active_booking_count,
+        # }
 
-        response = render(request, 'adminfirst.html', context)
+        response = render(request, 'adminfirst.html')
         response['Cache-Control'] = 'no-store, must-revalidate'
         return response
     else:
@@ -1043,63 +1043,134 @@ def delete_booking_customise(request, booking_id):
 
     return render(request, 'delete_booking_customise.html')
 
+@login_required
+def confirmed_gold_bookings(request):
+    # Filter GoldPackage objects where is_booked is True
+    confirmed_bookings = GoldPackage.objects.filter(is_booked=True)
 
+    # Render the details in a template or handle the data as per your requirement
+    context = {'confirmed_bookings': confirmed_bookings}
+    return render(request, 'confirmed_gold_bookings.html', context)
 
 @login_required
-def package_details(request):
-    # Assuming you have a way to associate bookings with packages
-    gold_package_bookings = GoldPackage.objects.filter(is_booked=True)
-    silver_package_bookings = SilverPackage.objects.filter(is_booked=True)
-    platinum_package_bookings = PlatinumPackage.objects.filter(is_booked=True)
-    customise_package_bookings = CustomisePackage.objects.filter(is_booked=True)
+def apply_bookings_gold(request, booking_id):
+    if request.user.is_authenticated:
+        vendor_profile = VendorProfile.objects.get(user=request.user)
+        booking = GoldPackage.objects.get(pk=booking_id)
 
-    # Combine the results into a single list
-    all_bookings = list(gold_package_bookings) + list(silver_package_bookings) + \
-                   list(platinum_package_bookings) + list(customise_package_bookings)
+        # Compose email content
+        subject = f"Request From {request.user.role} - {vendor_profile.skill}"
+        message = f"Vendor ID: {vendor_profile.id}\nDate of Booking: {booking.date_of_booking}\nDestination Selected: {booking.destination_selected}\n in Gold Package"
+        from_email = request.user.email
+        to_email = ['achu31395@gmail.com']  # Replace with your admin's email
 
-    return render(request, 'package_details.html', {'all_bookings': all_bookings})
+        try:
+            # Send email
+            send_mail(subject, message, from_email, to_email)
+            
+        except Exception as e:
+            messages.error(request, f'Error sending email: {e}')
+        messages.success(request, 'Application sent successfully!')
+        return redirect('confirmed_gold_bookings')
 
-
-from .models import Booking
-
-User = get_user_model()
-
+    # Render the template for unauthenticated users
+    return render(request, "apply_bookings_gold.html")
 
 @login_required
-def apply_booking(request):
-    if request.method == 'POST':
-        # Extract relevant information from the request
-        user_username = request.user.username
+def confirmed_silver_bookings(request):
+    # Filter GoldPackage objects where is_booked is True
+    confirmed_bookings = SilverPackage.objects.filter(is_booked=True)
 
-        # Get confirmed bookings for the logged-in user
-        confirmed_bookings = Booking.objects.filter(user=request.user)
+    # Render the details in a template or handle the data as per your requirement
+    context = {'confirmed_bookings': confirmed_bookings}
+    return render(request, 'confirmed_silver_bookings.html', context)
 
-        # Get user skill from the vendor profile
-        user_skill = (
-            request.user.vendorprofile.skill
-            if hasattr(request.user, 'vendorprofile')
-            else ''
-        )
+@login_required
+def apply_bookings_silver(request, booking_id):
+    if request.user.is_authenticated:
+        vendor_profile = VendorProfile.objects.get(user=request.user)
+        booking = SilverPackage.objects.get(pk=booking_id)
 
-        # Send email to admin for each confirmed booking
-        for booking in confirmed_bookings:
-            send_mail(
-                'Booking Application',
-                f' Vendor {user_username} has requested to apply to the booking '
-                f'with skill: {user_skill} for the date: {booking.date_of_booking} '
-                f'and destination: {booking.destination_selected}',
-                request.user.email,
-                ['achu31395@gmail.com'],
-                fail_silently=False,
-            )
+        # Compose email content
+        subject = f"Request From {request.user.role} - {vendor_profile.skill}"
+        message = f"Vendor ID: {vendor_profile.id}\nDate of Booking: {booking.date_of_booking}\nDestination Selected: {booking.destination_selected}\n of Silver Package"
+        from_email = request.user.email
+        to_email = ['achu31395@gmail.com']  # Replace with your admin's email
 
-    messages.success(request,"Applied Successfully")
-    return redirect('package_details')
+        try:
+            # Send email
+            send_mail(subject, message, from_email, to_email)
+            
+        except Exception as e:
+            messages.error(request, f'Error sending email: {e}')
+        messages.success(request, 'Application sent successfully!')
+        return redirect('confirmed_silver_bookings')
 
+    # Render the template for unauthenticated users
+    return render(request, "apply_bookings_silver.html")
 
+login_required
+def confirmed_platinum_bookings(request):
+    # Filter GoldPackage objects where is_booked is True
+    confirmed_bookings = PlatinumPackage.objects.filter(is_booked=True)
 
+    # Render the details in a template or handle the data as per your requirement
+    context = {'confirmed_bookings': confirmed_bookings}
+    return render(request, 'confirmed_platinum_bookings.html', context)
 
+@login_required
+def apply_bookings_platinum(request, booking_id):
+    if request.user.is_authenticated:
+        vendor_profile = VendorProfile.objects.get(user=request.user)
+        booking = PlatinumPackage.objects.get(pk=booking_id)
 
+        # Compose email content
+        subject = f"Request From {request.user.role} - {vendor_profile.skill}"
+        message = f"Vendor ID: {vendor_profile.id}\nDate of Booking: {booking.date_of_booking}\nDestination Selected: {booking.destination_selected}\n of Platinum Package"
+        from_email = request.user.email
+        to_email = ['achu31395@gmail.com']  # Replace with your admin's email
 
+        try:
+            # Send email
+            send_mail(subject, message, from_email, to_email)
+            
+        except Exception as e:
+            messages.error(request, f'Error sending email: {e}')
+        messages.success(request, 'Application sent successfully!')
+        return redirect('confirmed_platinum_bookings')
 
+    # Render the template for unauthenticated users
+    return render(request, "apply_bookings_platinum.html")
 
+login_required
+def confirmed_customise_bookings(request):
+    # Filter GoldPackage objects where is_booked is True
+    confirmed_bookings = CustomisePackage.objects.filter(is_booked=True)
+
+    # Render the details in a template or handle the data as per your requirement
+    context = {'confirmed_bookings': confirmed_bookings}
+    return render(request, 'confirmed_customise_bookings.html', context)
+
+@login_required
+def apply_bookings_customise(request, booking_id):
+    if request.user.is_authenticated:
+        vendor_profile = VendorProfile.objects.get(user=request.user)
+        booking = CustomisePackage.objects.get(pk=booking_id)
+
+        # Compose email content
+        subject = f"Request From {request.user.role} - {vendor_profile.skill}"
+        message = f"Vendor ID: {vendor_profile.id}\nDate of Booking: {booking.date_of_booking}\nDestination Selected: {booking.destination_selected}\n of Customise Package"
+        from_email = request.user.email
+        to_email = ['achu31395@gmail.com']  # Replace with your admin's email
+
+        try:
+            # Send email
+            send_mail(subject, message, from_email, to_email)
+            
+        except Exception as e:
+            messages.error(request, f'Error sending email: {e}')
+        messages.success(request, 'Application sent successfully!')
+        return redirect('confirmed_customise_bookings')
+
+    # Render the template for unauthenticated users
+    return render(request, "apply_bookings_customise.html")

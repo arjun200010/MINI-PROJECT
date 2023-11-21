@@ -1,0 +1,46 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Confirmed Silver Bookings</title>
+</head>
+<body>
+    <h1>Confirmed Silver Bookings</h1>
+     {% for message in messages %}  
+ <div class="alert alert-{{ message.tags}} alert-dismissible fade show" role="alert">
+  <strong>Message:</strong> {{ message }}
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{% endfor %}
+    <table border=2>
+        <thead>
+            <tr>
+                <th>User</th>
+                <th>Email</th>
+                <th>Date of Booking</th>
+                <th>Destination Selected</th>
+                <th>Action</th>  <!-- New column for the "Apply" button -->
+                <!-- Add more fields as needed -->
+            </tr>
+        </thead>
+        <tbody>
+            {% for booking in confirmed_bookings %}
+                <tr>
+                    <td>{{ booking.user.username }}</td>
+                    <td>{{ booking.user.email }}</td>
+                    <td>{{ booking.date_of_booking }}</td>
+                    <td>{{ booking.destination_selected }}</td>
+                    <td>
+                        <!-- "Apply" button -->
+                        <form action="{% url 'apply_bookings_silver' booking.id %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit">Apply</button>
+                        </form>
+                    </td>
+                    <!-- Add more fields as needed -->
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
