@@ -86,6 +86,7 @@
     <div class="sidebar">
         <a href="/">Home</a>
         <a href="/adminhome/">Users</a>
+        <a href="/vendorpackageapply/">Vendor Application</a>
         <a href="/vendordetails">Vendor Info</a>
         <select id="bookingDropdown">
             <option value="" disabled selected>Booking</option>
@@ -106,17 +107,17 @@
     <div class="cards-container">
         <div class="card card1">
             <h3> User</h3><br>
-            <p>Users:1{{ user_count }}</p>
+            <p>Users:{{ user_count }}</p>
         </div>
 
         <div class="card card2">
             <h3>vendor</h3><br>
-            <p>Vendors:1{{ vendor_count }}</p>
+            <p>Vendors:{{ vendor_count }}</p>
         </div>
 
         <div class="card card3">
             <h3>Total Bookings</h3><br>
-            <p>Bookings:4{{ active_booking_count }}</p>
+            <p>Bookings:{{ active_booking_count }}</p>
         </div>
 
         <div class="card card4">

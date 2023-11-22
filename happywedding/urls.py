@@ -74,6 +74,7 @@ urlpatterns = [
     path('apply_bookings_platinum/<int:booking_id>/', views.apply_bookings_platinum, name='apply_bookings_platinum'),
     path('confirmed_customise_bookings',views.confirmed_customise_bookings,name="confirmed_customise_bookings"),
     path('apply_bookings_customise/<int:booking_id>/', views.apply_bookings_customise, name='apply_bookings_customise'),
+    path('vendorpackageapply/',views.vendorpackageapply,name="vendorpackageapply"),
 ]
 # urls.py
 

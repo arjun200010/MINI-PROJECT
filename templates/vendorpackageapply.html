@@ -1,0 +1,107 @@
+<html>
+<body>
+  <h1>All Confirmed Bookings</h1>
+  
+  <table border=2>
+    <thead>
+      <tr>
+        <th>Date of Booking</th>
+        <th>Destination Selected</th>
+        <th>Vendor Username</th>
+        <th>Vendor Skill</th>
+        <th>Package Name</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for booking in gold_bookings %}
+        <tr>
+          <td>{{ booking.date_of_booking }}</td>
+          <td>{{ booking.destination_selected }}</td>
+          <td>
+            <select>
+              {% for vendor in vendors %}
+                <option>{{ vendor.user.username }}</option>
+              {% endfor %}
+            </select>
+          </td>
+          <td>
+            <select>
+              {% for vendor in vendors %}
+                <option>{{ vendor.skill }}</option>
+              {% endfor %}
+            </select>
+          </td>
+          <td>Gold</td>
+        </tr>
+      {% endfor %}
+
+      {% for booking in silver_bookings %}
+        <tr>
+          <td>{{ booking.date_of_booking }}</td>
+          <td>{{ booking.destination_selected }}</td>
+          <td>
+            <select>
+              {% for vendor in vendors %}
+                <option>{{ vendor.user.username }}</option>
+              {% endfor %}
+            </select>
+          </td>
+          <td>
+            <select>
+              {% for vendor in vendors %}
+                <option>{{ vendor.skill }}</option>
+              {% endfor %}
+            </select>
+          </td>
+          <td>Silver</td>
+        </tr>
+      {% endfor %}
+
+      {% for booking in platinum_bookings %}
+        <tr>
+          <td>{{ booking.date_of_booking }}</td>
+          <td>{{ booking.destination_selected }}</td>
+          <td>
+            <select>
+              {% for vendor in vendors %}
+                <option>{{ vendor.user.username }}</option>
+              {% endfor %}
+            </select>
+          </td>
+          <td>
+            <select>
+              {% for vendor in vendors %}
+                <option>{{ vendor.skill }}</option>
+              {% endfor %}
+            </select>
+          </td>
+          <td>Platinum</td>
+        </tr>
+      {% endfor %}
+
+      {% for booking in customise_bookings %}
+        <tr>
+          <td>{{ booking.date_of_booking }}</td>
+          <td>{{ booking.destination_selected }}</td>
+          <td>
+            <select>
+              {% for vendor in vendors %}
+                <option>{{ vendor.user.username }}</option>
+              {% endfor %}
+            </select>
+          </td>
+          <td>
+            <select>
+              {% for vendor in vendors %}
+                <option>{{ vendor.skill }}</option>
+              {% endfor %}
+            </select>
+          </td>
+          <td>Customise</td>
+        </tr>
+      {% endfor %}
+
+    </tbody>
+  </table>
+</body>
+</html>

@@ -4,7 +4,9 @@ from django.contrib.auth import login as auth_login, authenticate
 from django.contrib.auth import logout
 from django.contrib import messages
 from django.urls import reverse
-from .models import User,UserProfile,VendorProfile
+from django.contrib.auth import get_user_model
+User = get_user_model()
+from .models import UserProfile,VendorProfile
 from .models import GoldPackage,SilverPackage,PlatinumPackage,CustomisePackage
 from django.contrib.auth.decorators import login_required
 import json
@@ -137,22 +139,22 @@ def loginhome(request):
 
 def adminfirst(request):
     if 'username' in request.session:
-        # user_count = User.objects.filter(role='CUSTOMER').count()
-        # vendor_count = User.objects.filter(role='VENDOR').count()
+        user_count = User.objects.filter(role='CUSTOMER').count()
+        vendor_count = User.objects.filter(role='VENDOR').count()
 
-        # # Assuming "active" is a status field in your booking model
-        # active_booking_count = GoldPackage.objects.filter(is_booked=True).count() + \
-        #                       SilverPackage.objects.filter(is_booked=True).count() + \
-        #                       PlatinumPackage.objects.filter(is_booked=True).count() + \
-        #                       CustomisePackage.objects.filter(is_booked=True).count()
+        # Assuming "active" is a status field in your booking model
+        active_booking_count = GoldPackage.objects.filter(is_booked=True).count() + \
+                              SilverPackage.objects.filter(is_booked=True).count() + \
+                              PlatinumPackage.objects.filter(is_booked=True).count() + \
+                              CustomisePackage.objects.filter(is_booked=True).count()
 
-        # context = {
-        #     'user_count': user_count,
-        #     'vendor_count': vendor_count,
-        #     'active_booking_count': active_booking_count,
-        # }
+        context = {
+            'user_count': user_count,
+            'vendor_count': vendor_count,
+            'active_booking_count': active_booking_count,
+        }
 
-        response = render(request, 'adminfirst.html')
+        response = render(request, 'adminfirst.html',context)
         response['Cache-Control'] = 'no-store, must-revalidate'
         return response
     else:
@@ -168,10 +170,7 @@ def vendorhome(request):
             return redirect('login')
 
 
-# views.py
-from django.shortcuts import render
-from django.contrib.auth.models import User
-  # Import the form if you decide to use it
+
 
 def adminhome(request):
     # Fetch all users initially
@@ -1174,3 +1173,22 @@ def apply_bookings_customise(request, booking_id):
 
     # Render the template for unauthenticated users
     return render(request, "apply_bookings_customise.html")
+
+def vendorpackageapply(request):
+    gold_bookings = GoldPackage.objects.filter(is_booked=True)
+    silver_bookings = SilverPackage.objects.filter(is_booked=True)
+    platinum_bookings = PlatinumPackage.objects.filter(is_booked=True)
+    customise_bookings = CustomisePackage.objects.filter(is_booked=True)
+
+    # Get all registered vendors
+    vendors = VendorProfile.objects.all()
+
+    context = {
+        'gold_bookings': gold_bookings,
+        'silver_bookings': silver_bookings,
+        'platinum_bookings': platinum_bookings,
+        'customise_bookings': customise_bookings,
+        'vendors': vendors,
+    }
+
+    return render(request, 'vendorpackageapply.html', context)
