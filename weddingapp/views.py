@@ -1,4 +1,4 @@
-from django.http import JsonResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render,redirect
 from django.contrib.auth import login as auth_login, authenticate
 from django.contrib.auth import logout
@@ -1061,7 +1061,9 @@ def apply_bookings_gold(request, booking_id):
         subject = f"Request From {request.user.role} - {vendor_profile.skill}"
         message = f"Vendor ID: {vendor_profile.id}\nDate of Booking: {booking.date_of_booking}\nDestination Selected: {booking.destination_selected}\n in Gold Package"
         from_email = request.user.email
-        to_email = ['achu31395@gmail.com']  # Replace with your admin's email
+        to_email = ['achu31395@gmail.com']
+        booking.is_confirmed=False
+        booking.save()  # Replace with your admin's email
 
         try:
             # Send email
@@ -1094,7 +1096,9 @@ def apply_bookings_silver(request, booking_id):
         subject = f"Request From {request.user.role} - {vendor_profile.skill}"
         message = f"Vendor ID: {vendor_profile.id}\nDate of Booking: {booking.date_of_booking}\nDestination Selected: {booking.destination_selected}\n of Silver Package"
         from_email = request.user.email
-        to_email = ['achu31395@gmail.com']  # Replace with your admin's email
+        to_email = ['achu31395@gmail.com']
+        booking.is_confirmed=False
+        booking.save()  # Replace with your admin's email
 
         try:
             # Send email
@@ -1127,7 +1131,9 @@ def apply_bookings_platinum(request, booking_id):
         subject = f"Request From {request.user.role} - {vendor_profile.skill}"
         message = f"Vendor ID: {vendor_profile.id}\nDate of Booking: {booking.date_of_booking}\nDestination Selected: {booking.destination_selected}\n of Platinum Package"
         from_email = request.user.email
-        to_email = ['achu31395@gmail.com']  # Replace with your admin's email
+        to_email = ['achu31395@gmail.com'] 
+        booking.is_confirmed=False
+        booking.save() # Replace with your admin's email
 
         try:
             # Send email
@@ -1160,7 +1166,9 @@ def apply_bookings_customise(request, booking_id):
         subject = f"Request From {request.user.role} - {vendor_profile.skill}"
         message = f"Vendor ID: {vendor_profile.id}\nDate of Booking: {booking.date_of_booking}\nDestination Selected: {booking.destination_selected}\n of Customise Package"
         from_email = request.user.email
-        to_email = ['achu31395@gmail.com']  # Replace with your admin's email
+        to_email = ['achu31395@gmail.com'] 
+        booking.is_confirmed=False
+        booking.save() # Replace with your admin's email
 
         try:
             # Send email
@@ -1192,3 +1200,187 @@ def vendorpackageapply(request):
     }
 
     return render(request, 'vendorpackageapply.html', context)
+
+
+
+from django.shortcuts import get_object_or_404, redirect
+
+def confirm_booking_gold_vendor(request, booking_id):
+    # Get the GoldPackage instance
+    gold_booking = get_object_or_404(GoldPackage, id=booking_id)
+
+    # Assuming there's a ForeignKey from GoldPackage to User
+    vendor_user = gold_booking.user
+
+    # Admin's email
+    admin_email = 'achu31395@gmail.com'  # Replace with your admin's email
+
+    # Vendor's email
+    vendor_email = vendor_user.email  # Access the related User's email directly
+
+    # Send email
+    send_mail(
+        'Booking Confirmation',
+        'Dear Vendor, Your booking has been confirmed for the Gold Package.',
+        admin_email,  # From email address (admin's email)
+        [vendor_email],  # To email address (vendor's email)
+        fail_silently=False,
+    )
+
+    # Perform other actions related to confirmation here, e.g., updating the booking status
+    gold_booking.is_confirmed = True
+    gold_booking.save()
+
+    return redirect('vendorpackageapply')
+
+
+    return render(request,"confirm_booking_gold_vendor.html")
+
+
+
+from django.shortcuts import get_object_or_404, redirect
+
+def confirm_booking_silver_vendor(request, booking_id):
+    # Get the GoldPackage instance
+    silver_booking = get_object_or_404(SilverPackage, id=booking_id)
+
+    # Assuming there's a ForeignKey from GoldPackage to User
+    vendor_user = silver_booking.user
+
+    # Admin's email
+    admin_email = 'achu31395@gmail.com'  # Replace with your admin's email
+
+    # Vendor's email
+    vendor_email = vendor_user.email  # Access the related User's email directly
+
+    # Send email
+    send_mail(
+        'Booking Confirmation',
+        'Dear Vendor, Your booking has been confirmed for the Silver Package.',
+        admin_email,  # From email address (admin's email)
+        [vendor_email],  # To email address (vendor's email)
+        fail_silently=False,
+    )
+
+    # Perform other actions related to confirmation here, e.g., updating the booking status
+    silver_booking.is_confirmed = True
+    silver_booking.save()
+
+    return redirect('vendorpackageapply')
+
+
+    return render(request,"confirm_booking_silver_vendor.html")
+
+
+
+from django.shortcuts import get_object_or_404, redirect
+
+def confirm_booking_platinum_vendor(request, booking_id):
+    # Get the GoldPackage instance
+    platinum_booking = get_object_or_404(PlatinumPackage, id=booking_id)
+
+    # Assuming there's a ForeignKey from GoldPackage to User
+    vendor_user = platinum_booking.user
+
+    # Admin's email
+    admin_email = 'achu31395@gmail.com'  # Replace with your admin's email
+
+    # Vendor's email
+    vendor_email = vendor_user.email  # Access the related User's email directly
+
+    # Send email
+    send_mail(
+        'Booking Confirmation',
+        'Dear Vendor, Your booking has been confirmed for the Platinum Package.',
+        admin_email,  # From email address (admin's email)
+        [vendor_email],  # To email address (vendor's email)
+        fail_silently=False,
+    )
+
+    # Perform other actions related to confirmation here, e.g., updating the booking status
+    platinum_booking.is_confirmed = True
+    platinum_booking.save()
+
+    return redirect('vendorpackageapply')
+
+
+    return render(request,"confirm_booking_platinum_vendor.html")
+
+
+from django.shortcuts import get_object_or_404, redirect
+
+def confirm_booking_customise_vendor(request, booking_id):
+    # Get the GoldPackage instance
+    customise_booking = get_object_or_404(CustomisePackage, id=booking_id)
+
+    # Assuming there's a ForeignKey from GoldPackage to User
+    vendor_user = customise_booking.user
+
+    # Admin's email
+    admin_email = 'achu31395@gmail.com'  # Replace with your admin's email
+
+    # Vendor's email
+    vendor_email = vendor_user.email  # Access the related User's email directly
+
+    # Send email
+    send_mail(
+        'Booking Confirmation',
+        'Dear Vendor, Your booking has been confirmed for the Customise Package.',
+        admin_email,  # From email address (admin's email)
+        [vendor_email],  # To email address (vendor's email)
+        fail_silently=False,
+    )
+
+    # Perform other actions related to confirmation here, e.g., updating the booking status
+    customise_booking.is_confirmed = True
+    customise_booking.save()
+
+    return redirect('vendorpackageapply')
+
+
+    return render(request,"confirm_booking_customise_vendor.html")
+
+@login_required
+def payments(request):
+    user = request.user  # Get the currently logged-in user
+    gold_packages = GoldPackage.objects.filter(user=user)
+    silver_packages = SilverPackage.objects.filter(user=user)
+    platinum_packages = PlatinumPackage.objects.filter(user=user)
+    customise_packages=CustomisePackage.objects.filter(user=user)
+    
+    return render(request, 'payments.html', {
+         'user':user,
+        'gold_packages': gold_packages,
+        'silver_packages': silver_packages,
+        'platinum_packages': platinum_packages,
+        'customise_packages':customise_packages
+    })
+
+import razorpay
+@login_required
+def payment_gold(request):
+  if request.method== 'POST' :  
+    client = razorpay.Client(auth=("rzp_test_XxJHDi3GQ6Raye", "ETHQMabGv3tFBgWHtt6cGCf9"))
+
+    DATA = {
+        "amount": 100,
+        "currency": "INR",
+    }
+    client.order.create({'amount':'amount','currency':'INR','payment_cpature':'1'})
+  return render(request,"payment_gold.html")
+
+@login_required
+def payment_silver(request):
+    return render(request,"payment_silver.html")
+
+@login_required
+def payment_platinum(request):
+    return render(request,"payment_platinum.html")
+
+@login_required
+def payment_customise(request):
+    return render(request,"payment_customise.html")
+
+
+
+

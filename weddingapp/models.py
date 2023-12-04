@@ -19,6 +19,7 @@ class GoldPackage(models.Model):
     date_of_booking = models.DateField()
     destination_selected = models.CharField(max_length=255)
     is_booked = models.BooleanField(default=False) 
+    is_confirmed=models.BooleanField(default=False)
     
 
 class SilverPackage(models.Model):
@@ -27,6 +28,7 @@ class SilverPackage(models.Model):
     destination_selected = models.CharField(max_length=255)
     honeymoon_destination=models.CharField(max_length=255)
     is_booked = models.BooleanField(default=False) 
+    is_confirmed=models.BooleanField(default=False)
 
 class PlatinumPackage(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -34,6 +36,7 @@ class PlatinumPackage(models.Model):
     destination_selected = models.CharField(max_length=255)
     honeymoon_destination=models.CharField(max_length=255)
     is_booked = models.BooleanField(default=False) 
+    is_confirmed=models.BooleanField(default=False)
 
 class CustomisePackage(models.Model):
     user=models.ForeignKey(User,on_delete=models.CASCADE)
@@ -48,6 +51,7 @@ class CustomisePackage(models.Model):
     guest=models.IntegerField()
     is_booked=models.BooleanField(default=False)
     billing_info=models.IntegerField()
+    is_confirmed=models.BooleanField(default=False)
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)

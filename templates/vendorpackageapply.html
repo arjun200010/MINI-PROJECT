@@ -1,7 +1,110 @@
 <html>
-<body>
-  <h1>All Confirmed Bookings</h1>
-  
+<head>
+<style>
+body {
+            
+           
+        }
+ /* Sidebar */
+          .sidebar {
+            position: fixed;
+            width: 200px;
+            background-color: black;
+            height: 100%;
+            color: white;
+            padding: 20px;
+        }
+
+        .sidebar a {
+            text-decoration: none;
+            color: white;
+            display: block;
+            margin-bottom: 10px;
+        }
+         table {
+    border-collapse: collapse;
+    width: calc(100% - 300px); /* Subtract the width of the sidebar from the total width */
+    float: right; /* Float the table to the right of the sidebar */
+    margin-right: 20px; /* Add some margin to separate the table from the sidebar */
+}
+
+/* Adjust the content area to occupy the remaining space */
+.content {
+    flex: 1;
+    padding: 20px;
+    width: calc(100% - 200px); /* Subtract the width of the sidebar */
+}
+
+
+         button {
+        background-color:  #00b140;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        padding: 5px 10px;
+        cursor: pointer;
+    }
+
+        a {
+            text-decoration: none;
+            color: #00f; /* Change link color to blue */
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+      
+    th, td {
+        border: 2px solid #000;
+        padding: 8px;
+        text-align: left;
+    }
+
+    th {
+       /* Gradient background color combination */
+background: linear-gradient(to right, #000, #00b140); /* Replace with your desired colors */
+
+        color: white;
+        font-weight: bold; /* Make heading fonts bold */
+    }
+
+    td {
+        font-style: italic;
+       
+    }
+
+    tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+
+    tr:hover {
+        background-color: #0074e4;
+        color: white;
+    }
+
+  h1 {
+            text-align: center;
+            color: #OOO;
+            margin-top:20px;
+        }
+        /* Add CSS to align messages to the left side */
+
+/* Add CSS to align messages to the left side */
+.message-box {
+    text-align: right;
+    margin: 10px; /* Add margin for spacing */
+    width: auto; /* Make the message boxes expand to fit content */
+}
+</style>
+</head>
+  <body>
+  <div class="sidebar">
+        <a href="/adminfirst/">Dashboard</a>
+    </div>
+    <br>
+    <br>
+    <br>
+    <br>
   <table border=2>
     <thead>
       <tr>
@@ -10,6 +113,7 @@
         <th>Vendor Username</th>
         <th>Vendor Skill</th>
         <th>Package Name</th>
+        <th>Action</th>
       </tr>
     </thead>
     <tbody>
@@ -20,6 +124,7 @@
           <td>
             <select>
               {% for vendor in vendors %}
+                <option></option>
                 <option>{{ vendor.user.username }}</option>
               {% endfor %}
             </select>
@@ -27,11 +132,18 @@
           <td>
             <select>
               {% for vendor in vendors %}
+                <option></option>
                 <option>{{ vendor.skill }}</option>
               {% endfor %}
             </select>
           </td>
           <td>Gold</td>
+          <td>
+            <form action="{% url 'confirm_booking_gold_vendor' booking.id %}" method="post">
+              {% csrf_token %}
+              <button type="submit">Confirm</button>
+            </form>
+          </td> 
         </tr>
       {% endfor %}
 
@@ -49,11 +161,18 @@
           <td>
             <select>
               {% for vendor in vendors %}
+              
                 <option>{{ vendor.skill }}</option>
               {% endfor %}
             </select>
           </td>
           <td>Silver</td>
+          <td>
+             <form action="{% url 'confirm_booking_silver_vendor' booking.id %}" method="post"> 
+              {% csrf_token %}
+              <button type="submit">Confirm</button>
+            </form>
+          </td> 
         </tr>
       {% endfor %}
 
@@ -76,6 +195,12 @@
             </select>
           </td>
           <td>Platinum</td>
+          <td>
+           <form action="{% url 'confirm_booking_platinum_vendor' booking.id %}" method="post"> 
+              {% csrf_token %}
+              <button type="submit">Confirm</button>
+            </form>
+          </td> 
         </tr>
       {% endfor %}
 
@@ -98,6 +223,12 @@
             </select>
           </td>
           <td>Customise</td>
+          <td>
+            <form action="{% url 'confirm_booking_customise_vendor' booking.id %}" method="post"> 
+              {% csrf_token %}
+              <button type="submit">Confirm</button>
+            </form>
+          </td> 
         </tr>
       {% endfor %}
 
