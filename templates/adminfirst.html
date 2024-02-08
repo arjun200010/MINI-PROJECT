@@ -3,44 +3,120 @@
 <head>
     <meta charset="UTF-8">
     <title>HAPPY WEDDING | Admin Dashboard</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <style>
-        body {
-            
-            margin: 0;
-            padding: 0;
-            background-size: cover;
-            background-repeat: no-repeat;
-            justify-content: center;
-            align-items: center;
-        }
+    *{
+        margin:0;
+        padding:0;
+        box-sizing:border-box;
+        font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif
+    }
+    .sidebar{
+        position:absolute;
+        top:0;
+        left:0;
+        height: 100vh;
+        width: 80px;
+        background-color: #12171e;
+        padding: 0.4rem 0.8rem;
+        transition: all 0.5s ease;
+    }
+    .sidebar.active ~.main-content
+    {
+        left: 250px;
+        width: calc(100%-250px);
+    }
+    .sidebar.active{
+        width:250px;
+    }
+    .sidebar #btn{
+        position: absolute;
+        color:#fff;
+        top:0.4rem;
+        left:50%;
+        font_size:1.2rem;
+        line-height:50px;
+        transform:translatex(-50%);
+        cursor:pointer;
+    }
+    .sidebar.active #btn{
+        left:90%;
+    }
+    .sidebar .top .logo{
+    color: white;
+    display: flex;
+    height: 50px;
+    width: 100%;
+    align-items: center;
+    pointer-events: none;
+    opacity: 0;
+}
 
-        /* Sidebar */
-        .sidebar {
-            position: fixed;
-            width: 250px;
-            background-color: black;
-            height: 100%;
-            color: white;
-            padding: 20px;
-        }
+    .sidebar.active .top .logo{
+        opacity: 1;
+    }
+    .top .logo i{
+        font-size:2rem;
+        margin-right:5px;
+    }
+    
+    .user p{
+        color:white;
+        opacity:1;
+        margin-left:rem;
+    }
+    .bold{
+        font-weight:600;
+    }
+    .sidebar p{
+        opacity:0;
+    }
+    .sidebar.active p{
+        opacity:1;
+    }
+    .sidebar il li{
+        position:relative;
+        list-style-type:none;
+        height:50px;
+        width:90%;
+        margin: 0.8rem auto;
+        line-height;50px;
+    }
+    .sidebar ul li a{
+        color:white;
+        display:flex;
+        align-items:center;
+        text-decoration:none;
+        border-radius:0.8rem;
+    }
+    .sidebar ul li a:hover{
+        background-color:white;
+        color:#12171e;
+    }
+    .sidebar ul li a i {
+    min-width: 50px;
+    text-align: center;
+    height: 50px;
+    border-radius: 12px;
+    line-height: 50px;
+}
 
-        .sidebar a {
-            text-decoration: none;
-            color: white;
-            display: block;
-            margin-bottom: 10px;
-        }
+.sidebar .nav-item {
+    opacity: 0;
+}
+
+.sidebar.active .nav-item {
+    opacity: 1;
+}
 
         .content {
-            margin-left: 250px; /* Adjust this based on your sidebar width */
+            margin-left: 250px;
             padding: 20px;
             background: white;
             color: black;
-           box-shadow: 0px 0px 5px rgba(0, 0, 0, 5.2);
-        }
+          
+        } 
+
         button {
             background-color: #0074e4;
             color: #fff;
@@ -49,15 +125,18 @@
             padding: 5px;
             cursor: pointer;
         }
-        select {
-            border-radius: 15px;
-        }
-        h2 {
-            text-align: center;
-        }
 
+        .sidebar select {
+            width: 50%;
+            padding: 10px;
+            margin: 10px 0;
+            background-color: white;
+            color: black;
+            border: none;
+            border-radius: 15px;
+}
         .cards-container {
-            margin-top: 20px;
+            margin-top: 40px;
             text-align: center;
             padding-left:130px;
         }
@@ -66,7 +145,7 @@
             width: 242px;
             height: 171px;
             margin-left: 70px;
-            padding: 20px;
+            padding: 50px;
             text-align: center;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -78,17 +157,45 @@
         .card2 { background-color: #e74c3c; }
         .card3 { background-color: #2ecc71; }
         .card4 { background-color: #f39c12; }
-        p{
-            font-weight:bold;
+        h2{
+            text-align:center;
         }
     </style>
 </head>
 <body>
     <div class="sidebar">
-        <a href="/">Home</a>
-        <a href="/adminhome/">Users</a>
-        <a href="/vendorpackageapply/">Vendor Application</a>
-        <a href="/vendordetails">Vendor Info</a>
+        <div class="top">
+        <div class="logo">
+            <i class='bx bxl-codepen'></i>
+            <span> HAPPY WEDDING</span>
+        </div>
+        <i class="bx bx-menu" id="btn"></i>
+        </div>
+        <ul>
+        <li>
+        <a href="/">
+         <i class="bx bx-grid-alt"></i>
+            <span class="nav-item">Home</span>
+        </a>
+        <li>
+        <a href="/adminhome/">
+         <i class="bx bx-body"></i>
+            <span class="nav-item">Users</span>
+        </a>
+        </li>
+         <li>
+        <a href="/vendorpackageapply/">
+         <i class="bx bx-grid-alt"></i>
+            <span class="nav-item">Vendor Application</span>
+        </a>
+        </li>
+         <li>
+        <a href="/vendordetails/">
+         <i class="bx bx-grid-alt"></i>
+            <span class="nav-item">Vendor Info</span>
+        </a>
+        </li>
+        <li>
         <select id="bookingDropdown">
             <option value="" disabled selected>Booking</option>
             <option value="gold">Gold</option>
@@ -97,36 +204,50 @@
             <option value="customise">Customise</option>
         </select>
         <button onclick="redirectToSelectedPage()">Go</button>
-        <a href="/logout/">Logout</a>
+        </li>
+        <li>
+        <a href="/logout/">
+         <i class="bx bx-log-out"></i>
+            <span class="nav-item">Logout</span>
+        </a>
+        </li>
+        </ul>
     </div>
-    <div class="content">
+
+    <div class="main-content">
+    <div class="container">
+    </div>
+    </div>
+
+     <div class="content">
     
         <h2>Welcome, ADMIN</h2>
     </div>
 <br>
 <br>
-    <div class="cards-container">
+     <div class="cards-container">
         <div class="card card1">
             <h3> User</h3><br>
-            <p>Users:{{ user_count }}</p>
+            <p>Users: {{ user_count }}</p>
         </div>
 
         <div class="card card2">
             <h3>vendor</h3><br>
-            <p>Vendors:{{ vendor_count }}</p>
+            <p>Vendors: {{ vendor_count }}</p>
         </div>
 
         <div class="card card3">
             <h3>Total Bookings</h3><br>
-            <p>Bookings:{{ active_booking_count }}</p>
+            <p>Bookings: {{ active_booking_count }}</p>
         </div>
 
         <div class="card card4">
             <h3>Payments </h3><br>
             <p>Payments: 0</p>
         </div>
-    </div>
+    </div>  
 
+</body>
     <script>
         function redirectToSelectedPage() {
             // Get the selected option from the dropdown
@@ -157,6 +278,11 @@
                     alert("Please select an option.");
             }
         }
+        let btn=document.querySelector('#btn')
+        let sidebar=document.querySelector('.sidebar')
+        btn.onclick=function(){
+            sidebar.classList.toggle('active');
+        };
     </script>
-</body>
+
 </html>

@@ -183,23 +183,19 @@ def adminhome(request):
         # Apply role filter if present
         users = users.filter(role=role_filter)
 
-    # If you decide to use the form, you can uncomment the following lines:
-    # form = UserFilterForm(request.GET)
-    # if form.is_valid():
-    #     role_filter = form.cleaned_data['role']
-    #     if role_filter:
-    #         users = User.objects.filter(role=role_filter)
-
     context = {
         'users': users,
         'messages': [],  # Add your messages here if needed
         'selected_role': role_filter,
-        # Uncomment the line below if you decide to use the form:
-        # 'form': form,
     }
 
     return render(request, 'adminhome.html', context)
 
+from .models import UserProfile
+@login_required
+def userupdatetable(request):
+    user_profiles = UserProfile.objects.all()
+    return render(request, 'userupdatetable.html', {'user_profiles': user_profiles})
 
 
 def handlelogout(request):
@@ -213,14 +209,6 @@ def check_user_email(request):
         "exists": User.objects.filter(email=userd).exists()
     }
     return JsonResponse(data)
-
-
-
-
-# views.py
-
-
-
 
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -1051,31 +1039,42 @@ def confirmed_gold_bookings(request):
     context = {'confirmed_bookings': confirmed_bookings}
     return render(request, 'confirmed_gold_bookings.html', context)
 
+
 @login_required
 def apply_bookings_gold(request, booking_id):
-    if request.user.is_authenticated:
-        vendor_profile = VendorProfile.objects.get(user=request.user)
-        booking = GoldPackage.objects.get(pk=booking_id)
+    # Get the current vendor's profile
+    vendor_profile = get_object_or_404(VendorProfile, user=request.user)
 
-        # Compose email content
-        subject = f"Request From {request.user.role} - {vendor_profile.skill}"
-        message = f"Vendor ID: {vendor_profile.id}\nDate of Booking: {booking.date_of_booking}\nDestination Selected: {booking.destination_selected}\n in Gold Package"
-        from_email = request.user.email
-        to_email = ['achu31395@gmail.com']
-        booking.is_confirmed=False
-        booking.save()  # Replace with your admin's email
+    # Get the GoldPackage instance
+    booking = get_object_or_404(GoldPackage, pk=booking_id)
 
-        try:
-            # Send email
-            send_mail(subject, message, from_email, to_email)
-            
-        except Exception as e:
-            messages.error(request, f'Error sending email: {e}')
-        messages.success(request, 'Application sent successfully!')
+    # Check if another vendor with the same skill has already confirmed the booking
+    if GoldPackage.objects.filter(applicants__skill=vendor_profile.skill, is_confirmed=True).exists():
+        messages.error(request, 'Another vendor with the same skill has already confirmed this booking.')
         return redirect('confirmed_gold_bookings')
 
-    # Render the template for unauthenticated users
-    return render(request, "apply_bookings_gold.html")
+    # Check if the current vendor has already applied for the booking
+    if booking.applicants.filter(id=vendor_profile.id).exists():
+        messages.warning(request, 'You have already applied for this booking.')
+        return redirect('confirmed_gold_bookings')
+
+    # Compose email content
+    subject = f"Request From {request.user.role} - {vendor_profile.skill}"
+    message = f"Vendor ID: {vendor_profile.id}\nDate of Booking: {booking.date_of_booking}\nDestination Selected: {booking.destination_selected}\n in Gold Package"
+    from_email = request.user.email
+    to_email = ['achu31395@gmail.com']  # Replace with your admin's email
+
+    try:
+        # Send email
+        send_mail(subject, message, from_email, to_email)
+
+        # Save the vendor as an applicant for this booking
+        booking.applicants.add(vendor_profile)
+        messages.success(request, 'Application sent successfully!')
+    except Exception as e:
+        messages.error(request, f'Error sending email: {e}')
+
+    return redirect('confirmed_gold_bookings')
 
 @login_required
 def confirmed_silver_bookings(request):
@@ -1088,29 +1087,40 @@ def confirmed_silver_bookings(request):
 
 @login_required
 def apply_bookings_silver(request, booking_id):
-    if request.user.is_authenticated:
-        vendor_profile = VendorProfile.objects.get(user=request.user)
-        booking = SilverPackage.objects.get(pk=booking_id)
+    # Get the current vendor's profile
+    vendor_profile = get_object_or_404(VendorProfile, user=request.user)
 
-        # Compose email content
-        subject = f"Request From {request.user.role} - {vendor_profile.skill}"
-        message = f"Vendor ID: {vendor_profile.id}\nDate of Booking: {booking.date_of_booking}\nDestination Selected: {booking.destination_selected}\n of Silver Package"
-        from_email = request.user.email
-        to_email = ['achu31395@gmail.com']
-        booking.is_confirmed=False
-        booking.save()  # Replace with your admin's email
+    # Get the GoldPackage instance
+    booking = get_object_or_404(SilverPackage, pk=booking_id)
 
-        try:
-            # Send email
-            send_mail(subject, message, from_email, to_email)
-            
-        except Exception as e:
-            messages.error(request, f'Error sending email: {e}')
-        messages.success(request, 'Application sent successfully!')
+    # Check if another vendor with the same skill has already confirmed the booking
+    if SilverPackage.objects.filter(applicants__skill=vendor_profile.skill, is_confirmed=True).exists():
+        messages.error(request, 'Another vendor with the same skill has already confirmed this booking.')
         return redirect('confirmed_silver_bookings')
 
-    # Render the template for unauthenticated users
-    return render(request, "apply_bookings_silver.html")
+    # Check if the current vendor has already applied for the booking
+    if booking.applicants.filter(id=vendor_profile.id).exists():
+        messages.warning(request, 'You have already applied for this booking.')
+        return redirect('confirmed_silver_bookings')
+
+    # Compose email content
+    subject = f"Request From {request.user.role} - {vendor_profile.skill}"
+    message = f"Vendor ID: {vendor_profile.id}\nDate of Booking: {booking.date_of_booking}\nDestination Selected: {booking.destination_selected}\n in Silver Package"
+    from_email = request.user.email
+    to_email = ['achu31395@gmail.com']  # Replace with your admin's email
+
+    try:
+        # Send email
+        send_mail(subject, message, from_email, to_email)
+
+        # Save the vendor as an applicant for this booking
+        booking.applicants.add(vendor_profile)
+        messages.success(request, 'Application sent successfully!')
+    except Exception as e:
+        messages.error(request, f'Error sending email: {e}')
+
+    return redirect('confirmed_silver_bookings')
+
 
 login_required
 def confirmed_platinum_bookings(request):
@@ -1123,29 +1133,39 @@ def confirmed_platinum_bookings(request):
 
 @login_required
 def apply_bookings_platinum(request, booking_id):
-    if request.user.is_authenticated:
-        vendor_profile = VendorProfile.objects.get(user=request.user)
-        booking = PlatinumPackage.objects.get(pk=booking_id)
+    # Get the current vendor's profile
+    vendor_profile = get_object_or_404(VendorProfile, user=request.user)
 
-        # Compose email content
-        subject = f"Request From {request.user.role} - {vendor_profile.skill}"
-        message = f"Vendor ID: {vendor_profile.id}\nDate of Booking: {booking.date_of_booking}\nDestination Selected: {booking.destination_selected}\n of Platinum Package"
-        from_email = request.user.email
-        to_email = ['achu31395@gmail.com'] 
-        booking.is_confirmed=False
-        booking.save() # Replace with your admin's email
+    # Get the GoldPackage instance
+    booking = get_object_or_404(PlatinumPackage, pk=booking_id)
 
-        try:
-            # Send email
-            send_mail(subject, message, from_email, to_email)
-            
-        except Exception as e:
-            messages.error(request, f'Error sending email: {e}')
-        messages.success(request, 'Application sent successfully!')
+    # Check if another vendor with the same skill has already confirmed the booking
+    if PlatinumPackage.objects.filter(applicants__skill=vendor_profile.skill, is_confirmed=True).exists():
+        messages.error(request, 'Another vendor with the same skill has already confirmed this booking.')
         return redirect('confirmed_platinum_bookings')
 
-    # Render the template for unauthenticated users
-    return render(request, "apply_bookings_platinum.html")
+    # Check if the current vendor has already applied for the booking
+    if booking.applicants.filter(id=vendor_profile.id).exists():
+        messages.warning(request, 'You have already applied for this booking.')
+        return redirect('confirmed_platinum_bookings')
+
+    # Compose email content
+    subject = f"Request From {request.user.role} - {vendor_profile.skill}"
+    message = f"Vendor ID: {vendor_profile.id}\nDate of Booking: {booking.date_of_booking}\nDestination Selected: {booking.destination_selected}\n in Platinum Package"
+    from_email = request.user.email
+    to_email = ['achu31395@gmail.com']  # Replace with your admin's email
+
+    try:
+        # Send email
+        send_mail(subject, message, from_email, to_email)
+
+        # Save the vendor as an applicant for this booking
+        booking.applicants.add(vendor_profile)
+        messages.success(request, 'Application sent successfully!')
+    except Exception as e:
+        messages.error(request, f'Error sending email: {e}')
+
+    return redirect('confirmed_platinum_bookings')
 
 login_required
 def confirmed_customise_bookings(request):
@@ -1158,29 +1178,40 @@ def confirmed_customise_bookings(request):
 
 @login_required
 def apply_bookings_customise(request, booking_id):
-    if request.user.is_authenticated:
-        vendor_profile = VendorProfile.objects.get(user=request.user)
-        booking = CustomisePackage.objects.get(pk=booking_id)
+    # Get the current vendor's profile
+    vendor_profile = get_object_or_404(VendorProfile, user=request.user)
 
-        # Compose email content
-        subject = f"Request From {request.user.role} - {vendor_profile.skill}"
-        message = f"Vendor ID: {vendor_profile.id}\nDate of Booking: {booking.date_of_booking}\nDestination Selected: {booking.destination_selected}\n of Customise Package"
-        from_email = request.user.email
-        to_email = ['achu31395@gmail.com'] 
-        booking.is_confirmed=False
-        booking.save() # Replace with your admin's email
+    # Get the GoldPackage instance
+    booking = get_object_or_404(CustomisePackage, pk=booking_id)
 
-        try:
-            # Send email
-            send_mail(subject, message, from_email, to_email)
-            
-        except Exception as e:
-            messages.error(request, f'Error sending email: {e}')
-        messages.success(request, 'Application sent successfully!')
+    # Check if another vendor with the same skill has already confirmed the booking
+    if CustomisePackage.objects.filter(applicants__skill=vendor_profile.skill, is_confirmed=True).exists():
+        messages.error(request, 'Another vendor with the same skill has already confirmed this booking.')
         return redirect('confirmed_customise_bookings')
 
-    # Render the template for unauthenticated users
-    return render(request, "apply_bookings_customise.html")
+    # Check if the current vendor has already applied for the booking
+    if booking.applicants.filter(id=vendor_profile.id).exists():
+        messages.warning(request, 'You have already applied for this booking.')
+        return redirect('confirmed_customise_bookings')
+
+    # Compose email content
+    subject = f"Request From {request.user.role} - {vendor_profile.skill}"
+    message = f"Vendor ID: {vendor_profile.id}\nDate of Booking: {booking.date_of_booking}\nDestination Selected: {booking.destination_selected}\n in Gold Package"
+    from_email = request.user.email
+    to_email = ['achu31395@gmail.com']  # Replace with your admin's email
+
+    try:
+        # Send email
+        send_mail(subject, message, from_email, to_email)
+
+        # Save the vendor as an applicant for this booking
+        booking.applicants.add(vendor_profile)
+        messages.success(request, 'Application sent successfully!')
+    except Exception as e:
+        messages.error(request, f'Error sending email: {e}')
+
+    return redirect('confirmed_customise_bookings')
+
 
 def vendorpackageapply(request):
     gold_bookings = GoldPackage.objects.filter(is_booked=True)

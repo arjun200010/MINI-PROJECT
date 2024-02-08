@@ -76,11 +76,15 @@ urlpatterns = [
     path('apply_bookings_customise/<int:booking_id>/', views.apply_bookings_customise, name='apply_bookings_customise'),
     path('vendorpackageapply/',views.vendorpackageapply,name="vendorpackageapply"),
     path('confirm_booking_gold_vendor/<int:booking_id>/',views.confirm_booking_gold_vendor,name='confirm_booking_gold_vendor'),
+    path('confirm_booking_silver_vendor/<int:booking_id>/',views.confirm_booking_silver_vendor,name='confirm_booking_silver_vendor'),
+    path('confirm_booking_platinum_vendor/<int:booking_id>/',views.confirm_booking_platinum_vendor,name='confirm_booking_platinum_vendor'),
+    path('confirm_booking_customise_vendor/<int:booking_id>/',views.confirm_booking_customise_vendor,name='confirm_booking_customise_vendor'),
     path('payments/',views.payments,name="payments"),
     path('payment_gold',views.payment_gold,name='payment_gold'),
     path('payment_silver',views.payment_silver,name='payment_silver'),
     path('payment_platinum',views.payment_platinum,name='payment_platinum'),
     path('payment_customise',views.payment_customise,name='payment_customise'),
+    path('userupdatetable/',views.userupdatetable,name='userupdatetable'),
 ]
 # urls.py
 

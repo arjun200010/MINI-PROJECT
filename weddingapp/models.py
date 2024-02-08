@@ -12,7 +12,10 @@ class User(AbstractUser):
     verification_code = models.CharField(max_length=32, blank=True)  # Field to store the verification code
     is_verified = models.BooleanField(default=False)
 
-
+class VendorProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    skill = models.CharField(max_length=100)
+    document = models.FileField(upload_to='vendor_documents/')
 
 class GoldPackage(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -21,6 +24,7 @@ class GoldPackage(models.Model):
     is_booked = models.BooleanField(default=False) 
     is_confirmed=models.BooleanField(default=False)
     
+    applicants = models.ManyToManyField(VendorProfile, related_name='gold_package_applicants', blank=True)
 
 class SilverPackage(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -30,6 +34,8 @@ class SilverPackage(models.Model):
     is_booked = models.BooleanField(default=False) 
     is_confirmed=models.BooleanField(default=False)
 
+    applicants = models.ManyToManyField(VendorProfile, related_name='silver_package_applicants', blank=True)
+
 class PlatinumPackage(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     date_of_booking = models.DateField()
@@ -37,6 +43,8 @@ class PlatinumPackage(models.Model):
     honeymoon_destination=models.CharField(max_length=255)
     is_booked = models.BooleanField(default=False) 
     is_confirmed=models.BooleanField(default=False)
+
+    applicants = models.ManyToManyField(VendorProfile, related_name='platinum_package_applicants', blank=True)
 
 class CustomisePackage(models.Model):
     user=models.ForeignKey(User,on_delete=models.CASCADE)
@@ -53,14 +61,15 @@ class CustomisePackage(models.Model):
     billing_info=models.IntegerField()
     is_confirmed=models.BooleanField(default=False)
 
+    applicants = models.ManyToManyField(VendorProfile, related_name='customise_package_applicants', blank=True)
+
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     booked_package = models.CharField(max_length=100, default="Not booked")
+    profile_image = models.ImageField(default='default_avatar.jpeg', upload_to='profile_images/', blank=True, null=True)
 
-class VendorProfile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    skill = models.CharField(max_length=100)
-    document = models.FileField(upload_to='vendor_documents/')
+
+
 
 
 class Package(models.Model):

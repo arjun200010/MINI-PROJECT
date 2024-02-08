@@ -1,0 +1,31 @@
+{% load static %}
+<html>
+<body>
+  <h2>User Table</h2>
+
+  <table border="1">
+    <thead>
+      <tr>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>Profile Image</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for user_profile in user_profiles %}
+        <tr>
+          <td>{{ user_profile.user.first_name }}</td>
+          <td>{{ user_profile.user.last_name }}</td>
+          <td>
+            {% if user_profile.profile_image %}
+              <img src="{{ user_profile.profile_image.url }}" alt="{{ user_profile.user.username }}" width="50" height="50">
+            {% else %}
+              <img src="{% static 'profile_images/default_avatar.jpeg' %}" alt="Default Image" width="50" height="50">
+            {% endif %}
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</body>
+</html>
