@@ -17,8 +17,10 @@ from django.utils.crypto import get_random_string
 from django.contrib.auth import get_user_model
 from django.utils import timezone
 from datetime import timedelta
+from . import candy
+
 def index(request):
-    return render(request, 'index.html')
+    return candy.render(request, 'index.html')
 
 def signup(request):
     if request.method == 'POST':
@@ -58,7 +60,7 @@ def signup(request):
             messages.error(request,"Password does not match")
             return render(request, 'signup.html')
 
-    return render(request, 'signup.html')
+    return candy.render(request, 'signup.html')
 
 def vendorsignup(request):
     if request.method == 'POST':
@@ -122,7 +124,7 @@ def login(request):
         else:
             messages.error(request, 'Invalid login credentials or account is deactivated')
             return redirect('login')
-    response = render(request, 'login.html')
+    response = candy.render(request, 'login.html')
     response['Cache-Control'] = 'no-store, must-revalidate'
     return response
 
@@ -673,7 +675,7 @@ def customise_booking(request):
 
 @login_required
 def confirmation_view(request):
-    return render(request, 'confirmation.html')
+    return candy.render(request, 'confirmation.html')
 
 @login_required
 def gold(request):
@@ -984,7 +986,7 @@ def cancel_package_customise(request, package_id):
     return redirect('view_profile')
 
 def cancellation_view(request):
-     return render(request,"cancellation.html")
+     return candy.render(request,"cancellation.html")
 
 @login_required
 def delete_booking_gold(request, booking_id):

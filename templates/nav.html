@@ -46,11 +46,11 @@
       
       <!-- Uncomment below if you prefer to use an image logo -->
       <a href="index.html" class="logo"><img src="{% static 'assets/img/logo.png'%}" alt="" class="img-fluid"></a>
-      <h1 class="logo"><a href="">HAPPY WEDDING</a></h1>
+      <h1 class="logo"><a href="">{{index_happy}}</a></h1>
       <nav id="navbar" class="navbar">
         <ul>
-          <li><a class="nav-link scrollto active" href="{% url 'index' %}">Home</a></li>
-          <li><a class="nav-link scrollto" href="{% url 'login' %}">LogIn</a></li>
+          <li><a class="nav-link scrollto active" href="{% url candyLink.index %}">{{index_HOME}}</a></li>
+          <li><a class="nav-link scrollto" href="{% url 'login' %}">{{index_LOG}}</a></li>
         </ul>
         <i class="bi bi-list mobile-nav-toggle"></i>
       </nav><!-- .navbar -->

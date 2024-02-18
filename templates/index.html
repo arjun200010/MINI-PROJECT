@@ -35,21 +35,22 @@
   <!-- ======= Header ======= -->
   <header id="header" class="d-flex align-items-center">
     <div class="container d-flex align-items-center justify-content-between">
-
-      
+    {% comment %} <script src="https://translate.google.com/translate_a/element.js?cb=loadGoogleTranslate"></script>
+       {% endcomment %}
       <a href="" class="logo"><img src="{% static 'assets/img/logo.png'%}" alt="" class="img-fluid"></a>
-      <h1 class="logo"><a href="">HAPPY WEDDING</a></h1>
+      <h1 class="logo"><a href="">{{index_happy}}</a></h1>
       <nav id="navbar" class="navbar">
         <ul>
-          <li><a class="nav-link scrollto active" href="#hero">Home</a></li>
-          <li><a class="nav-link scrollto" href="#about">About</a></li>
-          <li><a class="nav-link scrollto" href="#services">Destination</a></li>
-          <li><a class="nav-link scrollto" href="#pricing">Pricing</a></li>
-          <li><a class="nav-link scrollto" href="signup/">Signup</a></li>
-          <li><a class="nav-link scrollto " href="vendorsignup/">Hey I am Vendor</a></li>
-          <li><a class="nav-link scrollto " href="#team">Team</a></li>
-          <li><a class="nav-link scrollto" href="login">LogIn</a></li>
-          <li><a class="nav-link scrollto" href="#contact">Contact</a></li>
+          <li><a class="nav-link scrollto active" href="#hero">{{index_HOME}}</a></li>
+          <li><a class="nav-link scrollto" href="#about">{{index_ABOUT}}</a></li>
+          <li><a class="nav-link scrollto" href="#services">{{index_DEST}}</a></li>
+          <li><a class="nav-link scrollto" href="#pricing">{{index_PRICE}}</a></li>
+          <li><a class="nav-link scrollto" href="{% url candyLink.signup %}">{{index_SIGN}}</a></li>
+          <li><a class="nav-link scrollto " href="vendorsignup/">{{index_HEY}}</a></li>
+          <li><a class="nav-link scrollto " href="#team">{{index_TEA}}</a></li>
+          <li><a class="nav-link scrollto" href="{% url candyLink.login %}">{{index_LOG}}</a></li>
+          <li><a class="nav-link scrollto" href="#contact">{{index_CONT}}</a></li>
+          <li>{{languageMenu|safe}}</li>
         </ul>
         <i class="bi bi-list mobile-nav-toggle"></i>
       </nav><!-- .navbar -->
@@ -60,9 +61,9 @@
   <!-- ======= Hero Section ======= -->
   <section id="hero" class="d-flex align-items-center">
     <div class="container position-relative" data-aos="fade-up" data-aos-delay="500">
-      <h1>Welcome</h1>
-      <h2>We are team of talented organisers to make your MOMENTS</h2>
-      <a href="#about" class="btn-get-started scrollto">Get Started</a>
+      <h1>{{index_WEL}}</h1>
+      <h2>{{index_DESC}}</h2>
+      <a href="#about" class="btn-get-started scrollto">{{index_START}}</a>
     </div>
   </section><!-- End Hero -->
 
@@ -80,14 +81,14 @@
           </div>
           <div class="col-lg-6 pt-4 pt-lg-0 order-2 order-lg-1 content" data-aos="fade-right">
             <p>
-                Our HAPPY WEDDING is  a place to share the love story of the couple, their journey to choosing a destination wedding, and their excitement about the upcoming celebration. It provides a personal touch, giving guests insight into the couple's relationship and the reasons behind their choice of a destination for their special day. We also include details about the destination's significance and what guests can look forward to during the wedding festivities. Overall, it sets the tone for the wedding experience and invites guests to be part of the couple's unique journey. </p>
-                <h2>Why a HAPPY WEDDING ?</h2>
+                {{index_Aboutsite}}</p>
+                <h2>{{index_hawed}}</h2>
 
-                <p>For us, the decision to have a destination wedding was an easy one. It's a reflection of our love for travel and our desire to create lasting memories with our closest friends and family. We couldn't imagine a more beautiful place to exchange our vows.
+                <p>{{index_decision}}
             </p>
-            <h2>What to Expect</h2>
+            <h2>{{index_ques}}</h2>
 
-            <p>Get ready for a celebration filled with love, laughter, and unforgettable moments. From beachside ceremonies to exploring local cuisine and culture, we've planned an unforgettable experience for our wedding guests. Explore our website to find details on travel arrangements, accommodations, and activities during our special weekend.
+            <p>{{index_detail}}
         </p>
           </div>
         </div>
@@ -100,55 +101,55 @@
 
         <div class="section-title">
           <!--<span>S</span> -->
-          <h2>DESTINATIONS</h2>
+          <h2>{{index_Destinations}}</h2>
         </div>
 
         <div class="row">
           <div class="col-lg-4 col-md-6 d-flex align-items-stretch" data-aos="fade-up">
             <div class="icon-box">
               <div class="icon"><i class="bx bxl-dribbble"></i></div>
-              <h4><a href="">DELHI</a></h4>
-              <p>The Capital of country, Is the capital for ethnic and gorgeous wedding</p>
+              <h4><a href="">{{index_delhi}}</a></h4>
+              <p>{{index_delhidesc}}</p>
             </div>
           </div>
 
           <div class="col-lg-4 col-md-6 d-flex align-items-stretch mt-4 mt-md-0" data-aos="fade-up" data-aos-delay="150">
             <div class="icon-box">
               <div class="icon"><i class="bx bx-file"></i></div>
-              <h4><a href="">RAJASTHAN</a></h4>
-              <p>The Pink City of INDIA, Will make your wedding Colorfull</p>
+              <h4><a href="">{{index_rajasthan}}</a></h4>
+              <p>{{index_rajdesc}}</p>
             </div>
           </div>
 
           <div class="col-lg-4 col-md-6 d-flex align-items-stretch mt-4 mt-lg-0" data-aos="fade-up" data-aos-delay="300">
             <div class="icon-box">
               <div class="icon"><i class="bx bx-tachometer"></i></div>
-              <h4><a href="">KERALA</a></h4>
-              <p>God's Own Country of INDIA, where HEAVEN falls</p>
+              <h4><a href="">{{index_kerala}}</a></h4>
+              <p>{{index_keraladesc}}</p>
             </div>
           </div>
 
           <div class="col-lg-4 col-md-6 d-flex align-items-stretch mt-4" data-aos="fade-up" data-aos-delay="450">
             <div class="icon-box">
               <div class="icon"><i class="bx bx-world"></i></div>
-              <h4><a href="">SWITZERLAND</a></h4>
-              <p>If you have a wish to have PURE and PEACE wedding </p>
+              <h4><a href="">{{index_swiz}}</a></h4>
+              <p>{{index_swizdesc}} </p>
             </div>
           </div>
 
           <div class="col-lg-4 col-md-6 d-flex align-items-stretch mt-4" data-aos="fade-up" data-aos-delay="600">
             <div class="icon-box">
               <div class="icon"><i class="bx bx-slideshow"></i></div>
-              <h4><a href="">LUXEMBURG</a></h4>
-              <p>The destination where you can have MOMENTS</p>
+              <h4><a href="">{{index_luxe}}</a></h4>
+              <p>{{index_luxedesc}}</p>
             </div>
           </div>
 
           <div class="col-lg-4 col-md-6 d-flex align-items-stretch mt-4" data-aos="fade-up" data-aos-delay="750">
             <div class="icon-box">
               <div class="icon"><i class="bx bx-arch"></i></div>
-              <h4><a href="">PARIS</a></h4>
-              <p>The DESTINATION for RICH and MEMORABLE wedding </p>
+              <h4><a href="">{{index_paris}}</a></h4>
+              <p>{{index_parisdesc}} </p>
             </div>
           </div>
 
@@ -164,24 +165,24 @@
       <div class="container">
 
         <div class="section-title">
-          <span>Pricing</span>
-          <h2>Pricing</h2>
-          <p>CHOOSE  THE DESIRED PACKAGE</p>
+          <span>{{index_price1}}</span>
+          <h2>{{index_price2}}</h2>
+          <p>{{index_desired}}</p>
         </div>
 
         <div class="row">
 
           <div class="col-lg-4 col-md-6" data-aos="zoom-in" data-aos-delay="150">
             <div class="box">
-              <h4>CUSTOMISE</h4>
+              <h4>{{index_customise}}</h4>
               <h3><sup>$</sup>3500-<sup>$</sup>100000</h3>
               <ul>
-                <li>customise</li>
-                <li>Your needs</li>
-                <li>With ADDS-on advnatage</li>
+                <li>{{index_customise1}}</li>
+                <li>{{index_needs}}</li>
+                <li>{{index_addson}}</li>
               </ul>
               <div class="btn-wrap">
-                <a href="{% url 'login' %}" class="btn-buy">Customise</a>
+                <a href="{% url 'login' %}" class="btn-buy">{{index_Customise2}}</a>
               </div>
             </div>
           </div>
@@ -189,61 +190,61 @@
 
           <div class="col-lg-4 col-md-6" data-aos="zoom-in" data-aos-delay="150">
             <div class="box">
-              <h4>GOLD</h4>
+              <h4>{{index_GOLD}}</h4>
               <h3><sup>$</sup>45000<span></span></h3>
               <ul>
-                <li>INDIAN CUISINE</li>
-                <li>INDIAN DESTINATION ONLY</li>
-                <li>MUSIC</li>
-                 <li>PHOTOGRAPY</li>
-                 <li>ACCODOMATIONS</li>
-                <li>DECORATORATION</li>
-                <li>100 GUESTS</li>
+                <li>{{index_cusine}}</li>
+                <li>{{index_indian}}</li>
+                <li>{{index_MUSIC}}</li>
+                 <li>{{index_PHOTOGRAPHY}}</li>
+                 <li>{{index_ACCODOMATIONS}}</li>
+                <li>{{index_DECORATORATION1}}</li>
+                <li>{{index_guest}}</li>
               </ul>
               <div class="btn-wrap">
-                <a href="{% url 'login' %}" class="btn-buy">Buy Now</a>
+                <a href="{% url 'login' %}" class="btn-buy">{{index_buynow}}</a>
               </div>
             </div>
           </div>
 
           <div class="col-lg-4 col-md-6 mt-4 mt-md-0" data-aos="zoom-in">
             <div class="box featured">
-              <h4>SILVER</h4>
+              <h4>{{index_SILVER}}</h4>
               <h3><sup>$</sup>55000<span></span></h3>
               <ul>
-                <li>INDIAN OR CONTINENTAL CUISINE</li>
-                <li>INDIAN DESTINATION WITH FREE HONEYMOON PACKAGE</li>
-                <li>TRAVELLING FACILITY</li>
-                <li>S CLASS-ACCODOMATIONS</li>
-                <li>MUSIC AND DJ NIGHT</li>
-                <li>AFTER MARRIAGE SHOOTING</li>
-                 <li>PHOTOGRAPY</li>
-                <li>DECORATORATION</li>
-                <li>100-150 GUESTS</li>
+                <li>{{index_cont}}</li>
+                <li>{{index_honey}}</li>
+                <li>{{index_facility}}</li>
+                <li>{{index_class}}</li>
+                <li>{{index_dj}}</li>
+                <li>{{index_after}}</li>
+                 <li>{{index_PHOTO}}</li>
+                <li>{{index_DECORATORATION2}}</li>
+                <li>{{index_guests1}}</li>
               </ul>
               <div class="btn-wrap">
-                <a href="{% url 'login' %}" class="btn-buy">Buy Now</a>
+                <a href="{% url 'login' %}" class="btn-buy">{{index_buynow}}</a>
               </div>
             </div>
           </div>
 
           <div class="col-lg-4 col-md-6 mt-4 mt-lg-0" data-aos="zoom-in" data-aos-delay="150">
             <div class="box">
-              <h4>PLATINUM</h4>
+              <h4>{{index_PLATINUM}}</h4>
               <h3><sup>$</sup>60000<span></span></h3>
               <ul>
-                <li>INDIAN AND CONTINENTAL CUISINE WITH BEVERAGES</li>
-                <li>INDIAN AND INTERNATIONAL DESTINATION WITH FREE HONEYMOON PACKAGE</li>
-                <li>AIRBUS  FACILITY</li>
-                <li>5 STAR CLASS-ACCODOMATIONS</li>
-                <li>MUSIC , DJ NIGHT AND LIVE CONCERT</li>
-                <li>AFTER MARRIAGE SHOOTING WITH PROJECTOR DISPLAY</li>
-                 <li>DESTIANTION PHOTOGRAPY</li>
-                <li>INTERNATIONAL DECORATORATION</li>
-                <li>100GUESTS</li>
+                <li>{{index_withb}}</li>
+                <li>{{index_honeyp}}</li>
+                <li>{{index_facilitybus}}</li>
+                <li>{{index_class}}</li>
+                <li>{{index_djnight}}</li>
+                <li>{{index_projection}}</li>
+                 <li>{{index_photography}}</li>
+                <li>{{index_decorator}}</li>
+                <li>{{index_GUESTS}}</li>
               </ul>
               <div class="btn-wrap">
-                <a href="{% url 'login' %}" class="btn-buy">Buy Now</a>
+                <a href="{% url 'login' %}" class="btn-buy">{{index_buynow}}</a>
               </div>
             </div>
           </div>
@@ -258,19 +259,19 @@
       <div class="container">
 
         <div class="section-title">
-          <span>Team</span>
-          <h2>Team</h2>
-          <p>OUR TEAM MEMBERS TO DESIGN YOUR HAPPINESS</p>
+          <span>{{index_Team2}}</span>
+          <h2>{{index_Team2}}</h2>
+          <p>{{index_your}}</p>
         </div>
 
         <div class="row">
           <div class="col-lg-4 col-md-6 d-flex align-items-stretch" data-aos="zoom-in">
             <div class="member">
               <img src="{% static 'assets/img/team/team-1.jpg' %}" alt="">
-              <h4>ZACK KING</h4>
-              <span>Chief Executive Officer</span>
+              <h4>{{index_king}}</h4>
+              <span>{{index_chief}}</span>
               <p>
-                "Crafting Dreams, Making Memories: Your Destination, Our Expertise."
+                {{index_our}}
               </p>
               
             </div>
@@ -279,9 +280,9 @@
           <div class="col-lg-4 col-md-6 d-flex align-items-stretch" data-aos="zoom-in">
             <div class="member">
               <img src="{% static 'assets/img/team/team-2.jpg' %}" alt="">
-              <h4>DRISHTI PATEL</h4>
-              <span>Product Manager</span>
-              <p>"Turning Dreams into Unforgettable Destinations."
+              <h4>{{index_patel}}</h4>
+              <span>{{index_productmanager}}</span>
+              <p>{{index_unforgettable}}
               </p>
               
             </div>
@@ -290,10 +291,10 @@
           <div class="col-lg-4 col-md-6 d-flex align-items-stretch" data-aos="zoom-in">
             <div class="member">
               <img src="{% static 'assets/img/team/team-3.jpg' %}" alt="">
-              <h4>LUCIFIER KING</h4>
-              <span>CTO</span>
+              <h4>{{index_lucy}}</h4>
+              <span>{{index_CTO}}</span>
               <p>
-                "Crafting Dreams, Creating Memories: Your Perfect Destination Wedding."
+                {{index_memories}}
               </p>
               
             </div>
@@ -309,32 +310,32 @@
       <div class="container">
 
         <div class="section-title">
-          <span>Contact</span>
-          <h2>Contact</h2>
-          <p>Contact Us whenever You Want</p>
+          <span>{{index_Contact2}}</span>
+          <h2>{{index_Contact2}}</h2>
+          <p>{{index_whene}}</p>
         </div>
 
         <div class="row" data-aos="fade-up">
           <div class="col-lg-6">
             <div class="info-box mb-4">
               <i class="bx bx-map"></i>
-              <h3>Our Address</h3>
-              <p>A108 Adam Street,New Delhi,535022</p>
+              <h3>{{index_ouraddress}}</h3>
+              <p>{{index_address}}</p>
             </div>
           </div>
 
           <div class="col-lg-3 col-md-6">
             <div class="info-box  mb-4">
               <i class="bx bx-envelope"></i>
-              <h3>Email Us</h3>
-              <p>happywedding@gmail.com</p>
+              <h3>{{index_emailus}}</h3>
+              <p>{{index_com}}</p>
             </div>
           </div>
 
           <div class="col-lg-3 col-md-6">
             <div class="info-box  mb-4">
               <i class="bx bx-phone-call"></i>
-              <h3>Call Us</h3>
+              <h3>{{index_callus}}</h3>
               <p>+91 9300144182</p>
             </div>
           </div>
@@ -384,14 +385,14 @@
 
     <div class="container">
       <div class="copyright">
-        &copy; Copyright <strong><span>Happy Wedding</span></strong>. All Rights Reserved
+        &copy; {{index_Copyright}} <strong><span>Happy Wedding</span></strong>. {{index_all}}
       </div>
       <div class="credits">
         <!-- All the links in the footer should remain intact. -->
         <!-- You can delete the links only if you purchased the pro version. -->
         <!-- Licensing information: https://bootstrapmade.com/license/ -->
         <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/day-multipurpose-html-template-for-free/ -->
-        Designed by <a href="https://bootstrapmade.com/">Happy Wedding</a>
+        {{index_by}} <a href="https://bootstrapmade.com/">Happy Wedding</a>
       </div>
     </div>
   </footer><!-- End Footer -->
@@ -406,7 +407,7 @@
   <script src="{% static 'assets/vendor/isotope-layout/isotope.pkgd.min.js' %}"></script>
   <script src="{% static 'assets/vendor/swiper/swiper-bundle.min.js' %}"></script>
   <script src="{% static 'assets/vendor/php-email-form/validate.js' %}"></script>
-
+  
   <!-- Template Main JS File -->
   <script src="{%static 'assets/js/main.js' %}"></script>
 

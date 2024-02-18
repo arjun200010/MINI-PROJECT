@@ -84,42 +84,42 @@ text-align: center;
 </div>
 {% endfor %}
     <div class="signup-container">
-        <h2> CUSTOMER SIGNUP</h2><br>
-        <form id="signup-form" action="http://127.0.0.1:8000/signup/" method="post"> 
+        <h2>{{signup_cust}}</h2><br>
+        <form id="signup-form" action="http://127.0.0.1:8000/candyLink.signup" method="post"> 
          {% csrf_token %}
             <div class="form-group">
-                <label for="firstname">First Name:</label>
+                <label for="firstname">{{signup_first}}</label>
                 <input type="text" id="first-name" name="firstname"  onchange="validateFirstName()" required><br>
                 <div2><span id="first-name-error" class="error-message"></span></div2>
             </div>
             <div class="form-group">
-                <label for="lastname">Last Name:</label>
+                <label for="lastname">{{signup_last}}</label>
                 <input type="text" id="last-name" name="lastname"  required onchange="validateLastName()" ><br>
                 <div2><span id="last-name-error" class="error-message"></span></div2>
             </div>
             
             <div class="form-group">
-                <label for="email">Email:</label>
+                <label for="email">{{signup_ema}}</label>
                 <input type="email" id="email" name="email" required onchange="validateEmail()"><br>
                 <div2><span id="email-error" class="error-message"></span></div2>
             </div>
             <div class="form-group">
-                <label for="username">Username:</label>
+                <label for="username">{{signup_uname}}</label>
                 <input type="text" id="username" name="username" required onchange="validateUsername()"><br>
                 <div2><span id="username-error" class="error-message"></span></div2>
             </div>
             <div class="form-group">
-                <label for="password">Password:</label>
+                <label for="password">{{signup_pass}}</label>
                 <input type="password" id="password" name="password" required onchange="validatePassword()"><br>
                 <div2><span id="password-error" class="error-message"></span></div2>
             </div>
             <div class="form-group">
-                <label for="confirm-password">Confirm Password:</label>
+                <label for="confirm-password">{{signup_cpass}}</label>
                 <input type="password" id="confirm-password" name="confirm_password" required onchange="validateConfirmPassword()"><br>
                 <div2><span id="confirm-password-error" class="error-message"></span></div2>
             </div>
             
-                <button type="submit" id="submit" class="submit-btn" onclick="validateSignup()">Sign Up</button>
+                <button type="submit" id="submit" class="submit-btn" onclick="validateSignup()">{{signup_up}}</button>
                 <span id="success-message" class="success-message"></span>
         
         </form>
