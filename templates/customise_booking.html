@@ -70,9 +70,20 @@ opacity: 1.9; /* This value should be between 0 and 1, not 1.9 */
     <br>
     <form id="booking-form" method="post">
     {% csrf_token %}
-        <label for="date_of_booking">Date of Booking:</label>
-        <input type="date" id="date_of_booking" name="date_of_booking" required><br>
-        <span id="dateError" style="color: red;"></span>
+        <div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <label for="date_of_booking">Date of Booking:</label>
+            <div class="input-group mb-3">
+                <input type="date" class="form-control" placeholder="Date of Booking" aria-label="Recipient's username" aria-describedby="button-addon2">
+                <div class="input-group-append">
+                    <button class="btn btn-primary" type="button" id="button-addon2" onclick="redirectToNextPage()">Predict</button>
+                </div>
+            </div>
+            <span id="dateError" style="color: red;"></span>
+        </div>
+    </div>
+</div>
 
         <label for="destination_selected">Destination Selection:</label>
         <select id="destination_selected" name="destination_selected" required>
@@ -146,15 +157,12 @@ opacity: 1.9; /* This value should be between 0 and 1, not 1.9 */
 
         <label for="billing_info">Billing Information:</label>
         <input type="text" id="billing_info" name="billing_info" readonly><br>
-
-        <input type="checkbox" id="agree_terms" name="agree_terms" required>
-        <label for="agree_terms">After, Receiving confirmation mail. You cannot CANCEL it.</label>
         <p>NOTE:<br>
                 1.) Honeymoon  Package is FREE for INTERNATIONAL Destination<br>
                 2.) Cost of Cuisine is on per head basis<br>
-                3.) Total Amount displayed is NON-NEGOTIABLE</p>
+                
 
-        <button type="submit">Submit</button> <button type="submit"><a href="{% url 'predict_weather' %}">Predict</button>
+        <button type="submit">Submit</button>
     </form>
 
     <script>
@@ -291,6 +299,9 @@ opacity: 1.9; /* This value should be between 0 and 1, not 1.9 */
         document.getElementById("dateError").textContent = "";
       }
     });
+    function redirectToNextPage() {
+        window.location.href = "http://127.0.0.1:8000/predict/";
+    }
   </script>
 </body>
 {% endblock body %}

@@ -1418,7 +1418,7 @@ def payment_customise(request):
 from django.conf import settings
 import requests
 from datetime import datetime
-
+@login_required
 def predict_weather(request):
     if request.method == 'POST':
         location = request.POST.get('location')
@@ -1435,7 +1435,8 @@ def predict_weather(request):
         data = response.json()
 
         if data['cod'] == '404':
-            return JsonResponse({'error': 'City not found'}, status=404)
+            messages.error(request,"Enter valid city")
+            return redirect('predict_weather')
 
         context = {
             'location': location,

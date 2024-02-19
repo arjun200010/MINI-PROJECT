@@ -1,17 +1,11 @@
-{% extends "nav6.html" %} 
+{% extends "nav3.html" %} 
 
 {% load static %}
 {% block style %}
 <style>
-    {% comment %} body{
-         background-image: url("{% static 'assets/img/profile.jpg' %} ");  
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-        margin: 119px;
-    
-     } {% endcomment %}
+     body{
+          background-color:#B0E0E6;
+     } 
 
     .container {
         display: flex;
@@ -37,8 +31,14 @@
             <h2>Weather Prediction</h2><br>
             <p><strong>Location:</strong> {{ location }}</p>
             <p><strong>Date:</strong> {{ date }}</p>
-            <p><strong>Temperature:</strong> {{ temperature }}</p>
+            <p><strong>Temperature:</strong> {{ temperature }} `Farenheit</p>
             <p><strong>Weather Description</strong> {{ weather_description }}</p>
+            <button class="btn btn-primary" type="button" id="button-addon2" onclick="redirectToNextPage()">BACK</button>
         </div>
 </div>
+<script>
+function redirectToNextPage() {
+        window.location.href = "http://127.0.0.1:8000/predict/";
+    }
+</script>
 {% endblock body  %}
