@@ -11,14 +11,14 @@
     }
         /* Style your form and other elements as needed */
            form {
-max-width: 500px;
-margin: 0 auto; /* Center-align the form horizontally */
-padding: 52px;
-background-color: rgba(255, 255, 255, 0.5);
-box-shadow: 0px 0px 10px rgba(0, 0, 0, 7.2);
-border-radius: 119px;
-text-align: center;
-opacity: 1.9; /* This value should be between 0 and 1, not 1.9 */
+            max-width: 500px;
+            margin: 0 auto; /* Center-align the form horizontally */
+            padding: 52px;
+            background-color: rgba(255, 255, 255, 0.5);
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 7.2);
+            border-radius: 119px;
+            text-align: center;
+            opacity: 1.9; /* This value should be between 0 and 1, not 1.9 */
 
         }
         select {
@@ -91,7 +91,7 @@ opacity: 1.9; /* This value should be between 0 and 1, not 1.9 */
         <input type="checkbox" id="agree_terms" name="agree_terms" required>
         <label for="agree_terms">After, Receiving confirmation mail. You cannot CANCEL it.</label>
         <br>
-        <button type="submit">Submit</button>
+        <button type="submit">Submit</button> <button type="submit"><a href="{% url 'predict_weather' %}">Predict</button> 
 
     </form>
 

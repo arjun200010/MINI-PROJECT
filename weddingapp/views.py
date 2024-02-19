@@ -124,7 +124,7 @@ def login(request):
         else:
             messages.error(request, 'Invalid login credentials or account is deactivated')
             return redirect('login')
-    response = candy.render(request, 'login.html')
+    response = render(request, 'login.html')
     response['Cache-Control'] = 'no-store, must-revalidate'
     return response
 
@@ -1414,6 +1414,39 @@ def payment_platinum(request):
 def payment_customise(request):
     return render(request,"payment_customise.html")
 
+# weather prediction
+from django.conf import settings
+import requests
+from datetime import datetime
+
+def predict_weather(request):
+    if request.method == 'POST':
+        location = request.POST.get('location')
+        date = request.POST.get('date')
+        
+        api_key = settings.OPENWEATHERMAP_API_KEY
+        base_url = 'http://api.openweathermap.org/data/2.5/weather'
+        params = {
+            'q': location,
+            'appid': api_key,
+        }
+
+        response = requests.get(base_url, params=params)
+        data = response.json()
+
+        if data['cod'] == '404':
+            return JsonResponse({'error': 'City not found'}, status=404)
+
+        context = {
+            'location': location,
+            'date': datetime.strptime(date, '%Y-%m-%d').date(),
+            'temperature': data['main']['temp'],
+            'weather_description': data['weather'][0]['description'],
+        }
+
+        return render(request, 'weather_prediction.html', context)
+
+    return render(request, 'weather_prediction_form.html')
 
 
 

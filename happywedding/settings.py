@@ -159,3 +159,6 @@ EMAIL_HOST_PASSWORD = 'spma gfvg kyrr yjly'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
+# weather_api
+
+OPENWEATHERMAP_API_KEY = '7291cf2a9da392c69f6a905049396d9b'

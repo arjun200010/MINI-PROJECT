@@ -20,11 +20,12 @@ from weddingapp import views
 from django.contrib.auth.views import PasswordResetView,PasswordResetDoneView,PasswordResetConfirmView,PasswordResetCompleteView
 from weddingapp.views import delete_booking_gold,delete_booking_customise,delete_booking_platinum,delete_booking_silver
 from weddingapp import candy
+from weddingapp.views import predict_weather
 urlpatterns = [
     path('admin/', admin.site.urls),
     *candy.path('',views.index,name='index'),
     *candy.path('signup',views.signup,name='signup'),
-    *candy.path('login/',views.login,name='login'),
+    path('login/',views.login,name='login'),
     path('loginhome/',views.loginhome,name='loginhome'),
     path('logout/',views.handlelogout,name='handlelogout'),
     path('password_reset/', PasswordResetView.as_view(), name='password_reset'),
@@ -44,8 +45,8 @@ urlpatterns = [
     path('gold_booking/',views.gold_booking,name="gold_booking"),
     path('silver_booking/',views.silver_booking,name="silver_booking"),
     path('platinum_booking/',views.platinum_booking,name="platinum_booking"),
-    *candy.path('confirmation/', views.confirmation_view, name='confirmation'),
-    *candy.path('cancellation/', views.cancellation_view, name='cancellation'),
+    path('confirmation/', views.confirmation_view, name='confirmation'),
+    path('cancellation/', views.cancellation_view, name='cancellation'),
     path('gold/',views.gold,name='gold'),
     path('silver/',views.silver,name='silver'),
     path('platinum/',views.platinum,name='platinum'),
@@ -86,6 +87,7 @@ urlpatterns = [
     path('payment_platinum',views.payment_platinum,name='payment_platinum'),
     path('payment_customise',views.payment_customise,name='payment_customise'),
     path('userupdatetable/',views.userupdatetable,name='userupdatetable'),
+    path('predict/', predict_weather, name='predict_weather'),
 ]
 # urls.py
 
