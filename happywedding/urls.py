@@ -88,6 +88,7 @@ urlpatterns = [
     path('payment_customise',views.payment_customise,name='payment_customise'),
     path('userupdatetable/',views.userupdatetable,name='userupdatetable'),
     path('predict/', predict_weather, name='predict_weather'),
+    path('chat/',views.messages_page,name='messages_page')
 ]
 # urls.py
 

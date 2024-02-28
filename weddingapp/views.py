@@ -1449,5 +1449,11 @@ def predict_weather(request):
 
     return render(request, 'weather_prediction_form.html')
 
-
-
+from weddingapp.models import Thread
+@login_required
+def messages_page(request):
+    threads = Thread.objects.by_user(user=request.user).prefetch_related('chatmessage_thread').order_by('timestamp')
+    context = {
+        'Threads': threads
+    }
+    return render(request, 'messages.html', context)

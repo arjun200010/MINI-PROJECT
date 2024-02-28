@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'weddingapp',
-    
+    'channels',
 ]
 
 MIDDLEWARE = [
@@ -70,8 +70,8 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'happywedding.wsgi.application'
-
+# WSGI_APPLICATION = 'happywedding.wsgi.application'
+ASGI_APPLICATION = 'happywedding.asgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
@@ -162,3 +162,12 @@ MEDIA_URL = '/media/'
 # weather_api
 
 OPENWEATHERMAP_API_KEY = '7291cf2a9da392c69f6a905049396d9b'
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels.layers.InMemoryChannelLayer',
+        # 'CONFIG': {
+        #     'hosts': [('127.0.0.1', 6379)],
+        # }
+    }
+}
