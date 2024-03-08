@@ -66,11 +66,6 @@ class CustomisePackage(models.Model):
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     booked_package = models.CharField(max_length=100, default="Not booked")
-    profile_image = models.ImageField(default='default_avatar.jpeg', upload_to='profile_images/', blank=True, null=True)
-
-
-
-
 
 class Package(models.Model):
     name = models.CharField(max_length=100)
@@ -104,6 +99,13 @@ class Thread(models.Model):
 
 class ChatMessage(models.Model):
     thread = models.ForeignKey(Thread, null=True, blank=True, on_delete=models.CASCADE, related_name='chatmessage_thread')
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    message = models.TextField()
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+# Notification 
+
+class Notification(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     message = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)

@@ -7,7 +7,7 @@ from django.urls import reverse
 from django.contrib.auth import get_user_model
 User = get_user_model()
 from .models import UserProfile,VendorProfile
-from .models import GoldPackage,SilverPackage,PlatinumPackage,CustomisePackage
+from .models import GoldPackage,SilverPackage,PlatinumPackage,CustomisePackage, Notification
 from django.contrib.auth.decorators import login_required
 import json
 from django.shortcuts import get_object_or_404, redirect
@@ -18,6 +18,8 @@ from django.contrib.auth import get_user_model
 from django.utils import timezone
 from datetime import timedelta
 from . import candy
+
+
 
 def index(request):
     return candy.render(request, 'index.html')
@@ -149,11 +151,14 @@ def adminfirst(request):
                               SilverPackage.objects.filter(is_booked=True).count() + \
                               PlatinumPackage.objects.filter(is_booked=True).count() + \
                               CustomisePackage.objects.filter(is_booked=True).count()
+        # Get the three most recent notifications
+        notifications = Notification.objects.order_by('-timestamp')[:3]
 
         context = {
             'user_count': user_count,
             'vendor_count': vendor_count,
             'active_booking_count': active_booking_count,
+            'notifications' : notifications
         }
 
         response = render(request, 'adminfirst.html',context)
@@ -1073,6 +1078,11 @@ def apply_bookings_gold(request, booking_id):
         # Save the vendor as an applicant for this booking
         booking.applicants.add(vendor_profile)
         messages.success(request, 'Application sent successfully!')
+
+        # Create a notification for the admin
+        notification_message = f"{request.user.role} has applied on {booking.date_of_booking} for {booking.destination_selected} for Gold Package "
+        Notification.objects.create(user=request.user, message=notification_message)
+
     except Exception as e:
         messages.error(request, f'Error sending email: {e}')
 
