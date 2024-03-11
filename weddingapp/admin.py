@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import User
-from .models import GoldPackage,SilverPackage,PlatinumPackage,CustomisePackage,Booking
+from .models import GoldPackage,SilverPackage,PlatinumPackage,CustomisePackage,Booking,VendorProfile
 from .models import Thread, ChatMessage
 # Register your models here.
 admin.site.register(User)
@@ -10,6 +10,7 @@ admin.site.register(PlatinumPackage)
 admin.site.register(CustomisePackage)
 admin.site.register(Booking)
 admin.site.register(ChatMessage)
+admin.site.register(VendorProfile)
 
 class ChatMessage(admin.TabularInline):
     model = ChatMessage

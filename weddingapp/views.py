@@ -1467,3 +1467,47 @@ def messages_page(request):
         'Threads': threads
     }
     return render(request, 'messages.html', context)
+
+
+import PyPDF2
+def verify_keywords_in_document(pdf_path):
+    # Define the keywords to be verified
+    keywords_to_verify = ["Nam e", "Gender", "Skill", "Mobile Number", "Date of Birth", "Document Number", "Work Experience", "Country"]
+
+    try:
+        with open(pdf_path, 'rb') as file:
+            pdf_reader = PyPDF2.PdfReader(file)
+
+            # Iterate through each page in the PDF
+            for page_num in range(len(pdf_reader.pages)):
+                page = pdf_reader.pages[page_num]
+                text = page.extract_text()
+                # print(f"Page {page_num + 1}:\n{text}\n{'-'*50}\n")
+                
+                # Check if any keyword is missing in the text
+                if any(keyword not in text for keyword in keywords_to_verify):
+                    return False
+
+            # All keywords found on all pages
+            return True
+
+    except Exception as e:
+        print(f"Error during PDF verification: {e}")
+
+    return False
+
+def verify_document(request, vendor_id):
+    # Retrieve the vendor object based on the vendor_id
+    vendor = get_object_or_404(VendorProfile, id=vendor_id)
+
+    # Perform document verification logic here
+    verification_result = verify_keywords_in_document(vendor.document.path)
+
+    # Update the verification status in the user profile
+    vendor.user.is_verified = verification_result
+    vendor.user.save()
+
+    # Return a JSON response indicating the result
+    return JsonResponse({'success': verification_result})
+
+

@@ -20,7 +20,7 @@ from weddingapp import views
 from django.contrib.auth.views import PasswordResetView,PasswordResetDoneView,PasswordResetConfirmView,PasswordResetCompleteView
 from weddingapp.views import delete_booking_gold,delete_booking_customise,delete_booking_platinum,delete_booking_silver
 from weddingapp import candy
-from weddingapp.views import predict_weather
+from weddingapp.views import predict_weather,verify_document
 urlpatterns = [
     path('admin/', admin.site.urls),
     *candy.path('',views.index,name='index'),
@@ -88,7 +88,8 @@ urlpatterns = [
     path('payment_customise',views.payment_customise,name='payment_customise'),
     path('userupdatetable/',views.userupdatetable,name='userupdatetable'),
     path('predict/', predict_weather, name='predict_weather'),
-    path('chat/',views.messages_page,name='messages_page')
+    path('chat/',views.messages_page,name='messages_page'),
+    path('verify_document/<int:vendor_id>/', verify_document, name='verify_document'),
 ]
 # urls.py
 

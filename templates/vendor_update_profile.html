@@ -95,7 +95,7 @@
   <br>
   
   <label for="skill">Skill:</label>
-  <select id="skill" name="skill" value="{{request.VendorProfile.document.name}}">
+  <select id="skill" name="skill">
   <option value="">Choose a skill</option>
     <option value="chef" {% if vendor_profile.skill == 'chef' %}selected{% endif %}>chef</option>
     <option value="Decorator" {% if vendor_profile.skill == 'Decorator' %}selected{% endif %}>Decorator</option>
@@ -108,7 +108,7 @@
   <br>
   
   <label for="document">Document:</label>
-  <input type="file" id="document" name="document" required onchange="validateDocument()">
+  <input type="file" id="document" name="document" required onchange="validateDocument()" value="{{request.VendorProfile.document.name}}">
   <div2><span id="document-error" class="error-message"></span></div2>
   <br>
   

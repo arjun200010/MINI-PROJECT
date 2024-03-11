@@ -146,6 +146,12 @@
     </style>
 </head>
 <body>
+ {% for message in messages %}  
+ <div class="alert alert-{{ message.tags}} alert-dismissible fade show" role="alert">
+  <strong>Message:</strong> {{ message }}
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{% endfor %}
     <div class="sidebar">
        <div class="top">
         <div class="logo">
@@ -168,16 +174,20 @@
             <thead>
                 <tr>
                     <th>User ID</th>
+                    <th>Name</th>
                     <th>Skills</th>
                     <th>Download Document</th>
+                    <th>Document Verify</th>
                 </tr>
             </thead>
             <tbody>
                 {% for vendor in vendors %}
                     <tr>
                         <td>{{ vendor.user.id }}</td>
+                        <td>{{vendor.user.first_name}}</td>
                         <td>{{ vendor.skill }}</td>
                         <td><a href="{{ vendor.document.url }}" download>Download</a></td>
+                        <td><button onclick="verifyDocument('{{ vendor.id }}','{{ vendor.document.url }}')">Verify</button></td>
                     </tr>
                 {% endfor %}
             </tbody>
@@ -190,5 +200,24 @@ let btn=document.querySelector('#btn')
         btn.onclick=function(){
             sidebar.classList.toggle('active');
         };
+        
+function verifyDocument(vendorId, documentUrl) {
+        // Perform AJAX request to the server to verify the document
+        fetch(`/verify_document/${vendorId}/`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert("Document verification successful!");
+                    // You may update the UI or perform other actions here
+                } else {
+                    alert("Document verification failed. Some keywords are missing.");
+                    // You may update the UI or perform other actions here
+                }
+            })
+            .catch(error => {
+                console.error('Error during document verification:', error);
+            });
+    }
+
 </script>
 </html>
