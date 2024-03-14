@@ -1128,6 +1128,9 @@ def apply_bookings_silver(request, booking_id):
         # Save the vendor as an applicant for this booking
         booking.applicants.add(vendor_profile)
         messages.success(request, 'Application sent successfully!')
+        notification_message = f"{request.user.role} has applied on {booking.date_of_booking} for {booking.destination_selected} for silver Package "
+        Notification.objects.create(user=request.user, message=notification_message)
+
     except Exception as e:
         messages.error(request, f'Error sending email: {e}')
 
@@ -1174,6 +1177,9 @@ def apply_bookings_platinum(request, booking_id):
         # Save the vendor as an applicant for this booking
         booking.applicants.add(vendor_profile)
         messages.success(request, 'Application sent successfully!')
+        notification_message = f"{request.user.role} has applied on {booking.date_of_booking} for {booking.destination_selected} for Platinum Package "
+        Notification.objects.create(user=request.user, message=notification_message)
+
     except Exception as e:
         messages.error(request, f'Error sending email: {e}')
 
@@ -1219,6 +1225,9 @@ def apply_bookings_customise(request, booking_id):
         # Save the vendor as an applicant for this booking
         booking.applicants.add(vendor_profile)
         messages.success(request, 'Application sent successfully!')
+        notification_message = f"{request.user.role} has applied on {booking.date_of_booking} for {booking.destination_selected} for Customise Package "
+        Notification.objects.create(user=request.user, message=notification_message)
+
     except Exception as e:
         messages.error(request, f'Error sending email: {e}')
 
