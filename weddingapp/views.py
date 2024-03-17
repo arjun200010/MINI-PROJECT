@@ -1520,3 +1520,20 @@ def verify_document(request, vendor_id):
     return JsonResponse({'success': verification_result})
 
 
+
+
+from .models import Review
+from textblob import TextBlob
+
+def review_form(request):
+    review=Review.objects.all()
+    if request.method == 'POST':
+        review_text = request.POST.get('review_text', '')
+        if review_text:
+            # Calculate sentiment rating using TextBlob
+            blob = TextBlob(review_text)
+            sentiment_rating = blob.sentiment.polarity
+            # Save review to the database
+            Review.objects.create(reviewer=request.user, review_text=review_text, sentiment_rating=sentiment_rating)
+            return redirect('review_form')  # Redirect to the same page after submitting
+    return render(request, 'review_form.html',{'review':review})

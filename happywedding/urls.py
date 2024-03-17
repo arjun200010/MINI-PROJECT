@@ -90,6 +90,7 @@ urlpatterns = [
     path('predict/', predict_weather, name='predict_weather'),
     path('chat/',views.messages_page,name='messages_page'),
     path('verify_document/<int:vendor_id>/', verify_document, name='verify_document'),
+    path('review/', views.review_form, name='review_form'),
 ]
 # urls.py
 

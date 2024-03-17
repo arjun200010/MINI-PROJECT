@@ -58,7 +58,33 @@ p1{
           <li><a class="nav-link scrollto" href="#services">Destination</a></li>
           <li><a class="nav-link scrollto" href="#contact">Contact</a></li>
           <li><a class="dropdown-item" href="{% url 'messages_page' %}">Chat Room</a></li>
-        
+          <li><a class="dropdown-item" href="{% url 'review_form' %}">Leave Review</a></li>
+          {% comment %} <li><button type="button" class="btn btn-primary">
+          Add Rivew on Seller
+      </button></li> {% endcomment %}
+
+      {% comment %} <div class="modal fade" id="addReviewModal" tabindex="-1" role="dialog" aria-labelledby="addReviewModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addReviewModalLabel">Add Review</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- Form for submitting reviews -->
+                    <form method="post" action="{% url 'submit_review'%}" id="reviewForm">
+                        {% csrf_token %}
+                        <!-- Add your review form fields here -->
+                        <textarea name="review_text"  rows="4" cols="50" required></textarea>
+                        <input type="hidden" name="seller_id" id="modalSellerId" value="">
+                        <input type="submit" value="Submit Review">
+                    </form>
+                </div>
+            </div>
+        </div> {% endcomment %}
+    </div>
         <i class="bi bi-list mobile-nav-toggle"></i>
       </nav><!-- .navbar -->
     <div class="dropdown-center">
@@ -396,6 +422,23 @@ p1{
   <div id="preloader"></div>
 
   <!-- Vendor JS Files -->
+  {% comment %} <script>
+  function openReviewModal() {
+  
+      // Set the seller ID in the hidden input field
+      
+
+      // Update the form action URL with the correct seller ID
+      var formAction = '{% url "submit_review" %}'.;
+      $('#reviewForm').attr('action', formAction);
+
+      // Trigger the modal to show
+      $('#addReviewModal').modal('show');
+   
+}
+
+  </script> {% endcomment %}
+  
   <script src="{% static 'assets/vendor/aos/aos.js' %}"></script>
   <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
   <script src="{% static 'assets/vendor/glightbox/js/glightbox.min.js' %}"></script>

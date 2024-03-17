@@ -109,3 +109,20 @@ class Notification(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     message = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
+
+
+
+
+from textblob import TextBlob
+
+class Review(models.Model):
+    reviewer = models.ForeignKey(User, on_delete=models.CASCADE)
+    review_text = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    sentiment_rating = models.FloatField(null=True, blank=True)
+
+    def save(self, *args, **kwargs):
+        
+        blob = TextBlob(self.review_text)
+        self.sentiment_rating = blob.sentiment.polarity
+        super().save(*args, **kwargs)

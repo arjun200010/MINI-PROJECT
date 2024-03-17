@@ -1,0 +1,70 @@
+{% extends 'nav4.html' %}
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Review Form</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+{% block body %}
+    <div class="container mt-5">
+        <form method="post" action="{% url 'review_form' %}">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="review_text">Review Text:</label>
+                <textarea class="form-control" id="review_text" name="review_text" rows="5" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit Review</button>
+        </form>
+    </div>
+
+    {% for review in review %}
+    <div class="container mt-3">
+        <div class="card">
+            <div class="card-body">
+                <p>{{ review.review_text }}</p>
+                <div class="stars" id="stars{{ review.id }}"></div>
+            </div>
+        </div>
+        <script>
+            var starsContainer = document.getElementById('stars{{ review.id }}');
+            if (starsContainer) {
+                var sentimentRating = {{ review.sentiment_rating|default:0 }};
+                var stars = calculateStars(sentimentRating);
+                for (var i = 0; i < 5; i++) {
+                    var star = document.createElement('i');
+                    star.className = 'fas fa-star';
+                    // Set color dynamically based on sentiment rating
+                    if (i < stars) {
+                        if (sentimentRating >= 0.6) {
+                            star.style.color = 'green'; // Good review
+                        } else if (sentimentRating >= 0.4) {
+                            star.style.color = 'yellow'; // Neutral review
+                        } else {
+                            star.style.color = 'red'; // Bad review
+                        }
+                    }
+                    starsContainer.appendChild(star);
+                }
+            }
+            function calculateStars(sentimentRating) {
+                if (sentimentRating >= 0.8) {
+                    return 5;
+                } else if (0.6 <= sentimentRating && sentimentRating < 0.8) {
+                    return 4;
+                } else if (0.4 <= sentimentRating && sentimentRating < 0.6) {
+                    return 3;
+                } else if (-0.6 <= sentimentRating && sentimentRating < 0.4) {
+                    return 2;
+                } else if (sentimentRating < -0.6) {
+                    return 1;
+                } else {
+                    return 0;
+                }
+            }
+        </script>
+    </div>
+    {% endfor %}
+
+    <script src="https://kit.fontawesome.com/0c1a238acd.js" crossorigin="anonymous"></script>
+{% endblock body %}
