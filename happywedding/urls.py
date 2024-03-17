@@ -20,7 +20,7 @@ from weddingapp import views
 from django.contrib.auth.views import PasswordResetView,PasswordResetDoneView,PasswordResetConfirmView,PasswordResetCompleteView
 from weddingapp.views import delete_booking_gold,delete_booking_customise,delete_booking_platinum,delete_booking_silver
 from weddingapp import candy
-from weddingapp.views import predict_weather,verify_document
+from weddingapp.views import predict_weather,verify_document,get_location_suggestions
 urlpatterns = [
     path('admin/', admin.site.urls),
     *candy.path('',views.index,name='index'),
@@ -37,7 +37,7 @@ urlpatterns = [
     path("adminhome/",views.adminhome,name="adminhome"),
     path("create_user/",views.create_user,name="create_user"),
     path('update_profile/',views.update_profile,name="update_profile"),
-    *candy.path('change_password/', views.change_password, name='change_password'),
+    path('change_password/', views.change_password, name='change_password'),
     path('vendor_change_password/',views.vendor_change_password,name="vendor_change_password"),
     path('activate_user/<int:user_id>/', views.activate_user, name='activate_user'),
     path('deactivate_user/<int:user_id>/', views.deactivate_user, name='deactivate_user'),
@@ -91,6 +91,7 @@ urlpatterns = [
     path('chat/',views.messages_page,name='messages_page'),
     path('verify_document/<int:vendor_id>/', verify_document, name='verify_document'),
     path('review/', views.review_form, name='review_form'),
+    path('get_location_suggestions/', get_location_suggestions, name='get_location_suggestions'),
 ]
 # urls.py
 

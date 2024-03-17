@@ -58,16 +58,23 @@ p1{
           <li><a class="nav-link scrollto" href="#contact">Contact</a></li>
           <li><a class="dropdown-item" href="{% url 'messages_page' %}">Chat Room</a></li>
         <i class="bi bi-list mobile-nav-toggle"></i>
+        </ul>
       </nav><!-- .navbar -->
     <div class="dropdown-center">
-  <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-    Hello,{{user.username}}!
-  </button>
+ {% if user.is_authenticated %}
+  {% with vendor_profile=user.vendorprofile %}
+    {% if vendor_profile %}
+      <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+        Hello, {{ vendor_profile.skill }}!
+      </button>
+    {% endif %}
+  {% endwith %}
+{% endif %}
+
   <ul class="dropdown-menu">
     <li><a class="dropdown-item" href="{% url 'vendor_change_password' %}">Change Password</a></li>
     <li><a class="dropdown-item" href="{% url 'vendor_update_profile' %}">Update Profile</a></li>
     <li><a class="dropdown-item" href="{% url 'handlelogout' %}">Logout</a></li>
-  </ul>
   </ul>
 </div>
 

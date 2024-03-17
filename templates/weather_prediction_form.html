@@ -2,91 +2,176 @@
 
 {% load static %}
 {% block style %}
-    <style>
-        
- body {
-           background-color:#B0E0E6;
-           background-size: cover;
-           background-repeat: no-repeat;
-           justify-content:center;
-           align-items:center;
+<style>
+    body {
+        background-color:#B0E0E6;
+        background-size: cover;
+        background-repeat: no-repeat;
+        justify-content:center;
+        align-items:center;
+    }
+
+    h3 {
+        text-align: center;
+        color: #000;
+        margin-bottom: 30px;
+        margin-top:102px;
+    }
+
+    form {
+        max-width: 500px;
+        margin: 0 auto; /* Center-align the form horizontally */
+        padding: 52px;
+        background-color: rgba(255, 255, 255, 0.5);
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 7.2);
+        border-radius: 119px;
+        text-align: center;
+        opacity: 1.9; /* This value should be between 0 and 1, not 1.9 */
+    }
+
+    label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 30px;
+    }
+
+    input {
+        width: 100%;
+        padding: 12px;
+        margin-bottom: 15px;
+        border: 1px solid #000;
+        border-radius: 5px;
+    }
+
+    button {
+        background-color: #0074e4;
+        color: #fff;
+        border: none;
+        border-radius: 20px;
+        padding: 15px 20px;
+        cursor: pointer;
+    }
+
+    a {
+        text-decoration: none;
+        color: #00f; /* Change link color to blue */
+    }
+
+    a:hover {
+        text-decoration: underline;
+    }
+
+    /* Additional CSS to hide autocomplete status div */
+    .ui-helper-hidden-accessible {
+        display: none !important;
+    }
+    .ui-autocomplete {
+            position: absolute;
+            z-index: 9999;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            max-height: 200px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
         }
-         
 
-        h3 {
-            text-align: center;
-            color: #OOO;
-            margin:bottom:30px;
-            margin-top:102px;
-        }
-
-        form {
-            max-width: 500px;
-            margin: 0 auto; /* Center-align the form horizontally */
-            padding: 52px;
-            background-color: rgba(255, 255, 255, 0.5);
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 7.2);
-            border-radius: 119px;
-            text-align: center;
-            opacity: 1.9; /* This value should be between 0 and 1, not 1.9 */
-
-        }
-
-        label {
-            display: block;
-            font-weight: bold;
-            margin-bottom: 30px;
-        }
-
-        input {
-            width: 100%;
-            padding: 12px;
-            margin-bottom: 15px;
-            border: 1px solid #ooo;
-            border-radius: 50px;
-        }
-
-        button {
-            background-color: #0074e4;
-            color: #fff;
-            border: none;
-            border-radius: 20px;
-            padding: 15px 20px;
+        .ui-autocomplete-item {
+            padding: 30px;
             cursor: pointer;
         }
 
-        a {
-            text-decoration: none;
-            color: #00f; /* Change link color to blue */
+        .ui-autocomplete-item:hover {
+            background-color: #f0f0f0;
         }
+</style>
+{% endblock style %}
 
-        a:hover {
-            text-decoration: underline;
-        }
-    </style>
-    {% endblock style %}
 {% block body  %}
 <br>
 <h3>Choose Best Date and Location according to Weather Forecast</h3>
 <br>
 <form method="post" action="{% url 'predict_weather' %}">
- {% for message in messages %}  
- <div class="alert alert-{{ message.tags}} alert-dismissible fade show" role="alert">
-  <strong>Message:</strong> {{ message }}
-  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-</div>
-{% endfor %}
+    {% for message in messages %}  
+    <div class="alert alert-{{ message.tags}} alert-dismissible fade show" role="alert">
+        <strong>Message:</strong> {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endfor %}
     {% csrf_token %}
     <div class="form-element">
-    <label for="location">Location:</label>
-    <input type="text" name="location" required>
+        <label for="location">Location:</label>
+        <input type="text" id="location-input" name="location" required>
     </div>
+
     <div class="form-element">
-    <label for="date">Date:</label>
-    <input type="date" name="date" required>
+        <label for="date">Date:</label>
+        <input type="date" name="date" id ="date" required>
     </div>
 
     <button type="submit" class="btn btn-primary">Predict Weather</button>
     <br>
 </form>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#location-input').autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: '/get_location_suggestions/',
+                    data: {
+                        'query': request.term
+                    },
+                    dataType: 'json',
+                    success: function (data) {
+                        var suggestions = data.features.map(function (item) {
+                            return item.properties.formatted;
+                        });
+                        response(suggestions.filter(function(suggestion) {
+                            return suggestion.toLowerCase().includes(request.term.toLowerCase());
+                        }));
+                    }
+                });
+            },
+            minLength: 2, // Set minimum length before autocomplete activates
+            open: function() {
+                $(this).autocomplete("widget").css({
+                    "width": "auto", // Set width to auto to fit the input field
+                    "z-index": 999 // Set higher z-index to ensure it's on top of other elements
+                });
+                return false; // Prevent the default list from displaying
+            }
+        });
+    });
+    const dateInput = document.getElementById("date");
+
+    // Get the current date
+    const currentDate = new Date();
+    
+    // Calculate the date 5 days ahead
+    currentDate.setDate(currentDate.getDate());
+
+    // Format the date as "YYYY-MM-DD"
+    const minDate = currentDate.toISOString().split("T")[0];
+
+    // Set the min attribute of the date input to 5 days ahead
+    dateInput.min = minDate;
+
+    // Add an event listener to the date input for validation
+    dateInput.addEventListener("change", function() {
+      const selectedDate = new Date(dateInput.value);
+      
+      if (selectedDate < currentDate) {
+        document.getElementById("dateError").textContent = "Please select a date.";
+        dateInput.value = ""; // Clear the input
+      } else {
+        document.getElementById("dateError").textContent = "";
+      }
+    });
+</script>
 {% endblock body  %}

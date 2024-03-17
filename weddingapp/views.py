@@ -1537,3 +1537,28 @@ def review_form(request):
             Review.objects.create(reviewer=request.user, review_text=review_text, sentiment_rating=sentiment_rating)
             return redirect('review_form')  # Redirect to the same page after submitting
     return render(request, 'review_form.html',{'review':review})
+
+
+
+
+def get_location_suggestions(request):
+    query = request.GET.get('query', '')  # Get the query string from the request
+    api_key = 'a15a0ad853484a0b8957d2832012fb69'  # Replace 'your_api_key' with your actual Geoapify API key
+    api_url = f'https://api.geoapify.com/v1/geocode/autocomplete?text={query}&apiKey={api_key}'
+    
+
+    
+    # Fetch location suggestions from the Geoapify API
+    response = requests.get(api_url)
+    
+    # Check if the request was successful (status code 200)
+    if response.status_code == 200:
+        suggestions = response.json()  # Parse the JSON response
+        return JsonResponse(suggestions, safe=False)  # Return the suggestions as JSON response
+    else:
+        # If there was an error fetching suggestions, return an error response
+        return JsonResponse({'error': 'Failed to fetch suggestions'}, status=500)
+
+
+
+

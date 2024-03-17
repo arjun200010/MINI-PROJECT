@@ -94,17 +94,11 @@
   <div2><span id="last-name-error" class="error-message"></span></div2>
   <br>
   
-  <label for="skill">Skill:</label>
-  <select id="skill" name="skill">
-  <option value="">Choose a skill</option>
-    <option value="chef" {% if vendor_profile.skill == 'chef' %}selected{% endif %}>chef</option>
-    <option value="Decorator" {% if vendor_profile.skill == 'Decorator' %}selected{% endif %}>Decorator</option>
-     <option value="Disk Jockey" {% if vendor_profile.skill == 'Disk Jockey' %}selected{% endif %}>Disk Jockey</option>
-    <option value="Photographer" {% if vendor_profile.skill == 'Photographer' %}selected{% endif %}>Photographer</option>
-     <option value="Bar tender" {% if vendor_profile.skill == 'Bar tender' %}selected{% endif %}>Bar tender</option>
-    <option value="Waiter" {% if vendor_profile.skill == 'Waiter' %}selected{% endif %}>Waiter</option>
-    <!-- Add more options as needed -->
-  </select>
+
+<label for="skill">Skill:</label>
+<input type="text" value="{{ vendor_profile.skill }}" readonly />
+
+
   <br>
   
   <label for="document">Document:</label>

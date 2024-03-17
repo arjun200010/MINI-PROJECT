@@ -82,13 +82,13 @@
 {% endfor %}
     {% csrf_token %}
     <div class="form-group">
-       <label for="profile_image">Profile Image:</label>
+       {% comment %} <label for="profile_image">Profile Image:</label>
 {% if user.userprofile.profile_image %}
     <img src="{{ user.userprofile.profile_image.url }}" alt="Profile Image" style="max-width: 200px; max-height: 200px;">
 {% else %}
     <img src="{% static 'path/to/placeholder-image.jpg' %}" alt="No Image" style="max-width: 200px; max-height: 200px;">
 {% endif %}
-<input type="file" name="profile_image" id="profile_image" class="form-control">
+<input type="file" name="profile_image" id="profile_image" class="form-control"> {% endcomment %}
 
 
       <label for="first_name">First Name:</label>
