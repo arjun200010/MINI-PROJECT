@@ -92,6 +92,12 @@ urlpatterns = [
     path('verify_document/<int:vendor_id>/', verify_document, name='verify_document'),
     path('review/', views.review_form, name='review_form'),
     path('get_location_suggestions/', get_location_suggestions, name='get_location_suggestions'),
+    path('keralaview/',views.keralaview,name='keralaview'),
+    path('delhiview/',views.delhiview,name='delhiview'),
+    path('rajview/',views.rajview,name='rajview'),
+    path('parisview/',views.parisview,name='parisview'),
+    path('swizview/',views.swizview,name='swizview'),
+    path('luxview/',views.luxview,name='luxview'),
 ]
 # urls.py
 

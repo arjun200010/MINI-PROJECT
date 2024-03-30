@@ -1562,3 +1562,20 @@ def get_location_suggestions(request):
 
 
 
+def keralaview(request):
+    return render(request, 'keralaview.html')
+
+def delhiview(request):
+    return render(request, 'delhiview.html')
+
+def rajview(request):
+    return render(request, 'rajview.html')
+
+def parisview(request):
+    return render(request, 'parisview.html')  
+
+def luxview(request):
+    return render(request, 'luxview.html')  
+
+def swizview(request):
+    return render(request, 'swizview.html')

@@ -1,0 +1,146 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>360 Degree Panorama of a City</title>
+  <style>
+    /* Set the panorama container to cover the entire viewport */
+    #panorama {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      overflow: hidden; /* Hide overflow to prevent scrolling */
+    }
+
+    /* Style for arrow buttons */
+    .arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 50px;
+      height: 50px;
+      background-color: rgba(255, 255, 255, 0.5);
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 24px;
+      text-align: center;
+      line-height: 50px;
+      color: #333;
+    }
+
+    .arrow.left {
+      left: 10px;
+    }
+
+    .arrow.right {
+      right: 10px;
+    }
+
+    /* Style for back button */
+    #backButton {
+      position: absolute;
+      bottom: 10px; /* Adjust bottom position */
+      left: 50%; /* Center horizontally */
+      transform: translateX(-50%); /* Center horizontally */
+      padding: 10px;
+      background-color: rgba(255, 255, 255, 0.5);
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      color: #333;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <div id="panorama">
+    <!-- Arrow buttons -->
+    <button class="arrow left" id="leftArrow">&larr;</button>
+    <button class="arrow right" id="rightArrow">&rarr;</button>
+  </div>
+  <a id="backButton" href="{% url 'index' %}">Back</a>
+
+  <!-- Include Three.js library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <!-- Include panorama viewer script -->
+  <script>
+    // Create a new Three.js scene
+    var scene = new THREE.Scene();
+
+    // Create a new Three.js camera
+    var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 10000); // Adjust the far plane to allow for greater distance
+
+    // Create a new Three.js renderer
+    var renderer = new THREE.WebGLRenderer();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.getElementById('panorama').appendChild(renderer.domElement);
+
+    // Load the panorama texture
+    var textureLoader = new THREE.TextureLoader();
+    textureLoader.load('{% static "assets/img/delhiview.jpg" %}', function(texture) {
+      // Create a new Three.js sphere geometry
+      var geometry = new THREE.SphereGeometry(5500, 60, 40); // Adjust the radius for zooming out
+
+      // Create a new Three.js material with the panorama texture
+      var material = new THREE.MeshBasicMaterial({ map: texture });
+
+      // Create a new Three.js mesh with the geometry and material
+      var mesh = new THREE.Mesh(geometry, material);
+
+      // Invert the geometry to ensure the texture is displayed correctly
+      geometry.scale(-1, 1, 1);
+
+      // Add the mesh to the scene
+      scene.add(mesh);
+
+      // Set the initial camera position and rotation to zoom out
+      camera.position.set(0, 0, 2200); // Adjust the Z position for zooming out
+      camera.lookAt(mesh.position);
+    });
+
+    // Create a function to handle window resizing
+    function onWindowResize() {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    }
+
+    // Listen for window resizing events
+    window.addEventListener('resize', onWindowResize);
+
+    // Create a function to render the scene
+    function animate() {
+      requestAnimationFrame(animate);
+      renderer.render(scene, camera);
+    }
+
+    // Call the animate function to start rendering the scene
+    animate();
+
+    // Function to handle arrow clicks
+    function rotateCamera(direction) {
+      switch (direction) {
+        case 'left':
+          camera.rotation.y += 0.1; // Rotate camera left
+          break;
+        case 'right':
+          camera.rotation.y -= 0.1; // Rotate camera right
+          break;
+      }
+    }
+
+    // Arrow button event listeners
+    document.getElementById('leftArrow').addEventListener('click', function() {
+      rotateCamera('left');
+    });
+
+    document.getElementById('rightArrow').addEventListener('click', function() {
+      rotateCamera('right');
+    });
+  </script>
+</body>
+</html>
