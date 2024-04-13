@@ -191,7 +191,7 @@
         <div class="row">
 
           <div class="col-lg-4 col-md-6" data-aos="zoom-in" data-aos-delay="150">
-            <div class="box">
+            <div class="box {% if recommendation_level == 'Highly Recommended' %}featured{% endif %}">
               <h4>{{index_customise}}</h4>
               <h3><sup>$</sup>3500-<sup>$</sup>100000</h3>
               <ul>
@@ -205,9 +205,9 @@
             </div>
           </div>
  <div class="row">
-
           <div class="col-lg-4 col-md-6" data-aos="zoom-in" data-aos-delay="150">
-            <div class="box">
+            <div class="box {% if recommendation_level == 'Highly Recommended' or recommendation_level == 'Moderately Recommended' %}featured{% endif %}">
+            
               <h4>{{index_GOLD}}</h4>
               <h3><sup>$</sup>45000<span></span></h3>
               <ul>
@@ -226,7 +226,7 @@
           </div>
 
           <div class="col-lg-4 col-md-6 mt-4 mt-md-0" data-aos="zoom-in">
-            <div class="box featured">
+            <div class="box {% if recommendation_level == 'Highly Recommended' or recommendation_level == 'Moderately Recommended' %}featured{% endif %}">
               <h4>{{index_SILVER}}</h4>
               <h3><sup>$</sup>55000<span></span></h3>
               <ul>
@@ -247,7 +247,7 @@
           </div>
 
           <div class="col-lg-4 col-md-6 mt-4 mt-lg-0" data-aos="zoom-in" data-aos-delay="150">
-            <div class="box">
+            <div class="box {% if recommendation_level == 'Highly Recommended' or recommendation_level == 'Moderately Recommended' %}featured{% endif %}">
               <h4>{{index_PLATINUM}}</h4>
               <h3><sup>$</sup>60000<span></span></h3>
               <ul>

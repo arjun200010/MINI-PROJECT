@@ -98,6 +98,7 @@ urlpatterns = [
     path('parisview/',views.parisview,name='parisview'),
     path('swizview/',views.swizview,name='swizview'),
     path('luxview/',views.luxview,name='luxview'),
+    path('review_table/',views.review_table,name='review_table')
 ]
 # urls.py
 

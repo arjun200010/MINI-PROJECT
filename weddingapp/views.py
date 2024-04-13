@@ -710,7 +710,7 @@ def customise(request):
     # Render the data in an HTML template
    return render(request, 'customise.html', {'customisebookings': customisebookings})
 
-@login_required
+
 def vendordetails(request):
      vendors = VendorProfile.objects.all()
 
@@ -1412,7 +1412,7 @@ import razorpay
 @login_required
 def payment_gold(request):
   if request.method== 'POST' :  
-    client = razorpay.Client(auth=("rzp_test_XxJHDi3GQ6Raye", "ETHQMabGv3tFBgWHtt6cGCf9"))
+    client = razorpay.Client(auth=("rzp_test_ueeDQ67AX1tkkb", "3GLtarShre0YUG5kmtChiTdz"))
 
     DATA = {
         "amount": 100,
@@ -1437,7 +1437,7 @@ def payment_customise(request):
 from django.conf import settings
 import requests
 from datetime import datetime
-@login_required
+
 def predict_weather(request):
     if request.method == 'POST':
         location = request.POST.get('location')
@@ -1524,7 +1524,7 @@ def verify_document(request, vendor_id):
 
 from .models import Review
 from textblob import TextBlob
-
+@login_required
 def review_form(request):
     review=Review.objects.all()
     if request.method == 'POST':
@@ -1538,6 +1538,12 @@ def review_form(request):
             return redirect('review_form')  # Redirect to the same page after submitting
     return render(request, 'review_form.html',{'review':review})
 
+
+from .models import Review
+@login_required
+def review_table(request):
+    reviews = Review.objects.all()
+    return render(request, 'review_table.html', {'reviews': reviews})
 
 
 
@@ -1579,3 +1585,5 @@ def luxview(request):
 
 def swizview(request):
     return render(request, 'swizview.html')
+
+

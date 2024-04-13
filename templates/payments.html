@@ -72,13 +72,15 @@ body{
         <h3>Gold Package:</h3>
         <p>Package: {{ package.destination_selected }}</p>
         <p>Date of Booking: {{ package.date_of_booking }}</p>
-        <p>Status: {% if package.is_booked %}Confirmed{% endif %}</p>
+        <p>{{ package.pk }}</p>
+        <p>Status: {% if package.is_booked %}Confirmed {% else %}
+             Pending{% endif %}</p>
         
         <form action="{% url 'confirmation' %}" method="POST">
         {% csrf_token%}
 <script
     src="https://checkout.razorpay.com/v1/checkout.js"
-    data-key="rzp_test_XxJHDi3GQ6Raye" 
+    data-key="rzp_test_ueeDQ67AX1tkkb" 
     data-amount="50000" 
     data-currency="INR"
     data-order_id="{{payment.id}}"
@@ -99,11 +101,12 @@ body{
                         <p>Package: {{ package.destination_selected }}</p>
                         <p>Date of Booking: {{ package.date_of_booking }}</p>
                         <p>Honeymoon Destination: {{ package.honeymoon_destination }}</p>
-                        <p>Status: {% if package.is_booked %}Confirmed {% endif %}</p>
+                        <p>Status: {% if package.is_booked %} Confirmed {% else %}Pending{% endif %}</p>
                             <form action="{% url 'confirmation' %}" method="POST">
+                            {% csrf_token%}
 <script
     src="https://checkout.razorpay.com/v1/checkout.js"
-    data-key="rzp_test_XxJHDi3GQ6Raye" 
+    data-key="rzp_test_ueeDQ67AX1tkkb" 
     data-amount="50000" 
     data-currency="INR"
     data-order_id="{{payment.id}}"
@@ -125,11 +128,12 @@ body{
                         <p>Package: {{ package.destination_selected }}</p>
                         <p>Date of Booking: {{ package.date_of_booking }}</p>
                         <p>Honeymoon Destination: {{ package.honeymoon_destination }}</p>
-                        <p>Status: {% if package.is_booked %}Confirmed {% endif %}</p>
+                        <p>Status: {% if package.is_booked %}Confirmed {% else %} Pending {% endif %}</p>
                            <form action="{% url 'confirmation' %}" method="POST">
+                           {% csrf_token%}
 <script
     src="https://checkout.razorpay.com/v1/checkout.js"
-    data-key="rzp_test_XxJHDi3GQ6Raye" 
+    data-key="rzp_test_ueeDQ67AX1tkkb" 
     data-amount="50000" 
     data-currency="INR"
     data-order_id="{{payment.id}}"
@@ -157,12 +161,13 @@ body{
                             <p>Photography:{{ package.photography }}</p>
                             <p>Guest:{{ package.guest }}</p>
                             <p>Amount:${{ package.billing_info }}</p>
-                        <p>Status: {% if package.is_booked %}Confirmed {% endif %} </p>
+                        <p>Status: {% if package.is_booked %}Confirmed {% else %}Pending {% endif %} </p>
                         {% if not package.is_booked %}
                            <form action="{% url 'confirmation' %}" method="POST">
+                           {% csrf_token%}
 <script
     src="https://checkout.razorpay.com/v1/checkout.js"
-    data-key="rzp_test_XxJHDi3GQ6Raye" 
+    data-key="rzp_test_ueeDQ67AX1tkkb" 
     data-amount="50000" 
     data-currency="INR"
     data-order_id="{{payment.id}}"
