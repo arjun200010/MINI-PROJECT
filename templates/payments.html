@@ -72,16 +72,15 @@ body{
         <h3>Gold Package:</h3>
         <p>Package: {{ package.destination_selected }}</p>
         <p>Date of Booking: {{ package.date_of_booking }}</p>
-        <p>{{ package.pk }}</p>
-        <p>Status: {% if package.is_booked %}Confirmed {% else %}
-             Pending{% endif %}</p>
-        
-        <form action="{% url 'confirmation' %}" method="POST">
-        {% csrf_token%}
+        <p>Status: {% if package.is_booked %} Payment Confirmed {% else %}Payment Pending{% endif %}</p>
+                            <form action="{% url 'confirmation_page_gold' %}" method="POST">
+                            {% csrf_token%}
+                             <input type="hidden" name="package_id" value="{{ package.pk }}">
+                            <input type="hidden" name="amount" value="10000">
 <script
     src="https://checkout.razorpay.com/v1/checkout.js"
     data-key="rzp_test_ueeDQ67AX1tkkb" 
-    data-amount="50000" 
+    data-amount="1000000" 
     data-currency="INR"
     data-order_id="{{payment.id}}"
     data-buttontext="Pay"
@@ -101,13 +100,15 @@ body{
                         <p>Package: {{ package.destination_selected }}</p>
                         <p>Date of Booking: {{ package.date_of_booking }}</p>
                         <p>Honeymoon Destination: {{ package.honeymoon_destination }}</p>
-                        <p>Status: {% if package.is_booked %} Confirmed {% else %}Pending{% endif %}</p>
-                            <form action="{% url 'confirmation' %}" method="POST">
+                        <p>Status: {% if package.is_booked %} Payment Confirmed {% else %}Payment Pending{% endif %}</p>
+                            <form action="{% url 'confirmation_page_silver' %}" method="POST">
                             {% csrf_token%}
+                             <input type="hidden" name="package_id" value="{{ package.pk }}">
+                            <input type="hidden" name="amount" value="10000">
 <script
     src="https://checkout.razorpay.com/v1/checkout.js"
     data-key="rzp_test_ueeDQ67AX1tkkb" 
-    data-amount="50000" 
+    data-amount="1000000" 
     data-currency="INR"
     data-order_id="{{payment.id}}"
     data-buttontext="Pay"
@@ -128,13 +129,15 @@ body{
                         <p>Package: {{ package.destination_selected }}</p>
                         <p>Date of Booking: {{ package.date_of_booking }}</p>
                         <p>Honeymoon Destination: {{ package.honeymoon_destination }}</p>
-                        <p>Status: {% if package.is_booked %}Confirmed {% else %} Pending {% endif %}</p>
-                           <form action="{% url 'confirmation' %}" method="POST">
-                           {% csrf_token%}
+                        <p>Status: {% if package.is_booked %} Payment Confirmed {% else %}Payment Pending{% endif %}</p>
+                            <form action="{% url 'confirmation_page_platinum' %}" method="POST">
+                            {% csrf_token%}
+                             <input type="hidden" name="package_id" value="{{ package.pk }}">
+                            <input type="hidden" name="amount" value="10000">
 <script
     src="https://checkout.razorpay.com/v1/checkout.js"
     data-key="rzp_test_ueeDQ67AX1tkkb" 
-    data-amount="50000" 
+    data-amount="1000000" 
     data-currency="INR"
     data-order_id="{{payment.id}}"
     data-buttontext="Pay"
@@ -161,14 +164,15 @@ body{
                             <p>Photography:{{ package.photography }}</p>
                             <p>Guest:{{ package.guest }}</p>
                             <p>Amount:${{ package.billing_info }}</p>
-                        <p>Status: {% if package.is_booked %}Confirmed {% else %}Pending {% endif %} </p>
-                        {% if not package.is_booked %}
-                           <form action="{% url 'confirmation' %}" method="POST">
-                           {% csrf_token%}
+                            <p>Status: {% if package.is_booked %} Payment Confirmed {% else %}Payment Pending{% endif %}</p>
+                            <form action="{% url 'confirmation_page_customise' %}" method="POST">
+                            {% csrf_token%}
+                             <input type="hidden" name="package_id" value="{{ package.pk }}">
+                            <input type="hidden" name="amount" value="10000">
 <script
     src="https://checkout.razorpay.com/v1/checkout.js"
     data-key="rzp_test_ueeDQ67AX1tkkb" 
-    data-amount="50000" 
+    data-amount="1000000" 
     data-currency="INR"
     data-order_id="{{payment.id}}"
     data-buttontext="Pay"
@@ -180,7 +184,7 @@ body{
     data-theme.color="#F37254"
 ></script>
 </form>
-                        {% endif %}
+                        
                     </li>
                 {% endfor %}
             </ul>

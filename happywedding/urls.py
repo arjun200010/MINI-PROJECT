@@ -98,7 +98,11 @@ urlpatterns = [
     path('parisview/',views.parisview,name='parisview'),
     path('swizview/',views.swizview,name='swizview'),
     path('luxview/',views.luxview,name='luxview'),
-    path('review_table/',views.review_table,name='review_table')
+    path('review_table/',views.review_table,name='review_table'),
+    path('confirmation_page_gold/', views.confirmation_page_gold, name='confirmation_page_gold'),
+    path('confirmation_page_silver/', views.confirmation_page_silver, name='confirmation_page_silver'),
+    path('confirmation_page_platinum/', views.confirmation_page_platinum, name='confirmation_page_platinum'),
+    path('confirmation_page_customise/', views.confirmation_page_customise, name='confirmation_page_customise'),
 ]
 # urls.py
 

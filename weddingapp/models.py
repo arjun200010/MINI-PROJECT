@@ -126,3 +126,40 @@ class Review(models.Model):
         blob = TextBlob(self.review_text)
         self.sentiment_rating = blob.sentiment.polarity
         super().save(*args, **kwargs)
+
+#Payment for Packages
+class Payment_silver(models.Model):
+    silver_package = models.ForeignKey(SilverPackage, on_delete=models.CASCADE)
+    user_id = models.CharField(max_length=100)
+    user_ref= models.ForeignKey(User, on_delete=models.CASCADE)
+    date_of_booking = models.DateField()
+    destination_selected = models.CharField(max_length=255)
+    amount_paid = models.DecimalField(max_digits=10, decimal_places=2)
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+class Payment_gold(models.Model):
+    gold_package = models.ForeignKey(GoldPackage, on_delete=models.CASCADE)
+    user_id = models.CharField(max_length=100)
+    user_ref= models.ForeignKey(User, on_delete=models.CASCADE)
+    date_of_booking = models.DateField()
+    destination_selected = models.CharField(max_length=255)
+    amount_paid = models.DecimalField(max_digits=10, decimal_places=2)
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+class Payment_platinum(models.Model):
+    platinum_package = models.ForeignKey(PlatinumPackage, on_delete=models.CASCADE)
+    user_id = models.CharField(max_length=100)
+    user_ref= models.ForeignKey(User, on_delete=models.CASCADE)
+    date_of_booking = models.DateField()
+    destination_selected = models.CharField(max_length=255)
+    amount_paid = models.DecimalField(max_digits=10, decimal_places=2)
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+class Payment_customise(models.Model):
+    customise_package = models.ForeignKey(CustomisePackage, on_delete=models.CASCADE)
+    user_id = models.CharField(max_length=100)
+    user_ref= models.ForeignKey(User, on_delete=models.CASCADE)
+    date_of_booking = models.DateField()
+    destination_selected = models.CharField(max_length=255)
+    amount_paid = models.DecimalField(max_digits=10, decimal_places=2)
+    timestamp = models.DateTimeField(auto_now_add=True)

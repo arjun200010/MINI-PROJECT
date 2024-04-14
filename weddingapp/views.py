@@ -481,7 +481,7 @@ def gold_booking(request):
         gold_package.save()
 
         # Redirect to a success page for a new booking
-        return redirect('confirmation')
+        return redirect('payments')
 
     return render(request, 'gold_booking.html')
 
@@ -541,7 +541,7 @@ def silver_booking(request):
         silver_package.save()
 
         # Redirect to a success page for a new booking
-        return redirect('confirmation')
+        return redirect('payments')
 
     return render(request, 'silver_booking.html')
 
@@ -598,7 +598,7 @@ def platinum_booking(request):
         platinum_package.save()
 
         # Redirect to a success page for a new booking
-        return redirect('confirmation')
+        return redirect('payments')
 
     return render(request, 'platinum_booking.html')
 
@@ -673,14 +673,14 @@ def customise_booking(request):
 
         # Save the CustomisePackage record
         customise_package.save()
-        return redirect('confirmation')
+        return redirect('payments')
 
     return render(request, 'customise_booking.html')
 
 
 @login_required
 def confirmation_view(request):
-    return candy.render(request, 'confirmation.html')
+    return render(request, 'confirmation.html')
 
 @login_required
 def gold(request):
@@ -1395,10 +1395,10 @@ def confirm_booking_customise_vendor(request, booking_id):
 @login_required
 def payments(request):
     user = request.user  # Get the currently logged-in user
-    gold_packages = GoldPackage.objects.filter(user=user)
-    silver_packages = SilverPackage.objects.filter(user=user)
-    platinum_packages = PlatinumPackage.objects.filter(user=user)
-    customise_packages=CustomisePackage.objects.filter(user=user)
+    gold_packages = GoldPackage.objects.filter(user=user,is_confirmed=False,is_booked=False)
+    silver_packages = SilverPackage.objects.filter(user=user,is_confirmed=False,is_booked=False)
+    platinum_packages = PlatinumPackage.objects.filter(user=user,is_confirmed=False,is_booked=False)
+    customise_packages=CustomisePackage.objects.filter(user=user,is_confirmed=False,is_booked=False)
     
     return render(request, 'payments.html', {
          'user':user,
@@ -1423,15 +1423,39 @@ def payment_gold(request):
 
 @login_required
 def payment_silver(request):
-    return render(request,"payment_silver.html")
+     if request.method== 'POST' :  
+        client = razorpay.Client(auth=("rzp_test_ueeDQ67AX1tkkb", "3GLtarShre0YUG5kmtChiTdz"))
+
+        DATA = {
+            "amount": 100,
+            "currency": "INR",
+        }
+        client.order.create({'amount':'amount','currency':'INR','payment_cpature':'1'})
+     return render(request,"payment_silver.html")
 
 @login_required
 def payment_platinum(request):
-    return render(request,"payment_platinum.html")
+     if request.method== 'POST' :  
+        client = razorpay.Client(auth=("rzp_test_ueeDQ67AX1tkkb", "3GLtarShre0YUG5kmtChiTdz"))
+
+        DATA = {
+            "amount": 100,
+            "currency": "INR",
+        }
+        client.order.create({'amount':'amount','currency':'INR','payment_cpature':'1'})
+        return render(request,"payment_platinum.html")
 
 @login_required
 def payment_customise(request):
-    return render(request,"payment_customise.html")
+     if request.method== 'POST' :  
+        client = razorpay.Client(auth=("rzp_test_ueeDQ67AX1tkkb", "3GLtarShre0YUG5kmtChiTdz"))
+
+        DATA = {
+            "amount": 100,
+            "currency": "INR",
+        }
+        client.order.create({'amount':'amount','currency':'INR','payment_cpature':'1'})
+        return render(request,"payment_customise.html")
 
 # weather prediction
 from django.conf import settings
@@ -1585,5 +1609,138 @@ def luxview(request):
 
 def swizview(request):
     return render(request, 'swizview.html')
+
+
+from django.shortcuts import render, get_object_or_404
+from .models import SilverPackage, Payment_silver,Payment_gold,Payment_platinum,Payment_customise
+
+def confirmation_page_silver(request):
+    if request.method == 'POST':
+        package_id = request.POST.get('package_id')
+        amount = request.POST.get('amount')
+        
+        # Fetch SilverPackage details for the given package_id
+        silver_package = get_object_or_404(SilverPackage, pk=package_id)
+        
+        # Save payment details to the database
+        payment = Payment_silver.objects.create(
+            silver_package=silver_package,
+            user_id=silver_package.user_id,
+            user_ref=silver_package.user,
+            date_of_booking=silver_package.date_of_booking,
+            destination_selected=silver_package.destination_selected,
+            amount_paid=amount,
+            # Add other payment details as needed
+        )
+        payment.save()
+
+        notification_message = f"Payment for  {silver_package.destination_selected} in Silver package has been done by User id:{silver_package.user_id} for date {silver_package.date_of_booking}."
+        notification = Notification.objects.create(
+            user=silver_package.user,
+            message=notification_message
+        )
+        notification.save()
+
+
+        return redirect("confirmation_page_silver")
+
+    return render(request, "confirmation_page_silver.html")
+
+
+def confirmation_page_gold(request):
+    if request.method == 'POST':
+        package_id = request.POST.get('package_id')
+        amount = request.POST.get('amount')
+        
+        # Fetch SilverPackage details for the given package_id
+        gold_package = get_object_or_404(GoldPackage, pk=package_id)
+        
+        # Save payment details to the database
+        payment = Payment_gold.objects.create(
+            gold_package=gold_package,
+            user_id=gold_package.user_id,
+            user_ref=gold_package.user,
+            date_of_booking=gold_package.date_of_booking,
+            destination_selected=gold_package.destination_selected,
+            amount_paid=amount,
+            # Add other payment details as needed
+        )
+        payment.save()
+
+        notification_message = f"Payment for  {gold_package.destination_selected} in Gold package has been done by User id:{gold_package.user_id} for date {gold_package.date_of_booking}."
+        notification = Notification.objects.create(
+            user=gold_package.user,
+            message=notification_message
+        )
+        notification.save()
+
+        # Provide some feedback or redirect the user to another page
+        return redirect("confirmation_page_gold")
+
+    return render(request, "confirmation_page_gold.html")
+
+def confirmation_page_platinum(request):
+    if request.method == 'POST':
+        package_id = request.POST.get('package_id')
+        amount = request.POST.get('amount')
+        
+        # Fetch SilverPackage details for the given package_id
+        platinum_package = get_object_or_404(PlatinumPackage, pk=package_id)
+        
+        # Save payment details to the database
+        payment = Payment_platinum.objects.create(
+            platinum_package=platinum_package,
+            user_id=platinum_package.user_id,
+            user_ref=platinum_package.user,
+            date_of_booking=platinum_package.date_of_booking,
+            destination_selected=platinum_package.destination_selected,
+            amount_paid=amount,
+            # Add other payment details as needed
+        )
+        payment.save()
+
+        notification_message = f"Payment for  {platinum_package.destination_selected} in Platinum package has been done by User id:{platinum_package.user_id} for date {platinum_package.date_of_booking}."
+        notification = Notification.objects.create(
+            user=platinum_package.user,
+            message=notification_message
+        )
+        notification.save()
+
+        # Provide some feedback or redirect the user to another page
+        return redirect("confirmation_page_platinum")
+
+    return render(request, "confirmation_page_platinum.html")
+
+def confirmation_page_customise(request):
+    if request.method == 'POST':
+        package_id = request.POST.get('package_id')
+        amount = request.POST.get('amount')
+        
+        # Fetch SilverPackage details for the given package_id
+        customise_package = get_object_or_404(CustomisePackage, pk=package_id)
+        
+        # Save payment details to the database
+        payment = Payment_customise.objects.create(
+            customise_package=customise_package,
+            user_id=customise_package.user_id,
+            user_ref=customise_package.user,
+            date_of_booking=customise_package.date_of_booking,
+            destination_selected=customise_package.destination_selected,
+            amount_paid=amount,
+            # Add other payment details as needed
+        )
+        payment.save()
+
+        notification_message = f"Payment for  {customise_package.destination_selected} in Customise package has been done by User id:{customise_package.user_id} for date {customise_package.date_of_booking}."
+        notification = Notification.objects.create(
+            user=customise_package.user,
+            message=notification_message
+        )
+        notification.save()
+
+        # Provide some feedback or redirect the user to another page
+        return redirect("confirmation_page_customise")
+
+    return render(request, "confirmation_page_customise.html")
 
 
