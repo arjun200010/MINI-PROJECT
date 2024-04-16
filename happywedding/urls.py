@@ -103,6 +103,11 @@ urlpatterns = [
     path('confirmation_page_silver/', views.confirmation_page_silver, name='confirmation_page_silver'),
     path('confirmation_page_platinum/', views.confirmation_page_platinum, name='confirmation_page_platinum'),
     path('confirmation_page_customise/', views.confirmation_page_customise, name='confirmation_page_customise'),
+    path('gold_pay_view/',views.gold_pay_view,name='gold_pay_view'),
+    path('silver_pay_view/',views.silver_pay_view,name='silver_pay_view'),
+    path('platinum_pay_view/',views.platinum_pay_view,name='platinum_pay_view'),
+    path('customise_pay_view/',views.customise_pay_view,name='customise_pay_view'),
+
 ]
 # urls.py
 

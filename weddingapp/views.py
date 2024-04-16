@@ -151,6 +151,10 @@ def adminfirst(request):
                               SilverPackage.objects.filter(is_booked=True).count() + \
                               PlatinumPackage.objects.filter(is_booked=True).count() + \
                               CustomisePackage.objects.filter(is_booked=True).count()
+        payment_count=Payment_gold.objects.filter().count()+\
+                      Payment_silver.objects.filter().count()+\
+                      Payment_platinum.objects.filter().count()+\
+                      Payment_customise.objects.filter().count()
         # Get the three most recent notifications
         notifications = Notification.objects.order_by('-timestamp')[:3]
 
@@ -158,6 +162,7 @@ def adminfirst(request):
             'user_count': user_count,
             'vendor_count': vendor_count,
             'active_booking_count': active_booking_count,
+            'payment_count':payment_count,
             'notifications' : notifications
         }
 
@@ -1744,3 +1749,22 @@ def confirmation_page_customise(request):
     return render(request, "confirmation_page_customise.html")
 
 
+@login_required
+def gold_pay_view(request):
+    pgold = Payment_gold.objects.all()
+    return render(request, 'gold_pay_view.html', {'pgold': pgold})
+
+@login_required
+def silver_pay_view(request):
+    psilver = Payment_silver.objects.all()
+    return render(request, 'silver_pay_view.html', {'psilver': psilver})
+
+@login_required
+def platinum_pay_view(request):
+    pplat = Payment_platinum.objects.all()
+    return render(request, 'platinum_pay_view.html', {'pplat': pplat})
+
+@login_required
+def customise_pay_view(request):
+    pcust = Payment_customise.objects.all()
+    return render(request, 'cutomise_pay_view.html', {'pcust': pcust})

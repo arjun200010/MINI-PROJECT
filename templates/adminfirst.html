@@ -276,6 +276,16 @@
         <button onclick="redirectToSelectedPage()">Go</button>
         </li>
         <li>
+        <select id="payDropdown">
+            <option value="" disabled selected>Payment</option>
+            <option value="goldPay">Gold</option>
+            <option value="silverPay">Silver</option>
+            <option value="platinumPay">Platinum</option>
+            <option value="customisePay">Customise</option>
+        </select>
+        <button onclick="redirectToPage()">Go</button>
+        </li>
+        <li>
         <a href="/logout/">
          <i class="bx bx-log-out"></i>
             <span class="nav-item">Logout</span>
@@ -329,7 +339,7 @@
 
         <div class="card card4">
             <h3>Payments </h3><br>
-            <p>Payments: 0</p>
+            <p>Payments: {{payment_count}}</p>
         </div>
     </div>  
 
@@ -364,6 +374,35 @@
                     alert("Please select an option.");
             }
         }
+        function redirectToPage() {
+            // Get the selected option from the dropdown
+            var selectedOption = document.getElementById("payDropdown").value;
+
+            var goldURL = "/gold_pay_view/";
+            var silverURL = "/silver_pay_view/";
+            var platinumURL = "/platinum_pay_view/";
+            var customiseURL = "/customise_pay_view/";
+
+            // Redirect based on the selected option
+            switch (selectedOption) {
+                case "goldPay":
+                    window.location.href = goldURL;
+                    break;
+                case "silverPay":
+                    window.location.href = silverURL;
+                    break;
+                case "platinumPay":
+                    window.location.href = platinumURL;
+                    break;
+                case "customisePay":
+                    window.location.href = customiseURL;
+                    break;
+                default:
+            
+                    alert("Please select an option.");
+            }
+        }
+
         let btn=document.querySelector('#btn')
         let sidebar=document.querySelector('.sidebar')
         btn.onclick=function(){
